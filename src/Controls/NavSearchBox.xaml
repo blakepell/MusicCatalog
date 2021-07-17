@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="MusicCatalog.Controls.NavSearchBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MusicCatalog.Controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:fluentWpf="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+             mc:Ignorable="d">
+    <Border BorderThickness="5, 0, 0, 0">
+        <TextBox x:Name="SearchBox" x:FieldModifier="public"
+                 Margin="10,2,15,5" Padding="5" Text="" BorderThickness="1"
+                 fluentWpf:Extensions.PlaceholderText="Search" AcceptsReturn="false"
+                 Style="{StaticResource TextBoxRevealStyle}"
+                 GotFocus="SearchBox_OnGotFocus" LostFocus="SearchBox_OnLostFocus" PreviewKeyDown="SearchBox_OnPreviewKeyDown">
+        </TextBox>
+        <!--<TextBox x:Name="SearchBox" 
+                 Margin="10,2,15,5" Padding="5" Text="" BorderThickness="1"
+                 fluentWpf:Extensions.PlaceholderText="Search"
+                 GotFocus="SearchBox_OnGotFocus" LostFocus="SearchBox_OnLostFocus">
+            --><!--<TextBox.Style>
+                <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                                <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                    <ScrollViewer x:Name="PART_ContentHost" Focusable="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="TextBox.BorderBrush" TargetName="border" Value="Red"/>
+                                    </Trigger>
+                                    <Trigger Property="IsKeyboardFocused" Value="True">
+                                        <Setter Property="TextBox.BorderBrush" TargetName="border" Value="Orange"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TextBox.Style>--><!--
+        </TextBox>-->        
+        <Border.Style>
+            <Style TargetType="{x:Type Border}">
+                <Setter Property="BorderBrush" Value="{Binding ActiveBrush}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding SearchBoxIsFocused}" Value="True">
+                        <Setter Property="BorderBrush" Value="{Binding ActiveBrush}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding SearchBoxIsFocused}" Value="False">
+                        <Setter Property="BorderBrush" Value="{Binding InactiveBrush}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+    </Border>
+</UserControl>

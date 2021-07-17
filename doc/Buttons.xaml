@@ -1,0 +1,8 @@
+        <StackPanel Orientation="Horizontal" 
+                            HorizontalAlignment="Right" Margin="25" VerticalAlignment="Bottom">
+                    <Button Content="Button"  Width="80" Height="35" Margin="5"/>
+                    <Button Content="Button"  Width="80" Height="35" Margin="5"
+                            Style="{StaticResource ButtonRevealStyle}"/>
+                    <Button Content="Button"  Width="80" Height="35" Margin="5"
+                            Style="{StaticResource ButtonRevealStyle}" Background="Transparent"/>
+                </StackPanel>

@@ -1,0 +1,107 @@
+﻿<fw:AcrylicWindow x:Class="MusicCatalog.MainWindow"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+                  xmlns:ui="http://schemas.modernwpf.com/2019"
+                  xmlns:local="clr-namespace:MusicCatalog"
+                  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                  xmlns:controls="clr-namespace:MusicCatalog.Controls"
+                  xmlns:pages="clr-namespace:MusicCatalog.Pages"
+                  mc:Ignorable="d" fw:AcrylicWindow.FallbackColor="#66FFFFFF"
+                  ui:ThemeManager.RequestedTheme="Light"
+                  fw:ExtendViewIntoTitleBar="True"
+                  Title="Music Catalog" Height="680" Width="1024"
+                  Loaded="MainWindow_OnLoaded">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="225"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <!-- Background="#10000000" darker -->
+        <!-- Background="#66FFFFFF" lighter -->
+        <DockPanel Grid.Row="0" Grid.Column="0" LastChildFill="True">
+            <StackPanel DockPanel.Dock="Top">
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="ButtonBack"
+                            Width="46" Height="29"
+                            BorderThickness="0"
+                            Background="Transparent"
+                            WindowChrome.IsHitTestVisibleInChrome="True"
+                            Style="{StaticResource ButtonRevealStyle}"
+                            Click="ButtonBack_OnClick">
+                        <Button.Content>
+                            <iconPacks:PackIconZondicons Kind="ArrowThinLeft" />
+                        </Button.Content>
+                    </Button>
+
+                    <TextBlock Margin="5,7,0,0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Text="Music Catalog"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+
+                <controls:NavSearchBox x:Name="SearchBox" Margin="0,5,0,0"
+                                       ActiveBrush="Transparent"></controls:NavSearchBox>
+
+                <controls:NavButton Text="Home" 
+                                    AssociatedFrame="{Binding ElementName=MainFrame}"
+                                    NavigationPageType="MusicCatalog.Pages.HomePage" IsActive="True"
+                                    SkipNavigateIfAlreadyLoaded="True">
+                    <controls:NavButton.IconControl>
+                        <iconPacks:PackIconVaadinIcons Kind="Home" Foreground="Black" />
+                    </controls:NavButton.IconControl>
+                </controls:NavButton>
+
+                <!-- doc: ElementName important to pass reference of one control to dp of another -->
+                <controls:NavButton Text="Recent Songs">
+                    <controls:NavButton.IconControl>
+                        <iconPacks:PackIconZondicons Kind="Time" Foreground="Black" />
+                    </controls:NavButton.IconControl>
+                </controls:NavButton>
+
+                <controls:NavButton Text="All Songs">
+                    <controls:NavButton.IconControl>
+                        <iconPacks:PackIconVaadinIcons Kind="Music" Foreground="Black" />
+                    </controls:NavButton.IconControl>
+                </controls:NavButton>
+
+                <controls:NavButton Text="Latest Songs">
+                    <controls:NavButton.IconControl>
+                        <iconPacks:PackIconVaadinIcons Kind="Music" Foreground="Black" />
+                    </controls:NavButton.IconControl>
+                </controls:NavButton>
+
+                <controls:NavButton Text="Playlists">
+                    <controls:NavButton.IconControl>
+                        <iconPacks:PackIconZondicons Kind="Playlist" Foreground="Black" />
+                    </controls:NavButton.IconControl>
+                </controls:NavButton>
+            </StackPanel>
+
+            <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+                <controls:NavButton Text="Settings"
+                                    AssociatedFrame="{Binding ElementName=MainFrame}"
+                                    NavigationPageType="MusicCatalog.Pages.SettingsPage"
+                                    SkipNavigateIfAlreadyLoaded="True">
+                    <controls:NavButton.IconControl>
+                        <iconPacks:PackIconVaadinIcons Kind="CogOutline" Margin="0" Foreground="Black" />
+                    </controls:NavButton.IconControl>
+                </controls:NavButton>
+            </StackPanel>
+        </DockPanel>
+
+        <fw:DropShadowPanel Grid.Column="1" ShadowMode="Outer" ShadowDepth="0" Background="White">
+            <StackPanel Orientation="Vertical">
+                <controls:InfoOverlay x:Name="InfoOverlay"
+                                      Width="200" HorizontalAlignment="Right" Visibility="Collapsed" 
+                                      Margin="0,40,25,0" ProgressIsActive="True"
+                                      TopText="Loading" BottomText="Step 2 of 5"></controls:InfoOverlay>
+
+                <ui:Frame x:Name="MainFrame" HorizontalAlignment="Left"></ui:Frame>
+            </StackPanel>
+        </fw:DropShadowPanel>
+    </Grid>
+</fw:AcrylicWindow>

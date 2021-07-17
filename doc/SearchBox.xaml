@@ -1,0 +1,6 @@
+                <Border BorderBrush="#66CCCCCC" BorderThickness="5, 0, 0, 0">
+                    <TextBox x:Name="SearchBox"
+                             Margin="10,2,15,5" Padding="5" Text="" BorderThickness="1"
+                             fw:Extensions.PlaceholderText="Search"
+                             Style="{StaticResource TextBoxRevealStyle}"/>
+                </Border>
