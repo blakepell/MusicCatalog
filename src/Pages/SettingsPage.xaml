@@ -30,7 +30,9 @@
                         <StackPanel Orientation="Vertical">
                             <ui:ProgressRing x:Name="ProgressRing"></ui:ProgressRing>
 
-                            <Button Width="150" Height="50" Content="Save" Click="ButtonBase_OnClickAsync"></Button>
+                            <TextBlock x:Name="TextStatus" Text="Status: Idle"></TextBlock>
+
+                            <Button Width="150" Height="50" Content="Rebuild Catalog" Click="ButtonBase_OnClickAsync"></Button>
 
                             <Button Width="150" Height="50" Content="Open Folder" Click="ButtonBase_OnClick"></Button>
                         </StackPanel>
@@ -56,12 +58,6 @@
                              HorizontalAlignment="Stretch"
                              PreviewKeyDown="ListViewMusicDirectories_OnPreviewKeyDown"
                              Style="{StaticResource DefaultListViewStyle}">
-                            <!--<ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                                    <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
-                                </Style>
-                            </ListView.ItemContainerStyle>-->
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Header="Directory">

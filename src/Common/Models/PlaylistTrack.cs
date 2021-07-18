@@ -16,7 +16,7 @@ namespace MusicCatalog.Common.Models
     {
         public int PlaylistId { get; set; }
 
-        public int PlaylistTrackId { get; set; }
+        public string FilePath { get; set; }
 
     }
 }

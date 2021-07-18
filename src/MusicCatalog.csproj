@@ -15,9 +15,11 @@
 
   <ItemGroup>
     <None Remove="Migrations\Script0001 Create Tables.sql" />
+    <None Remove="Migrations\Script0002 Create Views.sql" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Script0002 Create Views.sql" />
     <EmbeddedResource Include="Migrations\Script0001 Create Tables.sql" />
   </ItemGroup>
 

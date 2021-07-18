@@ -14,7 +14,7 @@
                 <ResourceDictionary Source="/ModernWpf;component/Styles/Pivot.xaml" />
                 <ResourceDictionary Source="/ModernWpf;component/Styles/ListView.xaml" />
                 <ResourceDictionary Source="/ModernWpf;component/Styles/CheckBox.xaml" />
-
+                <ResourceDictionary Source="/ModernWpf;component/Styles/DataGrid.xaml" />
 
                 <ui:ThemeResources>
                     <ui:ThemeResources.ThemeDictionaries>
@@ -29,8 +29,10 @@
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Dark">
                             <ResourceDictionary.MergedDictionaries>
+                                <!-- FluentWPF theme resources -->
                                 <ResourceDictionary Source="/FluentWPF;component/Styles/Colors.Dark.xaml" />
                                 <ResourceDictionary Source="/FluentWPF;component/Styles/Brushes.xaml" />
+                                <!-- ModernWPF theme resources -->
                                 <ResourceDictionary Source="/ModernWpf;component/ThemeResources/Dark.xaml" />
                             </ResourceDictionary.MergedDictionaries>
                             <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" Color="{StaticResource SystemBaseHighColor}" />
