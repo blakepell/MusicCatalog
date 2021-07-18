@@ -7,8 +7,10 @@
  * @license           : MIT
  */
 
+using System.Threading.Tasks;
 using MusicCatalog.Pages;
 using System.Windows;
+using NAudio.Wave;
 
 namespace MusicCatalog
 {
@@ -41,6 +43,10 @@ namespace MusicCatalog
             set => SetValue(NowPlayingAlbumProperty, value);
         }
 
+        private WaveOutEvent _waveOut;
+
+        private Mp3FileReader _mp3Reader;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -63,5 +69,66 @@ namespace MusicCatalog
                 MainFrame.GoBack();
             }
         }
+
+        private async void ButtonPlayAsync_OnClick(object sender, RoutedEventArgs e)
+        {
+            await this.Play(@"C:\Music\Richard Edwards - The Bride On The Boxcar - A Decade Of Margot Rarities- 2004-2014 - 46 Jesus Breaks Your Heart - Demo.mp3");
+        }
+
+        private void ButtonPause_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.Pause();
+        }
+
+        private void ButtonResume_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.Resume();
+        }
+
+        public async Task Play(string fileName)
+        {
+            if (_waveOut == null)
+            {
+                _waveOut = new();
+            }
+
+            if (_mp3Reader != null)
+            {
+                _waveOut?.Stop();
+                await _mp3Reader.DisposeAsync();
+            }
+
+            _mp3Reader = new(fileName);
+            _waveOut?.Init(_mp3Reader);
+            _waveOut.Play();
+
+            ButtonPlay.Visibility = Visibility.Collapsed;
+            ButtonResume.Visibility = Visibility.Collapsed;
+            ButtonPause.Visibility = Visibility.Visible;
+        }
+
+        public void Resume()
+        {
+            _waveOut?.Play();
+
+            ButtonPlay.Visibility = Visibility.Collapsed;
+            ButtonResume.Visibility = Visibility.Collapsed;
+            ButtonPause.Visibility = Visibility.Visible;
+        }
+
+        public void Pause()
+        {
+            if (_waveOut == null)
+            {
+                return;
+            }
+
+            _waveOut?.Pause();
+
+            ButtonPlay.Visibility = Visibility.Collapsed;
+            ButtonResume.Visibility = Visibility.Visible;
+            ButtonPause.Visibility = Visibility.Collapsed;
+        }
+
     }
 }

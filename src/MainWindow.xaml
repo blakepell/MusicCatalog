@@ -86,6 +86,84 @@
 
             <!-- Nav Buttons Bottom -->
             <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <!-- Backwards -->
+                    <Button Style="{StaticResource ButtonRevealStyle}" 
+                            HorizontalContentAlignment="Center" 
+                            Background="Transparent">
+                        <Button.Content>
+                            <iconPacks:PackIconVaadinIcons Kind="StepBackward"
+                                                           Margin="10"
+                                                           Height="20"
+                                                           Width="20"
+                                                           Background="Transparent"
+                                                           HorizontalAlignment="Center"/>
+                        </Button.Content>
+                    </Button>
+
+                    <!-- Play -->
+                    <Button x:Name="ButtonPlay"
+                            Style="{StaticResource ButtonRevealStyle}" 
+                            HorizontalContentAlignment="Center" Background="Transparent"
+                            Visibility="Visible"
+                            Click="ButtonPlayAsync_OnClick">
+                        <Button.Content>
+                            <iconPacks:PackIconVaadinIcons Kind="Play" 
+                                                           Margin="10"
+                                                           Height="20"
+                                                           Width="20"
+                                                           Background="Transparent" 
+                                                           HorizontalAlignment="Center" />
+                        </Button.Content>
+                    </Button>
+
+                    <!-- Resume -->
+                    <Button x:Name="ButtonResume"
+                            Style="{StaticResource ButtonRevealStyle}" 
+                            HorizontalContentAlignment="Center"
+                            Background="Transparent"
+                            Visibility="Collapsed"
+                            Click="ButtonResume_OnClick">
+                        <Button.Content>
+                            <iconPacks:PackIconVaadinIcons Kind="Play" 
+                                                           Margin="10"
+                                                           Height="20"
+                                                           Width="20"
+                                                           Background="Transparent" 
+                                                           HorizontalAlignment="Center" />
+                        </Button.Content>
+                    </Button>
+
+                    <!-- Pause -->
+                    <Button x:Name="ButtonPause"
+                            Style="{StaticResource ButtonRevealStyle}" 
+                            HorizontalContentAlignment="Center"
+                            Background="Transparent"
+                            Visibility="Collapsed"
+                            Click="ButtonPause_OnClick">
+                        <Button.Content>
+                            <iconPacks:PackIconZondicons Kind="Pause"
+                                                           Margin="10"
+                                                           Height="20"
+                                                           Width="20"
+                                                           Background="Transparent" 
+                                                           HorizontalAlignment="Center" />
+                        </Button.Content>
+                    </Button>
+
+                    <!-- Forward -->
+                    <Button Style="{StaticResource ButtonRevealStyle}"
+                            HorizontalContentAlignment="Center" 
+                            Background="Transparent">
+                        <Button.Content>
+                            <iconPacks:PackIconVaadinIcons Kind="StepForward"
+                                                           Margin="10"
+                                                           Height="20"
+                                                           Width="20"
+                                                           Background="Transparent" />
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
                 <controls:NavButton Text="Settings"
                                     AssociatedFrame="{Binding ElementName=MainFrame}"
                                     NavigationPageType="MusicCatalog.Pages.SettingsPage"
