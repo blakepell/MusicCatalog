@@ -7,29 +7,27 @@
  * @license           : MIT
  */
 
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Windows;
 using Configs;
 using DbUp;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using MusicCatalog.Common;
+using System;
+using System.Linq;
+using System.Reflection;
+using System.Windows;
+using MusicCatalog.Common.Models;
 
 namespace MusicCatalog
 {
-    public partial class App : Application
+    public partial class App
     {
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
             var appSettings = ConfigsTools.GetConfigs<AppSettings>();
             var mainWindow = new MainWindow();
 
+            // Register our services with the dependency injection.
             AppServices.Init((sc) =>
             {
                 sc.AddSingleton<AppSettings>(appSettings);
@@ -37,8 +35,10 @@ namespace MusicCatalog
                 sc.AddTransient<SqliteConnection>(s => new SqliteConnection(appSettings.DatabaseConnectionString));
             });
 
+            // Since we're loading the main window manually we have to set it here.
             this.MainWindow = AppServices.GetService<MainWindow>();
 
+            // Perform any database changes that need to be made
             var dbMigrations = DeployChanges.To
                 .SQLiteDatabase(appSettings.DatabaseConnectionString)
                 .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
@@ -46,6 +46,13 @@ namespace MusicCatalog
                 .Build();
 
             var result = dbMigrations.PerformUpgrade();
+
+            // Default settings if required.
+            if (!appSettings.MusicDirectoryList.Any())
+            {
+                appSettings.MusicDirectoryList.Add(new IndexDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonMusic)));
+                appSettings.MusicDirectoryList.Add(new IndexDirectory(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic)));
+            }
 
             mainWindow.Show();
         }

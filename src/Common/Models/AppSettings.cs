@@ -7,17 +7,24 @@
  * @license           : MIT
  */
 
+using System.Collections.ObjectModel;
 using Configs;
 using LocalAppDataFolder;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Windows.Documents;
+using Argus.Collections;
+using MusicCatalog.Common.Models;
 
 namespace MusicCatalog
 {
     public class AppSettings : ConfigsTools, INotifyPropertyChanged
     {
+        [JsonProperty("musicDirectoryList", Required = Required.Default)]
+        public SpecialObservableCollection<IndexDirectory> MusicDirectoryList { get; set; } = new();
+
         private string _databaseFilename = "MusicCatalog.db";
 
         [JsonProperty("databaseFilename", Required = Required.AllowNull)]

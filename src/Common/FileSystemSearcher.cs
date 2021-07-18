@@ -52,7 +52,7 @@ namespace MusicCatalog.Common
             {
                 foreach (var pattern in _patterns)
                 {
-                    matches = matches.Concat(_root.EnumerateDirectories(pattern, SearchOption.TopDirectoryOnly))
+                    matches = matches.Concat(_root.EnumerateDirectories("*", SearchOption.TopDirectoryOnly))
                                      .Concat(_root.EnumerateFiles(pattern, SearchOption.TopDirectoryOnly));
                 }
             }

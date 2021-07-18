@@ -7,17 +7,43 @@
  * @license           : MIT
  */
 
-using Dapper.Contrib.Extensions;
+using System.IO;
+using Argus.ComponentModel;
 
 namespace MusicCatalog.Common.Models
 {
-    [Table("IndexDirectory")]
-    public class IndexDirectory
+    public class IndexDirectory : Observable
     {
-        public int Id { get; set; }
+        public IndexDirectory()
+        {
 
-        public string DirectoryPath { get; set; }
+        }
 
-        public bool IndexChildDirectories { get; set; }
+        public IndexDirectory(string directoryPath)
+        {
+            this.DirectoryPath = directoryPath;
+        }
+
+        private string _directoryPath;
+
+        public string DirectoryPath
+        {
+            get => _directoryPath;
+            set => this.Set(ref _directoryPath, value);
+        }
+
+        private bool _indexChildDirectories = true;
+
+        public bool IndexChildDirectories
+        {
+            get => _indexChildDirectories;
+            set => this.Set(ref _indexChildDirectories, value);
+        }
+
+        public SearchOption ToSearchOption()
+        {
+            return _indexChildDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+        }
+
     }
 }

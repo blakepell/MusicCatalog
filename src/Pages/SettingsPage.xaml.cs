@@ -7,34 +7,25 @@
  * @license           : MIT
  */
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Argus.Extensions;
 using Dapper;
 using Dapper.Contrib.Extensions;
 using Microsoft.Data.Sqlite;
 using MusicCatalog.Common;
 using MusicCatalog.Common.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Forms;
+using System.Windows.Input;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
 namespace MusicCatalog.Pages
 {
-    /// <summary>
-    /// Interaction logic for SettingsPage.xaml
-    /// </summary>
-    public partial class SettingsPage : Page
+    public partial class SettingsPage
     {
         private AppSettings _appSettings;
 
@@ -54,7 +45,6 @@ namespace MusicCatalog.Pages
             ProgressRing.IsActive = true;
             await this.LoadDb();
             ProgressRing.IsActive = false;
-            //_appSettings.Save();
         }
 
         public async Task LoadDb()
@@ -69,46 +59,58 @@ namespace MusicCatalog.Pages
                     await conn.ExecuteAsync("VACUUM");
                     await conn.ExecuteAsync("BEGIN");
 
-                    var root = new DirectoryInfo(@"C:\Music");
-                    var enumerable = new FileSystemEnumerable(root, "*.mp3", SearchOption.TopDirectoryOnly);
+                    var extensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                        {  ".mp3", ".wav" };
 
-                    //fileCount = Directory.EnumerateDirectories(settings.Directory, "*", so).Count();
-                    // TODO - Same exclusions as below
-                    // fileCount = enumerable.Count();
-
-                    //foreach (var file in Directory.EnumerateFiles(settings.Directory, "*.*", so))
-                    foreach (var fs in enumerable)
+                    foreach (var dir in _appSettings.MusicDirectoryList)
                     {
-                        // Skip directories and junctions.
-                        if (fs.Attributes.HasFlag(FileAttributes.Directory) || fs.Attributes.HasFlag(FileAttributes.ReparsePoint))
+                        if (!Directory.Exists(dir.DirectoryPath))
                         {
                             continue;
                         }
 
-                        var fi = fs as FileInfo;
+                        var root = new DirectoryInfo(dir.DirectoryPath);
+                        var enumerable = new FileSystemEnumerable(root, "*", dir.ToSearchOption()).Where(x => extensions.Contains(Path.GetExtension(x.FullName)));
 
-                        if (fi == null)
+                        var fileCount = enumerable.Count();
+                        //fileCount = Directory.EnumerateDirectories(settings.Directory, "*", so).Count();
+                        // TODO - Same exclusions as below
+                        // fileCount = enumerable.Count();
+
+                        //foreach (var file in Directory.EnumerateFiles(settings.Directory, "*.*", so))
+                        foreach (var fs in enumerable)
                         {
-                            continue;
+                            // Skip directories and junctions.
+                            if (fs.Attributes.HasFlag(FileAttributes.Directory) || fs.Attributes.HasFlag(FileAttributes.ReparsePoint))
+                            {
+                                continue;
+                            }
+
+                            var fi = fs as FileInfo;
+
+                            if (fi == null)
+                            {
+                                continue;
+                            }
+
+                            var tr = new Track
+                            {
+                                FilePath = fi.FullName,
+                                FileName = fi.Name,
+                                DirectoryPath = fi.DirectoryName,
+                                Extension = fi.Extension.ToLower(),
+                                FileSize = fi.Length,
+                                DateCreated = fi.CreationTime,
+                                DateModified = fi.LastWriteTime,
+                                DateLastIndexed = DateTime.Now,
+                                TagsProcessed = false
+                            };
+
+                            //MD5 = fi.CreateMD5(),
+                            //tr.MD5 = fi.CreateMD5();
+
+                            _ = await conn.InsertAsync(tr);
                         }
-
-                        var tr = new Track
-                        {
-                            FilePath = fi.FullName,
-                            FileName = fi.Name,
-                            DirectoryPath = fi.DirectoryName,
-                            Extension = fi.Extension.ToLower(),
-                            FileSize = fi.Length,
-                            DateCreated = fi.CreationTime,
-                            DateModified = fi.LastWriteTime,
-                            DateLastIndexed = DateTime.Now,
-                            TagsProcessed = false
-                        };
-
-                        //MD5 = fi.CreateMD5(),
-                        //tr.MD5 = fi.CreateMD5();
-
-                        _ = await conn.InsertAsync(tr);
                     }
 
                     await conn.ExecuteAsync("COMMIT");
@@ -121,6 +123,50 @@ namespace MusicCatalog.Pages
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("explorer.exe", _appSettings.LocalAppData.AssemblyFolderPath);
+        }
+
+        /// <summary>
+        /// Key handling for the folder list view.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ListViewMusicDirectories_OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Delete:
+                    e.Handled = true;
+
+                    // Casting the selected items to an array to avoid the enumerable changing exception.
+                    var selected = ListViewMusicDirectories.SelectedItems.Cast<IndexDirectory>().ToArray();
+
+                    foreach (var item in selected)
+                    {
+                        _appSettings.MusicDirectoryList.Remove(item);
+                    }
+
+                    break;
+                case Key.Escape:
+                    e.Handled = true;
+                    ListViewMusicDirectories.SelectedItems.Clear();
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Allows the user to add a folder location to be indexed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ButtonAddDirectory_OnClick(object sender, RoutedEventArgs e)
+        {
+            var fd = new FolderBrowserDialog();
+            var result = fd.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                _appSettings.MusicDirectoryList.Add( new IndexDirectory(fd.SelectedPath));
+            }
         }
     }
 }

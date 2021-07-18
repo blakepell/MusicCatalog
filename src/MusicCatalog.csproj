@@ -5,6 +5,7 @@
     <TargetFramework>net5.0-windows10.0.18362</TargetFramework>
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
     <Authors>Blake Pell</Authors>
     <Company>https://www.blakepell.com</Company>
     <Product>Music Catalog</Product>
