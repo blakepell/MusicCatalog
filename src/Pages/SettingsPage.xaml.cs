@@ -44,23 +44,16 @@ namespace MusicCatalog.Pages
 
         private async void ButtonBase_OnClickAsync(object sender, RoutedEventArgs e)
         {
-            ProgressRing.IsActive = true;
-
+            //ProgressRing.IsActive = true;
             var indexer = new FileIndexer();
-
-            var sw = new Stopwatch();
-
-            sw.Start();
             await indexer.RebuildIndex();
-            sw.Stop();
-            TextStatus.Text = $"Rebuild took {sw.Elapsed.TotalSeconds.ToString()}s => ";
 
-            sw.Restart();
-            await indexer.GenerateMd5Hashes();
-            sw.Stop();
-            TextStatus.Text = $"MD5 hashes took {sw.Elapsed.TotalSeconds.ToString()}s";
+            //sw.Restart();
+            //await indexer.GenerateMd5Hashes();
+            //sw.Stop();
+            //TextStatus.Text = $"MD5 hashes took {sw.Elapsed.TotalSeconds.ToString()}s";
 
-            ProgressRing.IsActive = false;
+            //ProgressRing.IsActive = false;
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)

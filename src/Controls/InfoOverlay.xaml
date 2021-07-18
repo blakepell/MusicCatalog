@@ -7,8 +7,8 @@
              xmlns:controls="http://schemas.modernwpf.com/2019" Background="Transparent">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Border Grid.Row="0" Background="#2471AB" BorderThickness="0" CornerRadius="10, 10, 0, 0">
             <StackPanel Orientation="Horizontal">

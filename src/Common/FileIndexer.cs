@@ -26,10 +26,14 @@ namespace MusicCatalog.Common
             await Task.Run(async () =>
             {
                 var settings = AppServices.GetService<AppSettings>();
+                var conveyor = AppServices.CreateInstance<Conveyor>();
+                int counter = 0;
 
                 using (var conn = AppServices.GetService<SqliteConnection>())
                 {
                     await conn.OpenAsync();
+
+                    conveyor.UpdateInfoOverlay("Loading", "Deleting Index", true, true);
 
                     await conn.ExecuteAsync("DELETE FROM Track");
                     await conn.ExecuteAsync("VACUUM");
@@ -38,8 +42,12 @@ namespace MusicCatalog.Common
                     var extensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
                     {  ".mp3", ".wav" };
 
+
                     foreach (var dir in settings.MusicDirectoryList)
                     {
+                        counter++;
+                        conveyor.UpdateInfoOverlay("Loading", $"Directory {counter} of {settings.MusicDirectoryList.Count}", true, true);
+
                         if (!Directory.Exists(dir.DirectoryPath))
                         {
                             continue;
@@ -82,7 +90,10 @@ namespace MusicCatalog.Common
                         }
                     }
 
+                    conveyor.UpdateInfoOverlay("Loading", $"Commiting records to the database.", true, true);
                     await conn.ExecuteAsync("COMMIT");
+
+                    conveyor.HideInfoOverlay();
                 }
 
             });

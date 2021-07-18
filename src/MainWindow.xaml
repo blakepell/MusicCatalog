@@ -94,12 +94,27 @@
         </DockPanel>
 
         <fw:DropShadowPanel Grid.Column="1" ShadowMode="Outer" ShadowDepth="0" Background="White">
-                <!--<controls:InfoOverlay x:Name="InfoOverlay"
-                                      Width="200" HorizontalAlignment="Right" Visibility="Collapsed" 
-                                      Margin="0,40,25,0" ProgressIsActive="True"
-                                      TopText="Loading" BottomText="Step 2 of 5"></controls:InfoOverlay>-->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <ui:Frame x:Name="MainFrame"
+                              Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                              HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></ui:Frame>
 
-                <ui:Frame x:Name="MainFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></ui:Frame>
+                    <controls:InfoOverlay x:Name="InfoOverlay"
+                                          Grid.Row="0" Grid.Column="1"
+                                          Width="200" HorizontalAlignment="Right" Visibility="Collapsed" 
+                                          Margin="0,40,25,0" ProgressIsActive="True"
+                                          TopText="Loading" BottomText="Step 2 of 5"></controls:InfoOverlay>
+
+                </Grid>
+
         </fw:DropShadowPanel>
     </Grid>
 </fw:AcrylicWindow>
