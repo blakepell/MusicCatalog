@@ -4,19 +4,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MusicCatalog.Controls"
-             xmlns:controls="http://schemas.modernwpf.com/2019" Background="Transparent">
+             xmlns:controls="http://schemas.modernwpf.com/2019">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <Border Grid.Row="0" Background="#2471AB" BorderThickness="0" CornerRadius="10, 10, 0, 0">
+        <Border Grid.Row="0" Background="White" BorderThickness="0" CornerRadius="10, 10, 0, 0">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Path=TopText}" 
+                <TextBlock Text="{Binding Path=TopText}"
                                Margin="10,10,5,10"
-                               Foreground="White" FontSize="16"></TextBlock>
+                               Foreground="#27608C" FontSize="16"></TextBlock>
                 <controls:ProgressRing IsActive="{Binding Path=ProgressIsActive}"
-                                       Foreground="White">
+                                       Foreground="#27608C">
                     <controls:ProgressRing.Style>
                         <Style TargetType="{x:Type controls:ProgressRing}">
                             <Setter Property="Foreground" Value="White" />
@@ -30,7 +30,7 @@
                 </controls:ProgressRing>
             </StackPanel>
         </Border>
-        <Border Grid.Row="1" Background="#3C93D9"
+        <Border Grid.Row="1" Background="#27608C"
                     BorderThickness="0" 
                     CornerRadius="0, 0, 10, 10">
             <TextBlock Text="{Binding Path=BottomText}" 

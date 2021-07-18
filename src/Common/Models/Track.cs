@@ -35,6 +35,8 @@ namespace MusicCatalog.Common.Models
 
         public string TrackName { get; set; }
 
+        public bool Favorite { get; set; }
+
         public DateTime DateCreated { get; set; }
 
         public DateTime DateModified { get; set; }

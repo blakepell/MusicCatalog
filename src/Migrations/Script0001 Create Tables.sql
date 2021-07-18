@@ -32,6 +32,7 @@ CREATE TABLE Track (
     MD5              TEXT,
     FileSize         INTEGER NOT NULL,
     TrackName        TEXT,
+    Favorite         INTEGER,
     DateCreated      TEXT    NOT NULL,
     DateModified     TEXT    NOT NULL,
     DateLastIndexed  TEXT    NOT NULL,

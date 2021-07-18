@@ -13,6 +13,7 @@ CREATE VIEW DuplicateFiles AS
            t1.MD5,
            t1.FileSize,
            t1.TrackName,
+           t1.Favorite,
            t1.DateCreated,
            t1.DateModified,
            t1.DateLastIndexed,

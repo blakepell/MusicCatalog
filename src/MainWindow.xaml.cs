@@ -7,39 +7,48 @@
  * @license           : MIT
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Dapper;
-using Microsoft.Data.Sqlite;
-using MusicCatalog.Common;
 using MusicCatalog.Pages;
+using System.Windows;
 
 namespace MusicCatalog
 {
     public partial class MainWindow
     {
+        public static readonly DependencyProperty NowPlayingSongTitleProperty = DependencyProperty.Register(
+            nameof(NowPlayingSongTitle), typeof(string), typeof(MainWindow), new PropertyMetadata("No Song Info"));
+
+        public string NowPlayingSongTitle
+        {
+            get => (string) GetValue(NowPlayingSongTitleProperty);
+            set => SetValue(NowPlayingSongTitleProperty, value);
+        }
+
+        public static readonly DependencyProperty NowPlayingArtistProperty = DependencyProperty.Register(
+            nameof(NowPlayingArtist), typeof(string), typeof(MainWindow), new PropertyMetadata("No Artist Info"));
+
+        public string NowPlayingArtist
+        {
+            get => (string) GetValue(NowPlayingArtistProperty);
+            set => SetValue(NowPlayingArtistProperty, value);
+        }
+
+        public static readonly DependencyProperty NowPlayingAlbumProperty = DependencyProperty.Register(
+            nameof(NowPlayingAlbum), typeof(string), typeof(MainWindow), new PropertyMetadata("No Album Info"));
+
+        public string NowPlayingAlbum
+        {
+            get => (string) GetValue(NowPlayingAlbumProperty);
+            set => SetValue(NowPlayingAlbumProperty, value);
+        }
+
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = this;
         }
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            // TODO: Find old instance in stack, put to top and show.
-            // TODO: Property on NavButton to do this stuff automatically.
-
             // Navigate to the first page we're going to show the user.
             MainFrame.Navigate(typeof(HomePage));
 

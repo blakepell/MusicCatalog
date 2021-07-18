@@ -14,11 +14,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Unknown.png" />
     <None Remove="Migrations\Script0001 Create Tables.sql" />
     <None Remove="Migrations\Script0002 Create Views.sql" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Assets\Unknown.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Migrations\Script0002 Create Views.sql" />
     <EmbeddedResource Include="Migrations\Script0001 Create Tables.sql" />
   </ItemGroup>

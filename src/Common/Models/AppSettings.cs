@@ -7,16 +7,14 @@
  * @license           : MIT
  */
 
-using System.Collections.ObjectModel;
+using Argus.Collections;
 using Configs;
 using LocalAppDataFolder;
+using MusicCatalog.Common.Models;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Windows.Documents;
-using Argus.Collections;
-using MusicCatalog.Common.Models;
 
 namespace MusicCatalog
 {

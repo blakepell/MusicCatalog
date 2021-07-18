@@ -7,8 +7,8 @@
  * @license           : MIT
  */
 
-using System.IO;
 using Argus.ComponentModel;
+using System.IO;
 
 namespace MusicCatalog.Common.Models
 {

@@ -8,22 +8,13 @@
  */
 
 using Argus.Extensions;
-using Dapper;
-using Dapper.Contrib.Extensions;
-using Microsoft.Data.Sqlite;
 using MusicCatalog.Common;
 using MusicCatalog.Common.Models;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
-using MessageBox = System.Windows.MessageBox;
 
 namespace MusicCatalog.Pages
 {
@@ -44,16 +35,8 @@ namespace MusicCatalog.Pages
 
         private async void ButtonBase_OnClickAsync(object sender, RoutedEventArgs e)
         {
-            //ProgressRing.IsActive = true;
             var indexer = new FileIndexer();
             await indexer.RebuildIndex();
-
-            //sw.Restart();
-            //await indexer.GenerateMd5Hashes();
-            //sw.Stop();
-            //TextStatus.Text = $"MD5 hashes took {sw.Elapsed.TotalSeconds.ToString()}s";
-
-            //ProgressRing.IsActive = false;
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)

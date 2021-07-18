@@ -12,11 +12,11 @@ using DbUp;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using MusicCatalog.Common;
+using MusicCatalog.Common.Models;
 using System;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
-using MusicCatalog.Common.Models;
 
 namespace MusicCatalog
 {

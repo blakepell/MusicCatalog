@@ -9,7 +9,8 @@
                   xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                   xmlns:controls="clr-namespace:MusicCatalog.Controls"
                   xmlns:pages="clr-namespace:MusicCatalog.Pages"
-                  mc:Ignorable="d" fw:AcrylicWindow.FallbackColor="#66FFFFFF"
+                  mc:Ignorable="d"
+                  fw:AcrylicWindow.FallbackColor="#66FFFFFF"
                   ui:ThemeManager.RequestedTheme="Light"
                   fw:ExtendViewIntoTitleBar="True"
                   Title="Music Catalog" Height="680" Width="1024"
@@ -22,6 +23,7 @@
         <!-- Background="#10000000" darker -->
         <!-- Background="#66FFFFFF" lighter -->
         <DockPanel Grid.Row="0" Grid.Column="0" LastChildFill="True">
+            <!-- Back Button and Window Title -->
             <StackPanel DockPanel.Dock="Top">
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="ButtonBack"
@@ -43,9 +45,11 @@
                                TextWrapping="Wrap" />
                 </StackPanel>
 
+                <!-- Search Box -->
                 <controls:NavSearchBox x:Name="SearchBox" Margin="0,5,0,0"
                                        ActiveBrush="Transparent"></controls:NavSearchBox>
 
+                <!-- Nav Buttons Top -->
                 <controls:NavButton Text="Home" 
                                     AssociatedFrame="{Binding ElementName=MainFrame}"
                                     NavigationPageType="MusicCatalog.Pages.HomePage" IsActive="True"
@@ -55,7 +59,6 @@
                     </controls:NavButton.IconControl>
                 </controls:NavButton>
 
-                <!-- doc: ElementName important to pass reference of one control to dp of another -->
                 <controls:NavButton Text="Recent Songs">
                     <controls:NavButton.IconControl>
                         <iconPacks:PackIconZondicons Kind="Time" Foreground="Black" />
@@ -81,6 +84,7 @@
                 </controls:NavButton>
             </StackPanel>
 
+            <!-- Nav Buttons Bottom -->
             <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
                 <controls:NavButton Text="Settings"
                                     AssociatedFrame="{Binding ElementName=MainFrame}"
@@ -93,28 +97,48 @@
             </StackPanel>
         </DockPanel>
 
-        <fw:DropShadowPanel Grid.Column="1" ShadowMode="Outer" ShadowDepth="0" Background="White">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <ui:Frame x:Name="MainFrame"
-                              Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+        <!-- Main Panel -->
+        <fw:DropShadowPanel Grid.Column="1" ShadowMode="Outer" ShadowDepth="0" Background="Transparent">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition Height="100" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ui:Frame x:Name="MainFrame" Background="White"
+                              Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="2"
                               HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></ui:Frame>
 
+                <StackPanel Grid.Column="0" Grid.Row="2" 
+                                Orientation="Horizontal" Background="#800078D7">
+                    <Image Margin="10">
+                        <Image.Source>
+                            <BitmapImage UriSource="/Assets/Unknown.png"></BitmapImage>
+                        </Image.Source>
+                    </Image>
+
+                    <StackPanel Orientation="Vertical" Margin="0,7,0,0">
+                        <TextBlock Text="{Binding NowPlayingSongTitle}" FontSize="16" FontWeight="SemiBold"></TextBlock>
+                        <TextBlock Text="{Binding NowPlayingArtist}" FontSize="14"></TextBlock>
+                        <TextBlock Text="{Binding NowPlayingAlbum}" FontSize="14"></TextBlock>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Grid.Row="2" 
+                            Orientation="Horizontal" Background="#800078D7">
+
                     <controls:InfoOverlay x:Name="InfoOverlay"
-                                          Grid.Row="0" Grid.Column="1"
                                           Width="200" HorizontalAlignment="Right" Visibility="Collapsed" 
-                                          Margin="0,40,25,0" ProgressIsActive="True"
+                                          Margin="0,10,10, 0" ProgressIsActive="True"
                                           TopText="Loading" BottomText="Step 2 of 5"></controls:InfoOverlay>
 
-                </Grid>
+                </StackPanel>
 
+            </Grid>
         </fw:DropShadowPanel>
     </Grid>
 </fw:AcrylicWindow>
