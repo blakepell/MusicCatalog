@@ -7,27 +7,44 @@
  * @license           : MIT
  */
 
+using System.Threading.Tasks;
 using MusicCatalog.Common;
 using MusicCatalog.Pages;
 using System.Windows;
+using TagLib.IFD.Entries;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MusicCatalog
 {
     public partial class MainWindow
     {
-        public AudioManager AudioManager { get; set; }
+        public AudioManager AudioManager { get; }
 
         public MainWindow()
         {
             InitializeComponent();
             this.AudioManager = new AudioManager();
+
+            this.AudioManager.PlaybackStopped = new((e =>
+            {
+                if (this.AudioManager.Mp3Reader.Position == this.AudioManager.Mp3Reader.Length
+                    || this.AudioManager.Mp3Reader.Position + 1 >= this.AudioManager.Mp3Reader.Length)
+                {
+                    this.ButtonPlay.Visibility = Visibility.Visible;
+                    this.ButtonPause.Visibility = Visibility.Collapsed;
+                }
+            }));
+
             this.DataContext = this;
         }
 
-        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
+        private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
             // Navigate to the first page we're going to show the user.
             MainFrame.Navigate(typeof(HomePage));
+
+            // TODO: Temp, remove this but show the last song played if it exists.
+            await this.Load(@"C:\Music\Richard Edwards - The Bride On The Boxcar - A Decade Of Margot Rarities- 2004-2014 - 46 Jesus Breaks Your Heart - Demo.mp3");
 
             // Give the search box the initial focus.
             SearchBox.Focus();
@@ -43,29 +60,16 @@ namespace MusicCatalog
 
         private async void ButtonPlayAsync_OnClick(object sender, RoutedEventArgs e)
         {
-            await this.AudioManager.Load(@"C:\Music\Richard Edwards - The Bride On The Boxcar - A Decade Of Margot Rarities- 2004-2014 - 46 Jesus Breaks Your Heart - Demo.mp3");
-            this.NowPlayingAlbumArt.Source = this.AudioManager.AlbumArtForCurrentTrack();
             this.AudioManager.Play();
-
             this.ButtonPlay.Visibility = Visibility.Collapsed;
-            this.ButtonResume.Visibility = Visibility.Collapsed;
             this.ButtonPause.Visibility = Visibility.Visible;
         }
 
         private void ButtonPause_OnClick(object sender, RoutedEventArgs e)
         {
             this.AudioManager.Pause();
-            this.ButtonPlay.Visibility = Visibility.Collapsed;
-            this.ButtonResume.Visibility = Visibility.Visible;
+            this.ButtonPlay.Visibility = Visibility.Visible;
             this.ButtonPause.Visibility = Visibility.Collapsed;
-        }
-
-        private void ButtonResume_OnClick(object sender, RoutedEventArgs e)
-        {
-            this.AudioManager.Resume();
-            this.ButtonPlay.Visibility = Visibility.Collapsed;
-            this.ButtonResume.Visibility = Visibility.Collapsed;
-            this.ButtonPause.Visibility = Visibility.Visible;
         }
 
         private void ButtonBack_OnClick(object sender, RoutedEventArgs e)
@@ -85,6 +89,16 @@ namespace MusicCatalog
             {
                 this.AudioManager.FastForward();
             }
+        }
+
+        /// <summary>
+        /// Loads the current filename into the AudioManager and prepares the UI for playback.
+        /// </summary>
+        /// <param name="fileName"></param>
+        private async Task Load(string fileName)
+        {
+            await this.AudioManager.Load(fileName);
+            this.NowPlayingAlbumArt.Source = this.AudioManager.AlbumArtForCurrentTrack();
         }
     }
 }

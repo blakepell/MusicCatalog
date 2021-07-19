@@ -189,17 +189,6 @@ namespace MusicCatalog.Common
             _playTimer.Stop();
         }
 
-        public void Resume()
-        {
-            if (this.WaveOut == null)
-            {
-                return;
-            }
-
-            this.WaveOut.Play();
-            _playTimer.Start();
-        }
-
         public void Rewind()
         {
             if (this.Mp3Reader != null)
@@ -215,7 +204,7 @@ namespace MusicCatalog.Common
             if (this.Mp3Reader != null)
             {
                 this.WaveOut.Stop();
-                this.Mp3Reader.Position = this.Mp3Reader.Length;
+                this.Mp3Reader.Position = this.Mp3Reader.Length - 1;
                 this.UpdatePlayTime();
             }
         }

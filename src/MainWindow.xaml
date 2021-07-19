@@ -119,23 +119,6 @@
                         </Button.Content>
                     </Button>
 
-                    <!-- Resume -->
-                    <Button x:Name="ButtonResume"
-                            Style="{StaticResource ButtonRevealStyle}" 
-                            HorizontalContentAlignment="Center"
-                            Background="Transparent"
-                            Visibility="Collapsed"
-                            Click="ButtonResume_OnClick">
-                        <Button.Content>
-                            <iconPacks:PackIconVaadinIcons Kind="Play" 
-                                                           Margin="10"
-                                                           Height="20"
-                                                           Width="20"
-                                                           Background="Transparent" 
-                                                           HorizontalAlignment="Center" />
-                        </Button.Content>
-                    </Button>
-
                     <!-- Pause -->
                     <Button x:Name="ButtonPause"
                             Style="{StaticResource ButtonRevealStyle}" 
