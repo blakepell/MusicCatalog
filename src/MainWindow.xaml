@@ -154,9 +154,11 @@
                     </Button>
 
                     <!-- Forward -->
-                    <Button Style="{StaticResource ButtonRevealStyle}"
+                    <Button x:Name="ButtonForward"
+                            Style="{StaticResource ButtonRevealStyle}"
                             HorizontalContentAlignment="Center" 
-                            Background="Transparent">
+                            Background="Transparent"
+                            Click="ButtonForward_OnClick">
                         <Button.Content>
                             <iconPacks:PackIconVaadinIcons Kind="StepForward"
                                                            Margin="10"
@@ -204,17 +206,16 @@
                         </Image>
                     </fw:DropShadowPanel>
 
-                    <StackPanel Orientation="Vertical" Margin="8,7,0,0">
-                        <TextBlock Text="{Binding NowPlayingSongTitle}" FontSize="16" FontWeight="SemiBold"></TextBlock>
-                        <TextBlock Text="{Binding NowPlayingArtist}" FontSize="14"></TextBlock>
-                        <TextBlock Text="{Binding NowPlayingAlbum}" FontSize="14"></TextBlock>
+                    <StackPanel x:Name="StackPanelNowPlaying" Orientation="Vertical" Margin="8,7,0,0">
+                        <TextBlock Text="{Binding Path=AudioManager.NowPlayingSongTitle}" FontSize="16" FontWeight="SemiBold"></TextBlock>
+                        <TextBlock Text="{Binding Path=AudioManager.NowPlayingArtist}" FontSize="14"></TextBlock>
+                        <TextBlock Text="{Binding Path=AudioManager.NowPlayingAlbum}" FontSize="14"></TextBlock>
                         
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding NowPlayingCurrentTime}" FontSize="12"></TextBlock>
+                            <TextBlock Text="{Binding Path=AudioManager.NowPlayingCurrentTime}" FontSize="12"></TextBlock>
                             <TextBlock Text=" / "></TextBlock>
-                            <TextBlock Text="{Binding NowPlayingTotalTime}" FontSize="12"></TextBlock>
+                            <TextBlock Text="{Binding Path=AudioManager.NowPlayingTotalTime}" FontSize="12"></TextBlock>
                         </StackPanel>
-
                     </StackPanel>
                 </StackPanel>
 

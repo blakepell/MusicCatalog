@@ -72,27 +72,5 @@ namespace MusicCatalog.Common
             _mainWindow.InfoOverlay.ProgressIsActive = false;
             _mainWindow.InfoOverlay.Visibility = Visibility.Collapsed;
         }
-
-        /// <summary>
-        /// Sets the now playing information.
-        /// </summary>
-        /// <param name="songTitle"></param>
-        /// <param name="artist"></param>
-        /// <param name="album"></param>
-        public void SetNowPlaying(string songTitle, string artist, string album)
-        {
-            // If it doesn't have access then execute the same function on the UI thread, otherwise just run it.
-            if (!Application.Current.Dispatcher.CheckAccess())
-            {
-                Application.Current.Dispatcher.BeginInvoke(new Action(this.HideInfoOverlay));
-                return;
-            }
-
-            _mainWindow.NowPlayingSongTitle = songTitle;
-            _mainWindow.NowPlayingArtist = artist;
-            _mainWindow.NowPlayingAlbum = album;
-        }
-
-
     }
 }
