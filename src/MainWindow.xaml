@@ -47,7 +47,9 @@
 
                 <!-- Search Box -->
                 <controls:NavSearchBox x:Name="SearchBox" Margin="0,5,0,0"
-                                       ActiveBrush="Transparent"></controls:NavSearchBox>
+                                       ActiveBrush="Transparent"
+                                       Search="SearchBox_OnSearch">
+                </controls:NavSearchBox>
 
                 <!-- Nav Buttons Top -->
                 <controls:NavButton Text="Home" 

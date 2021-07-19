@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using MusicCatalog.Common;
 using MusicCatalog.Pages;
 using System.Windows;
+using System.Windows.Navigation;
 using TagLib.IFD.Entries;
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -24,7 +25,6 @@ namespace MusicCatalog
         {
             InitializeComponent();
             this.AudioManager = new AudioManager();
-
             this.AudioManager.PlaybackStopped = new((e =>
             {
                 if (this.AudioManager.Mp3Reader.Position == this.AudioManager.Mp3Reader.Length
@@ -36,6 +36,8 @@ namespace MusicCatalog
             }));
 
             this.DataContext = this;
+
+            MainFrame.LoadCompleted += MainFrameOnLoadCompleted;
         }
 
         private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
@@ -99,6 +101,21 @@ namespace MusicCatalog
         {
             await this.AudioManager.Load(fileName);
             this.NowPlayingAlbumArt.Source = this.AudioManager.AlbumArtForCurrentTrack();
+        }
+
+        /// <summary>
+        /// Navigates to the search page and passes the search parameter.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SearchBox_OnSearch(object? sender, string e)
+        {
+            // Navigate to the first page we're going to show the user.
+            MainFrame.Navigate(typeof(SearchPage), e);
+        }
+
+        private void MainFrameOnLoadCompleted(object sender, NavigationEventArgs e)
+        {
         }
     }
 }
