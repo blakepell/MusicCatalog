@@ -10,10 +10,13 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Search Results">
     <Grid>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="> Search Results for '"></TextBlock>
-            <TextBlock x:Name="TextBlockSearchTerm"></TextBlock>
-            <TextBlock Text="'"></TextBlock>
+        <StackPanel Orientation="Horizontal" Margin="10,40,0,0">
+            <TextBlock Text="Search Results for '" FontSize="18"></TextBlock>
+            <TextBlock x:Name="TextBlockSearchTerm" 
+                       FontSize="18"
+                       Text="{Binding SearchText}"></TextBlock>
+            <TextBlock Text="' >"
+                       FontSize="18"></TextBlock>
         </StackPanel>
     </Grid>
 </Page>

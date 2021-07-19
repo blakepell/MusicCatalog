@@ -39,9 +39,7 @@ namespace MusicCatalog.Pages
                 {
                     TextBlockTest.Text += $"{songCount} songs listed.\r\n";
                 }
-
             }
-
         }
     }
 }

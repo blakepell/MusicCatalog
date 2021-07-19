@@ -1,28 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/*
+ * Music Catalog
+ *
+ * @project lead      : Blake Pell
+ * @website           : http://www.blakepell.com
+ * @copyright         : Copyright (c), 2018-2021 All rights reserved.
+ * @license           : MIT
+ */
+
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MusicCatalog.Pages
 {
-    /// <summary>
-    /// Interaction logic for SearchPage.xaml
-    /// </summary>
-    public partial class SearchPage : Page
+    public partial class SearchPage
     {
+        public static readonly DependencyProperty SearchTextProperty = DependencyProperty.Register(
+            nameof(SearchText), typeof(string), typeof(SearchPage), new PropertyMetadata(default(string)));
+
+        public string SearchText
+        {
+            get => (string) GetValue(SearchTextProperty);
+            set => SetValue(SearchTextProperty, value);
+        }
         public SearchPage()
         {
             InitializeComponent();
+            this.DataContext = this;
         }
     }
 }

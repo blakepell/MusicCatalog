@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using MusicCatalog.Common;
 using MusicCatalog.Pages;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Navigation;
 using TagLib.IFD.Entries;
 // ReSharper disable MemberCanBePrivate.Global
@@ -114,8 +115,19 @@ namespace MusicCatalog
             MainFrame.Navigate(typeof(SearchPage), e);
         }
 
+        /// <summary>
+        /// When a frame navigation load is completed this will fire.  We can use this
+        /// to pass values in the <see cref="NavigationEventArgs"/> to the actual <see cref="Page"/>
+        /// that will be using them.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MainFrameOnLoadCompleted(object sender, NavigationEventArgs e)
         {
+            if (e.Content is SearchPage page && e.ExtraData != null)
+            {
+                page.SearchText = e.ExtraData.ToString();
+            }
         }
     }
 }
