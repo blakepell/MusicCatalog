@@ -7,10 +7,18 @@
  * @license           : MIT
  */
 
+using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using MusicCatalog.Pages;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using NAudio.Wave;
+using TagLib;
+using Argus.Extensions;
 
 namespace MusicCatalog
 {
@@ -43,9 +51,29 @@ namespace MusicCatalog
             set => SetValue(NowPlayingAlbumProperty, value);
         }
 
+        public static readonly DependencyProperty NowPlayingTotalTimeProperty = DependencyProperty.Register(
+            nameof(NowPlayingTotalTime), typeof(string), typeof(MainWindow), new PropertyMetadata("0:00"));
+
+        public string NowPlayingTotalTime
+        {
+            get => (string) GetValue(NowPlayingTotalTimeProperty);
+            set => SetValue(NowPlayingTotalTimeProperty, value);
+        }
+
+        public static readonly DependencyProperty PropertyTypeProperty = DependencyProperty.Register(
+            nameof(NowPlayingCurrentTime), typeof(string), typeof(MainWindow), new PropertyMetadata("0:00"));
+
+        public string NowPlayingCurrentTime
+        {
+            get => (string) GetValue(PropertyTypeProperty);
+            set => SetValue(PropertyTypeProperty, value);
+        }
+
         private WaveOutEvent _waveOut;
 
         private Mp3FileReader _mp3Reader;
+
+        private DispatcherTimer _playTimer;
 
         public MainWindow()
         {
@@ -55,6 +83,13 @@ namespace MusicCatalog
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
+            _playTimer = new();
+            _playTimer.Tick += new EventHandler(delegate(object? o, EventArgs args)
+            {
+                this.NowPlayingCurrentTime = $"{_mp3Reader.CurrentTime.Minutes}:{(_mp3Reader.CurrentTime.Seconds > 9 ? _mp3Reader.CurrentTime.Seconds : "0" + _mp3Reader.CurrentTime.Seconds)}";
+            });
+            _playTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+
             // Navigate to the first page we're going to show the user.
             MainFrame.Navigate(typeof(HomePage));
 
@@ -62,7 +97,7 @@ namespace MusicCatalog
             SearchBox.Focus();
         }
 
-        private void ButtonBack_OnClick(object sender, RoutedEventArgs e)
+        private void ButtonPageBack_OnClick(object sender, RoutedEventArgs e)
         {
             if (MainFrame.CanGoBack)
             {
@@ -85,11 +120,20 @@ namespace MusicCatalog
             this.Resume();
         }
 
+        public void Back()
+        {
+            if (_mp3Reader != null)
+            {
+                _mp3Reader.Position = 0;
+            }
+        }
+
         public async Task Play(string fileName)
         {
             if (_waveOut == null)
             {
                 _waveOut = new();
+                _waveOut.PlaybackStopped += _waveOut_PlaybackStopped;
             }
 
             if (_mp3Reader != null)
@@ -98,9 +142,34 @@ namespace MusicCatalog
                 await _mp3Reader.DisposeAsync();
             }
 
+            var song = TagLib.File.Create(fileName);
+            this.NowPlayingSongTitle = song.Tag.Title;
+            this.NowPlayingArtist = song.Tag.FirstAlbumArtist;
+            this.NowPlayingAlbum = song.Tag.Album;
+
+            var cs = song.Tag.Pictures.FirstOrDefault();
+
+            if (cs != default(IPicture))
+            {
+                using (var stream = new MemoryStream(cs.Data.Data))
+                {
+                    var bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.StreamSource = stream;
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.EndInit();
+                    bitmap.Freeze();
+                    this.NowPlayingAlbumArt.Source = bitmap;
+                }
+            }
+
             _mp3Reader = new(fileName);
+
+            this.NowPlayingTotalTime = $"{_mp3Reader.TotalTime.Minutes}:{(_mp3Reader.TotalTime.Seconds > 9 ? _mp3Reader.TotalTime.Seconds : "0" + _mp3Reader.TotalTime.Seconds)}";
+
             _waveOut?.Init(_mp3Reader);
             _waveOut.Play();
+            _playTimer.Start();
 
             ButtonPlay.Visibility = Visibility.Collapsed;
             ButtonResume.Visibility = Visibility.Collapsed;
@@ -110,10 +179,17 @@ namespace MusicCatalog
         public void Resume()
         {
             _waveOut?.Play();
-
+            _playTimer.Start();
             ButtonPlay.Visibility = Visibility.Collapsed;
             ButtonResume.Visibility = Visibility.Collapsed;
             ButtonPause.Visibility = Visibility.Visible;
+        }
+
+        private void _waveOut_PlaybackStopped(object sender, StoppedEventArgs e)
+        {
+            this.Stop();
+            _playTimer.Stop();
+            this.Title = "Stopped @" + DateTime.Now.ToString();
         }
 
         public void Pause()
@@ -124,11 +200,31 @@ namespace MusicCatalog
             }
 
             _waveOut?.Pause();
+            _playTimer.Stop();
 
             ButtonPlay.Visibility = Visibility.Collapsed;
             ButtonResume.Visibility = Visibility.Visible;
             ButtonPause.Visibility = Visibility.Collapsed;
         }
 
+        public void Stop()
+        {
+            if (_waveOut == null)
+            {
+                return;
+            }
+
+            _waveOut?.Stop();
+            _playTimer.Stop();
+
+            ButtonPlay.Visibility = Visibility.Visible;
+            ButtonResume.Visibility = Visibility.Collapsed;
+            ButtonPause.Visibility = Visibility.Collapsed;
+        }
+
+        private void ButtonBack_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.Back();
+        }
     }
 }

@@ -26,13 +26,13 @@
             <!-- Back Button and Window Title -->
             <StackPanel DockPanel.Dock="Top">
                 <StackPanel Orientation="Horizontal">
-                    <Button x:Name="ButtonBack"
+                    <Button x:Name="ButtonPageBack"
                             Width="46" Height="29"
                             BorderThickness="0"
                             Background="Transparent"
                             WindowChrome.IsHitTestVisibleInChrome="True"
                             Style="{StaticResource ButtonRevealStyle}"
-                            Click="ButtonBack_OnClick">
+                            Click="ButtonPageBack_OnClick">
                         <Button.Content>
                             <iconPacks:PackIconZondicons Kind="ArrowThinLeft" />
                         </Button.Content>
@@ -88,9 +88,11 @@
             <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <!-- Backwards -->
-                    <Button Style="{StaticResource ButtonRevealStyle}" 
+                    <Button x:Name="ButtonBack"
+                            Style="{StaticResource ButtonRevealStyle}" 
                             HorizontalContentAlignment="Center" 
-                            Background="Transparent">
+                            Background="Transparent"
+                            Click="ButtonBack_OnClick">
                         <Button.Content>
                             <iconPacks:PackIconVaadinIcons Kind="StepBackward"
                                                            Margin="10"
@@ -193,16 +195,26 @@
 
                 <StackPanel Grid.Column="0" Grid.Row="2" 
                                 Orientation="Horizontal" Background="#800078D7">
-                    <Image Margin="10">
-                        <Image.Source>
-                            <BitmapImage UriSource="/Assets/Unknown.png"></BitmapImage>
-                        </Image.Source>
-                    </Image>
 
-                    <StackPanel Orientation="Vertical" Margin="0,7,0,0">
+                    <fw:DropShadowPanel ShadowMode="Content" ShadowDepth="0" Background="Transparent">
+                        <Image x:Name="NowPlayingAlbumArt" Margin="10">
+                            <Image.Source>
+                                <BitmapImage UriSource="/Assets/Unknown.png"></BitmapImage>
+                            </Image.Source>
+                        </Image>
+                    </fw:DropShadowPanel>
+
+                    <StackPanel Orientation="Vertical" Margin="8,7,0,0">
                         <TextBlock Text="{Binding NowPlayingSongTitle}" FontSize="16" FontWeight="SemiBold"></TextBlock>
                         <TextBlock Text="{Binding NowPlayingArtist}" FontSize="14"></TextBlock>
                         <TextBlock Text="{Binding NowPlayingAlbum}" FontSize="14"></TextBlock>
+                        
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding NowPlayingCurrentTime}" FontSize="12"></TextBlock>
+                            <TextBlock Text=" / "></TextBlock>
+                            <TextBlock Text="{Binding NowPlayingTotalTime}" FontSize="12"></TextBlock>
+                        </StackPanel>
+
                     </StackPanel>
                 </StackPanel>
 
