@@ -10,6 +10,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <!-- FluentWPF Controls -->
+                <ResourceDictionary Source="Resources/DataTemplates.xaml" />
                 <ResourceDictionary Source="/FluentWPF;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="/ModernWpf;component/Styles/Pivot.xaml" />
                 <ResourceDictionary Source="/ModernWpf;component/Styles/ListView.xaml" />

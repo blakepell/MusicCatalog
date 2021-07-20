@@ -7,13 +7,12 @@
  * @license           : MIT
  */
 
-using System.Threading.Tasks;
 using MusicCatalog.Common;
 using MusicCatalog.Pages;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
-using TagLib.IFD.Entries;
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace MusicCatalog
@@ -26,18 +25,7 @@ namespace MusicCatalog
         {
             InitializeComponent();
             this.AudioManager = new AudioManager();
-            this.AudioManager.PlaybackStopped = new((e =>
-            {
-                //if (this.AudioManager.Mp3Reader.Position == this.AudioManager.Mp3Reader.Length
-                //    || this.AudioManager.Mp3Reader.Position + 1 >= this.AudioManager.Mp3Reader.Length)
-                //{
-                //    this.ButtonPlay.Visibility = Visibility.Visible;
-                //    this.ButtonPause.Visibility = Visibility.Collapsed;
-                //}
-            }));
-
             this.DataContext = this;
-
             MainFrame.LoadCompleted += MainFrameOnLoadCompleted;
         }
 
