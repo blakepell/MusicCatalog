@@ -113,11 +113,11 @@ namespace MusicCatalog
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MainFrameOnLoadCompleted(object sender, NavigationEventArgs e)
+        private async void MainFrameOnLoadCompleted(object sender, NavigationEventArgs e)
         {
             if (e.Content is SearchPage page && e.ExtraData != null)
             {
-                page.SearchText = e.ExtraData.ToString();
+                await page.ExecuteSearch(e.ExtraData.ToString());
             }
         }
     }

@@ -13,6 +13,7 @@ using MusicCatalog.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Argus.Diagnostics;
 
 namespace MusicCatalog.Common
 {
@@ -34,5 +35,18 @@ namespace MusicCatalog.Common
             return await db.QueryAsync<Track>($"SELECT * FROM Track Where PlayCount > 0 ORDER BY DateLastPlayed DESC LIMIT {count}");
         }
 
+        public static async Task<IEnumerable<Track>> SearchTracks(string searchTerm)
+        {
+            searchTerm = searchTerm.Replace('*', '%');
+
+            if (!searchTerm.Contains('%'))
+            {
+                searchTerm = $"%{searchTerm}%";
+            }
+
+            await using var db = AppServices.GetService<SqliteConnection>();
+            await db.OpenAsync();
+            return await db.QueryAsync<Track>($"SELECT * FROM Track WHERE FileName LIKE @searchTerm", new { searchTerm });
+        }
     }
 }

@@ -5,7 +5,7 @@
     <!-- DataTemplate to show the XAML for the large track display -->
     <DataTemplate x:Key="TrackTemplate">
         <UniformGrid Width="150" Height="175">
-            <StackPanel Orientation="Vertical" Cursor="Hand">
+            <ui:SimpleStackPanel Orientation="Vertical" Cursor="Hand">
                 <fluentWpf:DropShadowPanel 
                     ShadowMode="Content"
                     ShadowDepth="10">
@@ -23,7 +23,7 @@
                            FontSize="12" Foreground="Gray"
                            Text="{Binding Tags.Tag.FirstPerformer, Mode=OneTime}" 
                            TextWrapping="Wrap"></TextBlock>
-            </StackPanel>
+            </ui:SimpleStackPanel>
         </UniformGrid>
     </DataTemplate>
 

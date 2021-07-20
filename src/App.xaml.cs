@@ -17,11 +17,14 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace MusicCatalog
 {
     public partial class App
     {
+        internal static BitmapImage DefaultAlbumArt;
+
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
             var appSettings = ConfigsTools.GetConfigs<AppSettings>();
@@ -53,6 +56,14 @@ namespace MusicCatalog
                 appSettings.MusicDirectoryList.Add(new IndexDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonMusic)));
                 appSettings.MusicDirectoryList.Add(new IndexDirectory(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic)));
             }
+
+            // Since this will be used a lot we're going to cache a static copy that's frozen.
+            DefaultAlbumArt = new BitmapImage(new Uri("Assets/Unknown.png", UriKind.Relative))
+            {
+                CacheOption = BitmapCacheOption.OnLoad
+            };
+
+            DefaultAlbumArt.Freeze();
 
             mainWindow.Show();
         }

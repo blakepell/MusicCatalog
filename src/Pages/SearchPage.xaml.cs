@@ -7,8 +7,12 @@
  * @license           : MIT
  */
 
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using ModernWpf.Controls;
+using MusicCatalog.Common;
+using MusicCatalog.Common.Models;
 
 namespace MusicCatalog.Pages
 {
@@ -26,6 +30,26 @@ namespace MusicCatalog.Pages
         {
             InitializeComponent();
             this.DataContext = this;
+        }
+
+        private async void SearchResultsView_OnItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (e.ClickedItem is Track tr)
+            {
+                var conveyor = AppServices.CreateInstance<Conveyor>();
+                await conveyor.PlayTrack(tr.FilePath);
+            }
+        }
+
+        public async Task ExecuteSearch()
+        {
+            SearchResultsView.ItemsSource = await DbTasks.SearchTracks(this.SearchText);
+        }
+
+        public async Task ExecuteSearch(string searchTerm)
+        {
+            this.SearchText = searchTerm;
+            await this.ExecuteSearch();
         }
     }
 }

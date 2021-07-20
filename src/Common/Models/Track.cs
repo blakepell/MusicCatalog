@@ -9,6 +9,7 @@
 
 using Dapper.Contrib.Extensions;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Media.Imaging;
@@ -72,14 +73,6 @@ namespace MusicCatalog.Common.Models
             }
         }
 
-        public string Title
-        {
-            get
-            {
-                return "derp";
-            }
-        }
-
         [Write(false)]
         [JsonIgnore]
         public BitmapImage AlbumArt
@@ -90,14 +83,14 @@ namespace MusicCatalog.Common.Models
 
                 if (tags.Tag == null)
                 {
-                    return new BitmapImage(new Uri("/Assets/Unknown.png", UriKind.Relative));
+                    return App.DefaultAlbumArt;
                 }
 
                 var cs = tags.Tag.Pictures.FirstOrDefault();
 
-                if (cs == default(IPicture))
+                if (cs == default(IPicture) || cs.Type == PictureType.NotAPicture)
                 {
-                    return new BitmapImage(new Uri("/Assets/Unknown.png", UriKind.Relative));
+                    return App.DefaultAlbumArt;
                 }
 
                 using (var stream = new MemoryStream(cs.Data.Data))
