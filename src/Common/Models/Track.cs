@@ -9,6 +9,11 @@
 
 using Dapper.Contrib.Extensions;
 using System;
+using System.IO;
+using System.Linq;
+using System.Windows.Media.Imaging;
+using Newtonsoft.Json;
+using TagLib;
 
 namespace MusicCatalog.Common.Models
 {
@@ -37,6 +42,8 @@ namespace MusicCatalog.Common.Models
 
         public bool Favorite { get; set; }
 
+        public int PlayCount { get; set; }
+
         public DateTime DateCreated { get; set; }
 
         public DateTime DateModified { get; set; }
@@ -46,5 +53,64 @@ namespace MusicCatalog.Common.Models
         public DateTime DateLastPlayed { get; set; }
 
         public bool TagsProcessed { get; set; }
+
+        private TagLib.File _tags;
+
+        [Write(false)]
+        [JsonIgnore]
+        public TagLib.File Tags
+        {
+            get
+            {
+                if (_tags != null)
+                {
+                    return _tags;
+                }
+
+                _tags = TagLib.File.Create(FilePath);
+                return _tags;
+            }
+        }
+
+        public string Title
+        {
+            get
+            {
+                return "derp";
+            }
+        }
+
+        [Write(false)]
+        [JsonIgnore]
+        public BitmapImage AlbumArt
+        {
+            get
+            {
+                var tags = TagLib.File.Create(FilePath);
+
+                if (tags.Tag == null)
+                {
+                    return new BitmapImage(new Uri("/Assets/Unknown.png", UriKind.Relative));
+                }
+
+                var cs = tags.Tag.Pictures.FirstOrDefault();
+
+                if (cs == default(IPicture))
+                {
+                    return new BitmapImage(new Uri("/Assets/Unknown.png", UriKind.Relative));
+                }
+
+                using (var stream = new MemoryStream(cs.Data.Data))
+                {
+                    var bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.StreamSource = stream;
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.EndInit();
+                    bitmap.Freeze();
+                    return bitmap;
+                }
+            }
+        }
     }
 }

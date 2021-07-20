@@ -12,6 +12,9 @@ using Microsoft.Data.Sqlite;
 using MusicCatalog.Common;
 using System.Windows;
 using System.Windows.Controls;
+using ModernWpf.Controls;
+using MusicCatalog.Common.Models;
+using GridView = ModernWpf.Controls.GridView;
 
 namespace MusicCatalog.Pages
 {
@@ -20,6 +23,7 @@ namespace MusicCatalog.Pages
         public HomePage()
         {
             InitializeComponent();
+            this.DataContext = this;
         }
 
         /// <summary>
@@ -28,17 +32,25 @@ namespace MusicCatalog.Pages
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void HomePage_OnLoaded(object sender, RoutedEventArgs e)
+        private async void HomePage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            using (var db = AppServices.GetService<SqliteConnection>())
-            {
-                db.Open();
-                int songCount = db.ExecuteScalar<int>("select count(*) from track");
+            RecentPlaysView.ItemsSource = await DbTasks.RecentPlays(5);
+        }
 
-                for (int i = 0; i < 10; i++)
-                {
-                    TextBlockTest.Text += $"{songCount} songs listed.\r\n";
-                }
+        private async void RecentPlaysView_OnItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (e.ClickedItem is Track tr)
+            {
+                var conveyor = AppServices.CreateInstance<Conveyor>();
+                await conveyor.PlayTrack(tr.FilePath);
+            }
+        }
+
+        private void RecentPlaysView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is GridView gv)
+            {
+                gv.SelectedIndex = -1;
             }
         }
     }

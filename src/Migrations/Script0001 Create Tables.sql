@@ -33,6 +33,7 @@ CREATE TABLE Track (
     FileSize         INTEGER NOT NULL,
     TrackName        TEXT,
     Favorite         INTEGER,
+    PlayCount        INTEGER,
     DateCreated      TEXT    NOT NULL,
     DateModified     TEXT    NOT NULL,
     DateLastIndexed  TEXT    NOT NULL,

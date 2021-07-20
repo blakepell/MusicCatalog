@@ -47,8 +47,10 @@ namespace MusicCatalog
             MainFrame.Navigate(typeof(HomePage));
 
             // TODO: Temp, remove this but show the last song played if it exists.
-            await this.Load(@"C:\Music\Richard Edwards - The Bride On The Boxcar - A Decade Of Margot Rarities- 2004-2014 - 46 Jesus Breaks Your Heart - Demo.mp3");
-
+            await this.Load(@"C:\Music\Blake Pell - Pandemic - Quiet as a Mouse (June 2020).mp3");
+            //await this.Load("C:\\Music\\Blake Pell - Pandemic - Jesus Breaks Your Heart (June 2021).mp3");
+            //await this.Load(@"C:\Music\Richard Edwards - The Bride On The Boxcar - A Decade Of Margot Rarities- 2004-2014 - 46 Jesus Breaks Your Heart - Demo.mp3");
+            // await this.Load(@"C:\Music\The Beatles - I Don't Want To Spoil The Party (Remastered).mp3");
             // Give the search box the initial focus.
             SearchBox.Focus();
         }
@@ -98,7 +100,7 @@ namespace MusicCatalog
         /// Loads the current filename into the AudioManager and prepares the UI for playback.
         /// </summary>
         /// <param name="fileName"></param>
-        private async Task Load(string fileName)
+        public async Task Load(string fileName)
         {
             await this.AudioManager.Load(fileName);
             this.NowPlayingAlbumArt.Source = this.AudioManager.AlbumArtForCurrentTrack();

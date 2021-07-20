@@ -10,7 +10,69 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Home">
-    <Grid>
-        <TextBlock x:Name="TextBlockTest">This is the home page.  Welcome.</TextBlock>
+    <Page.Resources>
+        <!-- This style is used for buttons and other controls, to remove the WPF default 'animated' mouse over effect -->
+        <Style x:Key="GridViewItemStyle" TargetType="ui:GridViewItem">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ui:GridViewItem">
+                        <Border Name="border" 
+                                BorderThickness="0"
+                                BorderBrush="Transparent" 
+                                Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="Transparent" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate x:Key="TrackTemplate">
+            <UniformGrid Width="150" Height="175">
+                <StackPanel Orientation="Vertical" Cursor="Hand">
+                    <fluentWpf:DropShadowPanel 
+                        ShadowMode="Content"
+                        ShadowDepth="10">
+                        <Image
+                               Margin="0,0,10,0"
+                               Stretch="UniformToFill"
+                               Height="128" Width="128"
+                               Source="{Binding AlbumArt, Mode=OneTime}">
+                        </Image>
+                    </fluentWpf:DropShadowPanel>
+                    <TextBlock Margin="5,10,0,0"
+                               FontSize="12" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"
+                               Text="{Binding Tags.Tag.Title, Mode=OneTime}"></TextBlock>
+                    <TextBlock Grid.Row="1" Height="40"
+                               Margin="5,0,0,0"
+                               FontSize="12" Foreground="Gray"
+                               Text="{Binding Tags.Tag.FirstPerformer, Mode=OneTime}" 
+                               TextWrapping="Wrap"></TextBlock>
+                </StackPanel>
+            </UniformGrid>
+        </DataTemplate>
+    </Page.Resources>
+    <Grid Margin="10,40,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Recently Played Tracks >" FontSize="18"></TextBlock>
+        <ui:GridView Grid.Row="1"
+            x:Name="RecentPlaysView"
+            Margin="0,10,0,0"
+            ItemTemplate="{StaticResource TrackTemplate}"
+            IsItemClickEnabled="True"
+            SelectionMode="Single" ItemContainerStyle="{StaticResource GridViewItemStyle}"
+            SelectionChanged="RecentPlaysView_OnSelectionChanged"
+            ItemClick="RecentPlaysView_OnItemClick">
+        </ui:GridView>
     </Grid>
 </Page>

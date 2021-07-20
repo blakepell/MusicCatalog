@@ -8,6 +8,7 @@
  */
 
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace MusicCatalog.Common
@@ -71,6 +72,23 @@ namespace MusicCatalog.Common
 
             _mainWindow.InfoOverlay.ProgressIsActive = false;
             _mainWindow.InfoOverlay.Visibility = Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// Plays the audio of the specified file.
+        /// </summary>
+        /// <param name="fileName"></param>
+        public async Task PlayTrack(string fileName)
+        {
+            // If it doesn't have access then execute the same function on the UI thread, otherwise just run it.
+            if (!Application.Current.Dispatcher.CheckAccess())
+            {
+                _ = Application.Current.Dispatcher.BeginInvoke(new Action(async () => await PlayTrack(fileName)));
+                return;
+            }
+
+            await _mainWindow.Load(fileName);
+            _mainWindow.AudioManager.Play();
         }
     }
 }

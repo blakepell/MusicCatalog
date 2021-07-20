@@ -15,6 +15,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using Dapper;
+using Microsoft.Data.Sqlite;
 using TagLib;
 
 namespace MusicCatalog.Common
@@ -102,6 +104,11 @@ namespace MusicCatalog.Common
                 this.WaveOut.PlaybackStopped += WaveOut_PlaybackStopped;
             }
 
+            if (this.WaveOut.PlaybackState != PlaybackState.Stopped)
+            {
+                this.WaveOut.Stop();
+            }
+
             if (this.Mp3Reader != null)
             {
                 this.WaveOut.Stop();
@@ -118,9 +125,10 @@ namespace MusicCatalog.Common
             this.WaveOut.Init(this.Mp3Reader);
 
             this.NowPlayingSongTitle = this.Tags.Tag.Title;
-            this.NowPlayingArtist = this.Tags.Tag.FirstAlbumArtist;
+            this.NowPlayingArtist = this.Tags.Tag.FirstAlbumArtist ?? this.Tags.Tag.FirstPerformer;
             this.NowPlayingAlbum = this.Tags.Tag.Album;
 
+            _ = await DbTasks.UpdateLastPlayed(fileName);
         }
 
         private void WaveOut_PlaybackStopped(object sender, StoppedEventArgs e)
@@ -134,7 +142,7 @@ namespace MusicCatalog.Common
         {
             if (this.Tags == null)
             {
-                return new BitmapImage(new Uri("/Assets/Unknown.png"));
+                return new BitmapImage(new Uri("/Assets/Unknown.png", UriKind.Relative));
             }
 
             var cs = this.Tags.Tag.Pictures.FirstOrDefault();
@@ -152,8 +160,8 @@ namespace MusicCatalog.Common
                     return bitmap;
                 }
             }
-
-            return new BitmapImage(new Uri("/Assets/Unknown.png"));
+            
+            return new BitmapImage(new Uri("/Assets/Unknown.png", UriKind.Relative));
         }
 
         public void Play()
