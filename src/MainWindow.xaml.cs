@@ -28,12 +28,12 @@ namespace MusicCatalog
             this.AudioManager = new AudioManager();
             this.AudioManager.PlaybackStopped = new((e =>
             {
-                if (this.AudioManager.Mp3Reader.Position == this.AudioManager.Mp3Reader.Length
-                    || this.AudioManager.Mp3Reader.Position + 1 >= this.AudioManager.Mp3Reader.Length)
-                {
-                    this.ButtonPlay.Visibility = Visibility.Visible;
-                    this.ButtonPause.Visibility = Visibility.Collapsed;
-                }
+                //if (this.AudioManager.Mp3Reader.Position == this.AudioManager.Mp3Reader.Length
+                //    || this.AudioManager.Mp3Reader.Position + 1 >= this.AudioManager.Mp3Reader.Length)
+                //{
+                //    this.ButtonPlay.Visibility = Visibility.Visible;
+                //    this.ButtonPause.Visibility = Visibility.Collapsed;
+                //}
             }));
 
             this.DataContext = this;
@@ -46,11 +46,6 @@ namespace MusicCatalog
             // Navigate to the first page we're going to show the user.
             MainFrame.Navigate(typeof(HomePage));
 
-            // TODO: Temp, remove this but show the last song played if it exists.
-            await this.Load(@"C:\Music\Blake Pell - Pandemic - Quiet as a Mouse (June 2020).mp3");
-            //await this.Load("C:\\Music\\Blake Pell - Pandemic - Jesus Breaks Your Heart (June 2021).mp3");
-            //await this.Load(@"C:\Music\Richard Edwards - The Bride On The Boxcar - A Decade Of Margot Rarities- 2004-2014 - 46 Jesus Breaks Your Heart - Demo.mp3");
-            // await this.Load(@"C:\Music\The Beatles - I Don't Want To Spoil The Party (Remastered).mp3");
             // Give the search box the initial focus.
             SearchBox.Focus();
         }
@@ -66,19 +61,20 @@ namespace MusicCatalog
         private async void ButtonPlayAsync_OnClick(object sender, RoutedEventArgs e)
         {
             this.AudioManager.Play();
-            this.ButtonPlay.Visibility = Visibility.Collapsed;
-            this.ButtonPause.Visibility = Visibility.Visible;
         }
 
         private void ButtonPause_OnClick(object sender, RoutedEventArgs e)
         {
             this.AudioManager.Pause();
-            this.ButtonPlay.Visibility = Visibility.Visible;
-            this.ButtonPause.Visibility = Visibility.Collapsed;
         }
 
         private void ButtonBack_OnClick(object sender, RoutedEventArgs e)
         {
+            if (this.AudioManager.Mp3Reader == null)
+            {
+                return;
+            }
+
             // If the position is greater than 0 then rewind to the start of the track
             // but continue playing.  If the position is 0, go then start going back
             // through previous songs in the stack.
@@ -90,6 +86,11 @@ namespace MusicCatalog
 
         private void ButtonForward_OnClick(object sender, RoutedEventArgs e)
         {
+            if (this.AudioManager.Mp3Reader == null)
+            {
+                return;
+            }
+
             if (this.AudioManager.Mp3Reader.Position > 0)
             {
                 this.AudioManager.FastForward();

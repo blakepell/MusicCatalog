@@ -15,8 +15,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using Dapper;
-using Microsoft.Data.Sqlite;
 using TagLib;
 
 namespace MusicCatalog.Common
@@ -70,6 +68,15 @@ namespace MusicCatalog.Common
         {
             get => (string)GetValue(PropertyTypeProperty);
             set => SetValue(PropertyTypeProperty, value);
+        }
+
+        public static readonly DependencyProperty IsPlayingProperty = DependencyProperty.Register(
+            nameof(IsPlaying), typeof(bool), typeof(AudioManager), new PropertyMetadata(default(bool)));
+
+        public bool IsPlaying
+        {
+            get => (bool) GetValue(IsPlayingProperty);
+            set => SetValue(IsPlayingProperty, value);
         }
 
         public WaveOutEvent WaveOut { get; private set; }
@@ -135,6 +142,7 @@ namespace MusicCatalog.Common
         {
             this.WaveOut.Stop();
             _playTimer?.Stop();
+            this.IsPlaying = false;
             this.PlaybackStopped?.Invoke(e);
         }
 
@@ -171,7 +179,13 @@ namespace MusicCatalog.Common
                 this.UpdatePlayTime();
             }
 
-            this?.WaveOut.Play();
+            if (this.WaveOut == null)
+            {
+                return;
+            }
+
+            this.WaveOut.Play();
+            this.IsPlaying = true;
             _playTimer.Start();
         }
 
@@ -184,6 +198,7 @@ namespace MusicCatalog.Common
 
             this.WaveOut.Pause();
             _playTimer.Stop();
+            this.IsPlaying = false;
         }
 
         public void Stop()
@@ -195,6 +210,7 @@ namespace MusicCatalog.Common
 
             this.WaveOut.Stop();
             _playTimer.Stop();
+            this.IsPlaying = false;
         }
 
         public void Rewind()
@@ -212,6 +228,7 @@ namespace MusicCatalog.Common
             if (this.Mp3Reader != null)
             {
                 this.WaveOut.Stop();
+                this.IsPlaying = false;
                 this.Mp3Reader.Position = this.Mp3Reader.Length - 1;
                 this.UpdatePlayTime();
             }
@@ -227,6 +244,7 @@ namespace MusicCatalog.Common
         {
             if (this.WaveOut != null)
             {
+                this.IsPlaying = false;
                 this.WaveOut.Stop();
                 this.WaveOut.PlaybackStopped -= WaveOut_PlaybackStopped;
                 this.WaveOut.Dispose();

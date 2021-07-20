@@ -9,12 +9,17 @@
                   xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                   xmlns:controls="clr-namespace:MusicCatalog.Controls"
                   xmlns:pages="clr-namespace:MusicCatalog.Pages"
+                  xmlns:converters="clr-namespace:MusicCatalog.Converters"
                   mc:Ignorable="d"
                   fw:AcrylicWindow.FallbackColor="#66FFFFFF"
                   ui:ThemeManager.RequestedTheme="Light"
                   fw:ExtendViewIntoTitleBar="True"
                   Title="Music Catalog" Height="680" Width="1024"
                   Loaded="MainWindow_OnLoaded">
+    <Window.Resources>
+        <converters:BooleanToCollapsedConverter x:Key="BoolToCollapsedConverter"/>
+        <converters:InvertingBooleanToCollapsedConverter x:Key="InvertingBoolToCollapsedConverter" />
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="225"/>
@@ -109,7 +114,7 @@
                     <Button x:Name="ButtonPlay"
                             Style="{StaticResource ButtonRevealStyle}" 
                             HorizontalContentAlignment="Center" Background="Transparent"
-                            Visibility="Visible"
+                            Visibility="{Binding AudioManager.IsPlaying, Converter={StaticResource InvertingBoolToCollapsedConverter}}"
                             Click="ButtonPlayAsync_OnClick">
                         <Button.Content>
                             <iconPacks:PackIconVaadinIcons Kind="Play" 
@@ -126,7 +131,7 @@
                             Style="{StaticResource ButtonRevealStyle}" 
                             HorizontalContentAlignment="Center"
                             Background="Transparent"
-                            Visibility="Collapsed"
+                            Visibility="{Binding AudioManager.IsPlaying, Converter={StaticResource BoolToCollapsedConverter}}"
                             Click="ButtonPause_OnClick">
                         <Button.Content>
                             <iconPacks:PackIconZondicons Kind="Pause"
@@ -197,7 +202,7 @@
                         <TextBlock Text="{Binding Path=AudioManager.NowPlayingSongTitle}" FontSize="16" FontWeight="SemiBold"></TextBlock>
                         <TextBlock Text="{Binding Path=AudioManager.NowPlayingArtist}" FontSize="14"></TextBlock>
                         <TextBlock Text="{Binding Path=AudioManager.NowPlayingAlbum}" FontSize="14"></TextBlock>
-                        
+
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Path=AudioManager.NowPlayingCurrentTime}" FontSize="12"></TextBlock>
                             <TextBlock Text=" / "></TextBlock>
