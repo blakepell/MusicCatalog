@@ -12,16 +12,16 @@
                     <Image
                         Margin="0,0,10,0"
                         Height="128" Width="128"
-                        Source="{Binding AlbumArt, Mode=OneTime}">
+                        Source="{Binding AlbumArt, Mode=OneTime, IsAsync=True}">
                     </Image>
                 </fluentWpf:DropShadowPanel>
                 <TextBlock Margin="5,10,0,0"
                            FontSize="12" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"
-                           Text="{Binding Tags.Tag.Title, Mode=OneTime}"></TextBlock>
+                           Text="{Binding Tags.Tag.Title, Mode=OneTime, IsAsync=True}"></TextBlock>
                 <TextBlock Grid.Row="1" Height="40"
                            Margin="5,0,0,0"
                            FontSize="12" Foreground="Gray"
-                           Text="{Binding Tags.Tag.FirstPerformer, Mode=OneTime}" 
+                           Text="{Binding Tags.Tag.FirstPerformer, Mode=OneTime, IsAsync=True}" 
                            TextWrapping="Wrap"></TextBlock>
             </ui:SimpleStackPanel>
         </UniformGrid>
