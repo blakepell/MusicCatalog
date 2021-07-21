@@ -55,6 +55,25 @@ namespace MusicCatalog.Common.Models
 
         public bool TagsProcessed { get; set; }
 
+        [JsonIgnore]
+        public string DisplayTrackName
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(this.TrackName))
+                {
+                    return this.TrackName;
+                }
+
+                if (!string.IsNullOrWhiteSpace((Tags?.Tag?.Title)))
+                {
+                    return this.Tags.Tag.Title;
+                }
+
+                return this.FileName;
+            }
+        }
+
         private TagLib.File _tags;
 
         [Write(false)]
@@ -88,20 +107,32 @@ namespace MusicCatalog.Common.Models
 
                 var cs = tags.Tag.Pictures.FirstOrDefault();
 
-                if (cs == default(IPicture) || cs.Type == PictureType.NotAPicture)
+                if (cs == default(IPicture) 
+                    || cs.Type == PictureType.NotAPicture
+                    || cs.Type == PictureType.Other)
                 {
                     return App.DefaultAlbumArt;
                 }
 
-                using (var stream = new MemoryStream(cs.Data.Data))
+                try
                 {
-                    var bitmap = new BitmapImage();
-                    bitmap.BeginInit();
-                    bitmap.StreamSource = stream;
-                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmap.EndInit();
-                    bitmap.Freeze();
-                    return bitmap;
+                    using (var stream = new MemoryStream(cs.Data.Data))
+                    {
+                        var bitmap = new BitmapImage();
+                        bitmap.BeginInit();
+                        //bitmap.DecodePixelHeight = 256;
+                        //bitmap.DecodePixelHeight = 256;
+                        bitmap.StreamSource = stream;
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.EndInit();
+                        bitmap.Freeze();
+                        return bitmap;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
                 }
             }
         }

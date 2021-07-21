@@ -7,12 +7,13 @@
  * @license           : MIT
  */
 
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using ModernWpf.Controls;
 using MusicCatalog.Common;
 using MusicCatalog.Common.Models;
+using MusicCatalog.Common.Commands;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 
 namespace MusicCatalog.Pages
 {
@@ -30,6 +31,7 @@ namespace MusicCatalog.Pages
         {
             InitializeComponent();
             this.DataContext = this;
+            this.CommandBindings.Add(new CommandBinding(DataTemplateCommands.CopyFilePath, MenuItem_CopyFilePathClicked));
         }
 
         private async void SearchResultsView_OnItemClick(object sender, ItemClickEventArgs e)
@@ -51,5 +53,26 @@ namespace MusicCatalog.Pages
             this.SearchText = searchTerm;
             await this.ExecuteSearch();
         }
+
+        /// <summary>
+        /// Attempts to copy the file path from the selected item.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void MenuItem_CopyFilePathClicked(object sender, ExecutedRoutedEventArgs args)
+        {
+            try
+            {
+                if (args?.Parameter != null)
+                {
+                    Clipboard.SetText(args.Parameter.ToString() ?? "");
+                }
+            }
+            catch
+            {
+                // TODO: Log error
+            }
+        }
+
     }
 }

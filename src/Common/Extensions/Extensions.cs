@@ -7,15 +7,11 @@
  * @license           : MIT
  */
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace MusicCatalog.Extensions
+namespace MusicCatalog.Common.Extensions
 {
     /// <summary>
     /// Miscellaneous methods used in this application.

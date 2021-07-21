@@ -75,7 +75,7 @@ namespace MusicCatalog.Common
 
         public bool IsPlaying
         {
-            get => (bool) GetValue(IsPlayingProperty);
+            get => (bool)GetValue(IsPlayingProperty);
             set => SetValue(IsPlayingProperty, value);
         }
 
@@ -150,26 +150,31 @@ namespace MusicCatalog.Common
         {
             if (this.Tags == null)
             {
-                return new BitmapImage(new Uri("/Assets/Unknown.png", UriKind.Relative));
+                return App.DefaultAlbumArt;
             }
 
             var cs = this.Tags.Tag.Pictures.FirstOrDefault();
 
-            if (cs != default(IPicture))
+
+            if (cs == default(IPicture)
+                || cs.Type == PictureType.NotAPicture
+                || cs.Type == PictureType.Other)
             {
-                using (var stream = new MemoryStream(cs.Data.Data))
-                {
-                    var bitmap = new BitmapImage();
-                    bitmap.BeginInit();
-                    bitmap.StreamSource = stream;
-                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmap.EndInit();
-                    bitmap.Freeze();
-                    return bitmap;
-                }
+                return App.DefaultAlbumArt;
             }
-            
-            return new BitmapImage(new Uri("/Assets/Unknown.png", UriKind.Relative));
+
+            using (var stream = new MemoryStream(cs.Data.Data))
+            {
+                var bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.StreamSource = stream;
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.EndInit();
+                bitmap.Freeze();
+                return bitmap;
+            }
+
+            return App.DefaultAlbumArt;
         }
 
         public void Play()

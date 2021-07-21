@@ -7,7 +7,7 @@
  * @license           : MIT
  */
 
-using MusicCatalog.Extensions;
+using MusicCatalog.Common.Extensions;
 using System;
 using System.Windows;
 using System.Windows.Controls;
