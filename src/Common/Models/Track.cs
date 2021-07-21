@@ -8,12 +8,11 @@
  */
 
 using Dapper.Contrib.Extensions;
+using Newtonsoft.Json;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Media.Imaging;
-using Newtonsoft.Json;
 using TagLib;
 
 namespace MusicCatalog.Common.Models

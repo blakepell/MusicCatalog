@@ -11,6 +11,7 @@ using ModernWpf.Controls;
 using MusicCatalog.Common;
 using MusicCatalog.Common.Models;
 using MusicCatalog.Common.Commands;
+using MusicCatalog.Common.Extensions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
