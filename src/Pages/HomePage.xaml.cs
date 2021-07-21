@@ -34,7 +34,7 @@ namespace MusicCatalog.Pages
         /// <param name="e"></param>
         private async void HomePage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            RecentPlaysView.ItemsSource = await DbTasks.RecentPlays(5);
+            RecentPlaysView.ItemsSource = await DbTasks.RecentPlays(15);
         }
 
         private async void RecentPlaysView_OnItemClick(object sender, ItemClickEventArgs e)

@@ -66,7 +66,7 @@ namespace MusicCatalog.Common.Models
 
                 if (!string.IsNullOrWhiteSpace((Tags?.Tag?.Title)))
                 {
-                    return this.Tags.Tag.Title;
+                    return this.Tags?.Tag?.Title;
                 }
 
                 return this.FileName;
