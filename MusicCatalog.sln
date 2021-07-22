@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicCatalog", "src\MusicCatalog.csproj", "{F386E260-E044-4FEB-9BDC-1A52F2DD5BE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicCatalog", "src\MusicCatalog\MusicCatalog.csproj", "{F386E260-E044-4FEB-9BDC-1A52F2DD5BE2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Avalon.Sqlite", "src\Avalon.SQLite\Avalon.Sqlite.csproj", "{23A79339-91C0-409B-8ED1-38ABF1E5C7F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{F386E260-E044-4FEB-9BDC-1A52F2DD5BE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F386E260-E044-4FEB-9BDC-1A52F2DD5BE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F386E260-E044-4FEB-9BDC-1A52F2DD5BE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23A79339-91C0-409B-8ED1-38ABF1E5C7F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23A79339-91C0-409B-8ED1-38ABF1E5C7F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23A79339-91C0-409B-8ED1-38ABF1E5C7F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23A79339-91C0-409B-8ED1-38ABF1E5C7F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

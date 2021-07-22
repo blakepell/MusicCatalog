@@ -9,13 +9,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!-- FluentWPF Controls -->
+                <!-- MusicCatalog Resources -->
                 <ResourceDictionary Source="Resources/DataTemplates.xaml" />
-                <ResourceDictionary Source="/FluentWPF;component/Styles/Controls.xaml" />
-                <ResourceDictionary Source="/ModernWpf;component/Styles/Pivot.xaml" />
-                <ResourceDictionary Source="/ModernWpf;component/Styles/ListView.xaml" />
-                <ResourceDictionary Source="/ModernWpf;component/Styles/CheckBox.xaml" />
-                <ResourceDictionary Source="/ModernWpf;component/Styles/DataGrid.xaml" />
 
                 <ui:ThemeResources>
                     <ui:ThemeResources.ThemeDictionaries>
@@ -26,6 +21,8 @@
                                 <ResourceDictionary Source="/FluentWPF;component/Styles/Brushes.xaml" />
                                 <!-- ModernWPF theme resources -->
                                 <ResourceDictionary Source="/ModernWpf;component/ThemeResources/Light.xaml" />
+                                <!-- Sqlite Query Editor --><!--
+                                <ResourceDictionary Source="/Avalon.Sqlite;component/Resources/Light.xaml" />-->
                             </ResourceDictionary.MergedDictionaries>
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Dark">
@@ -33,16 +30,19 @@
                                 <!-- FluentWPF theme resources -->
                                 <ResourceDictionary Source="/FluentWPF;component/Styles/Colors.Dark.xaml" />
                                 <ResourceDictionary Source="/FluentWPF;component/Styles/Brushes.xaml" />
-                                <!-- ModernWPF theme resources -->
-                                <ResourceDictionary Source="/ModernWpf;component/ThemeResources/Dark.xaml" />
+                                <!-- ModernWPF theme resources --><!--
+                                <ResourceDictionary Source="/ModernWpf;component/ThemeResources/Dark.xaml" />-->
                             </ResourceDictionary.MergedDictionaries>
                             <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" Color="{StaticResource SystemBaseHighColor}" />
                         </ResourceDictionary>
                     </ui:ThemeResources.ThemeDictionaries>
                 </ui:ThemeResources>
 
+                <!-- FluentWPF Controls -->
+                <ResourceDictionary Source="/FluentWPF;component/Styles/Controls.xaml" />
+
                 <!-- ModernWPF controls resources -->
-                <!--<ui:XamlControlsResources />-->
+                <ui:XamlControlsResources />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="Argus.Core" Version="2021.6.26.1" />
+    <PackageReference Include="AvalonEdit" Version="6.1.2.30" />
     <PackageReference Include="Configs" Version="2.0.2" />
     <PackageReference Include="Dapper" Version="2.0.90" />
     <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
@@ -41,6 +42,10 @@
     <PackageReference Include="ModernWpfUI" Version="0.9.4" />
     <PackageReference Include="NAudio" Version="2.0.1" />
     <PackageReference Include="TagLibSharp" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Avalon.SQLite\Avalon.Sqlite.csproj" />
   </ItemGroup>
 
   <ItemGroup>
