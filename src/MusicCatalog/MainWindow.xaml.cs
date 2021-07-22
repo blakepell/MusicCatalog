@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace MusicCatalog
@@ -29,7 +30,7 @@ namespace MusicCatalog
             MainFrame.LoadCompleted += MainFrameOnLoadCompleted;
         }
 
-        private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
+        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
             // Navigate to the first page we're going to show the user.
             MainFrame.Navigate(typeof(HomePage));

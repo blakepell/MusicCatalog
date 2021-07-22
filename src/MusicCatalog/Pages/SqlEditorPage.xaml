@@ -9,7 +9,7 @@
       xmlns:sqlite="clr-namespace:Avalon.Sqlite;assembly=Avalon.Sqlite"
       mc:Ignorable="d"
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="SQLite Query Editor" ui:ThemeManager.RequestedTheme="Light"
+      Title="SQLite Query Editor"
       Loaded="SqlEditorPage_OnLoaded">
     <Grid Margin="0,30,0,0">
         <sqlite:SqliteQueryControl x:Name="QueryControl"></sqlite:SqliteQueryControl>

@@ -9,8 +9,9 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d"
              Loaded="QueryControl_Loaded" Unloaded="SqliteQueryControl_OnUnloaded"
-             Name="QueryControl" Margin="10" 
-             BorderBrush="{StaticResource GridLinesBrush}"
+             Name="QueryControl" Margin="10"
+             Background="{DynamicResource Background}"
+             BorderBrush="{DynamicResource GridLines}"
              BorderThickness="0"
              d:DesignHeight="450" d:DesignWidth="800"
              KeyDown="QueryControl_KeyDownAsync">
@@ -18,17 +19,20 @@
         <ResourceDictionary>
             <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <ResourceDictionary.MergedDictionaries>
-                <ui:ThemeResources />
                 <ui:XamlControlsResources />
-                <ui:ThemeResources RequestedTheme="Dark">
-                    <ui:ThemeResources.MergedDictionaries>
-                        <ResourceDictionary Source="Resources/Dark.xaml" />
-                    </ui:ThemeResources.MergedDictionaries>
-                </ui:ThemeResources>
-                <ui:ThemeResources RequestedTheme="Light">
-                    <ui:ThemeResources.MergedDictionaries>
-                        <ResourceDictionary Source="Resources/Light.xaml" />
-                    </ui:ThemeResources.MergedDictionaries>
+                <ui:ThemeResources>
+                    <ui:ThemeResources.ThemeDictionaries>
+                        <ResourceDictionary x:Key="Light">
+                            <ResourceDictionary.MergedDictionaries>
+                                <ResourceDictionary Source="Resources/Light.xaml" />
+                            </ResourceDictionary.MergedDictionaries>
+                        </ResourceDictionary>
+                        <ResourceDictionary x:Key="Dark">
+                            <ResourceDictionary.MergedDictionaries>
+                                <ResourceDictionary Source="Resources/Dark.xaml" />
+                            </ResourceDictionary.MergedDictionaries>
+                        </ResourceDictionary>
+                    </ui:ThemeResources.ThemeDictionaries>
                 </ui:ThemeResources>
                 <ui:XamlControlsResources />
             </ResourceDictionary.MergedDictionaries>
@@ -47,12 +51,12 @@
 
         <StackPanel Grid.Row="0" Grid.Column="0">
             <ui:CommandBar x:Name="DbExplorerCommandBar" 
-                           Background="{StaticResource Background}" 
-                           Foreground="{StaticResource Foreground}"
+                           Background="{DynamicResource Background}" 
+                           Foreground="{DynamicResource Foreground}"
                            DefaultLabelPosition="Right"  HorizontalAlignment="Left" Margin="1">
                 <ui:AppBarButton x:Name="ButtonRefreshSchema" 
-                                 Background="{StaticResource Background}" 
-                                 Foreground="{StaticResource Foreground}"
+                                 Background="{DynamicResource Background}" 
+                                 Foreground="{DynamicResource Foreground}"
                                  Label="Refresh Schema" Click="ButtonRefreshSchema_ClickAsync">
                     <ui:AppBarButton.Icon>
                         <ui:SymbolIcon Symbol="Refresh" Foreground="CornflowerBlue" />
@@ -61,26 +65,34 @@
             </ui:CommandBar>
         </StackPanel>
 
-        <DockPanel Background="{StaticResource Background}" Grid.Row="0" Grid.Column="1">
+        <DockPanel Background="{DynamicResource Background}" Grid.Row="0" Grid.Column="1">
             <ui:CommandBar x:Name="SqlCommandBar" 
-                           Background="{StaticResource Background}" 
-                           Foreground="{StaticResource Foreground}"
+                           Background="{DynamicResource Background}" 
+                           Foreground="{DynamicResource Foreground}"
                            DefaultLabelPosition="Right" HorizontalAlignment="Left">
                 <ui:AppBarButton x:Name="ButtonExecuteSql" 
-                                 Background="{StaticResource Background}" 
-                                 Foreground="{StaticResource Foreground}"
-                                 Label="Execute Query [F5]" Click="ButtonExecuteSql_ClickAsync" DataContext="{Binding ElementName=QueryControl}" IsEnabled="{Binding Path=IsQueryExecuting, Converter={StaticResource InverseBooleanConverter}}">
+                                 Background="{DynamicResource Background}" 
+                                 Foreground="{DynamicResource Foreground}"
+                                 Label="Execute Query [F5]" Click="ButtonExecuteSql_ClickAsync" 
+                                 DataContext="{Binding ElementName=QueryControl}" 
+                                 IsEnabled="{Binding Path=IsQueryExecuting, Converter={StaticResource InverseBooleanConverter}}">
                     <ui:AppBarButton.Icon>
                         <ui:SymbolIcon Symbol="Play" Foreground="Green" />
                     </ui:AppBarButton.Icon>
                 </ui:AppBarButton>
             </ui:CommandBar>
-            <TextBlock x:Name="TextBlockStatus" HorizontalAlignment="Right" Padding="0,10,10,0" FontSize="14" Foreground="{StaticResource Foreground}"></TextBlock>
+            <TextBlock x:Name="TextBlockStatus" 
+                       HorizontalAlignment="Right" 
+                       Padding="0,10,10,0" 
+                       FontSize="14" 
+                       Foreground="{DynamicResource Foreground}"></TextBlock>
         </DockPanel>
 
         <TreeView x:Name="TreeViewSchema"
                   DataContext="{Binding Schema}"
-                  BorderBrush="{StaticResource ResourceKey=GridLines}" Background="{StaticResource Background}" Foreground="{StaticResource Foreground}"
+                  BorderBrush="{DynamicResource ResourceKey=GridLines}"
+                  Background="{DynamicResource Background}"
+                  Foreground="{DynamicResource Foreground}"
                   Margin="0" Padding="0,0,0,0"
                   BorderThickness="1,1,1,1"
                   Grid.Row="1" Grid.Column="0">
@@ -91,9 +103,9 @@
                                                        Height="16" Width="16" 
                                                        Margin="0,0,5,0" 
                                                        VerticalAlignment="Center" 
-                                                       Foreground="{StaticResource GenericIcon}" />
+                                                       Foreground="{DynamicResource GenericIcon}" />
                         <TextBlock Text="{Binding DatabaseName}"
-                                   FontSize="{StaticResource FontSizeRegular}"
+                                   FontSize="{DynamicResource FontSizeRegular}"
                                    VerticalAlignment="Center"></TextBlock>
                     </StackPanel>
                 </TreeViewItem.Header>
@@ -104,9 +116,9 @@
                                                            Height="16" Width="16" 
                                                            Margin="0, 0, 5, 0" 
                                                            VerticalAlignment="Center"
-                                                           Foreground="{StaticResource Folder}"/>
+                                                           Foreground="{DynamicResource Folder}"/>
                             <TextBlock Text="Tables" 
-                                       FontSize="{StaticResource FontSizeRegular}"
+                                       FontSize="{DynamicResource FontSizeRegular}"
                                        VerticalAlignment="Center"></TextBlock>
                         </StackPanel>
                     </TreeViewItem.Header>
@@ -119,10 +131,10 @@
                                                                        Height="16" Width="16" 
                                                                        Margin="0, 0, 5, 0" 
                                                                        VerticalAlignment="Center"
-                                                                       Foreground="{StaticResource Foreground}"/>
+                                                                       Foreground="{DynamicResource Foreground}"/>
                                         <TextBlock Text="{Binding Name}"
-                                                   Foreground="{StaticResource Foreground}"
-                                                   FontSize="{StaticResource FontSizeRegular}"
+                                                   Foreground="{DynamicResource Foreground}"
+                                                   FontSize="{DynamicResource FontSizeRegular}"
                                                    VerticalAlignment="Center"></TextBlock>
                                     </StackPanel>
                                 </TreeViewItem.Header>
@@ -134,11 +146,11 @@
                                                                            Height="16" Width="16" 
                                                                            Margin="0, 0, 5, 0" 
                                                                            VerticalAlignment="Center"
-                                                                           Foreground="{StaticResource GenericIcon}"/>
+                                                                           Foreground="{DynamicResource GenericIcon}"/>
                                             <TextBlock Text="{Binding Name}" 
                                                        VerticalAlignment="Center"
-                                                       Foreground="{StaticResource Foreground}"
-                                                       FontSize="{StaticResource FontSizeRegular}"></TextBlock>
+                                                       Foreground="{DynamicResource Foreground}"
+                                                       FontSize="{DynamicResource FontSizeRegular}"></TextBlock>
                                         </StackPanel>
                                     </DataTemplate>
                                 </TreeViewItem.ItemTemplate>
@@ -153,10 +165,10 @@
                                                            Height="16" Width="16" 
                                                            Margin="0, 0, 5, 0" 
                                                            VerticalAlignment="Center"
-                                                           Foreground="{StaticResource Folder}"/>
+                                                           Foreground="{DynamicResource Folder}"/>
                             <TextBlock Text="Views" 
                                        VerticalAlignment="Center"
-                                       FontSize="{StaticResource FontSizeRegular}"></TextBlock>
+                                       FontSize="{DynamicResource FontSizeRegular}"></TextBlock>
                         </StackPanel>
                     </TreeViewItem.Header>
                     <TreeViewItem.ItemTemplate>
@@ -168,11 +180,11 @@
                                                                        Height="16" Width="16" 
                                                                        Margin="0, 0, 5, 0" 
                                                                        VerticalAlignment="Center"
-                                                                       Foreground="{StaticResource GenericIcon}"/>
+                                                                       Foreground="{DynamicResource GenericIcon}"/>
                                         <TextBlock Text="{Binding Name}" 
-                                                   Foreground="{StaticResource Foreground}"
+                                                   Foreground="{DynamicResource Foreground}"
                                                    VerticalAlignment="Center"
-                                                   FontSize="{StaticResource FontSizeRegular}"></TextBlock>
+                                                   FontSize="{DynamicResource FontSizeRegular}"></TextBlock>
                                     </StackPanel>
                                 </TreeViewItem.Header>
                                 <TreeViewItem.ItemTemplate>
@@ -182,10 +194,10 @@
                                                                            Height="16" Width="16" 
                                                                            Margin="0, 0, 5, 0" 
                                                                            VerticalAlignment="Center"
-                                                                           Foreground="{StaticResource GenericIcon}"/>
+                                                                           Foreground="{DynamicResource GenericIcon}"/>
                                             <TextBlock Text="{Binding Name}" 
-                                                       Foreground="{StaticResource Foreground}"
-                                                       FontSize="{StaticResource FontSizeRegular}"
+                                                       Foreground="{DynamicResource Foreground}"
+                                                       FontSize="{DynamicResource FontSizeRegular}"
                                                        VerticalAlignment="Center" />
                                         </StackPanel>
                                     </DataTemplate>
@@ -204,9 +216,9 @@
             FontFamily="Consolas"
             Padding="0,0,0,15"
             Margin="0"
-            Foreground="{StaticResource Foreground}"
-            BorderBrush="{StaticResource ResourceKey=GridLines}" 
-            Background="{StaticResource Background}"
+            Foreground="{DynamicResource Foreground}"
+            BorderBrush="{DynamicResource ResourceKey=GridLines}" 
+            Background="{DynamicResource Background}"
             BorderThickness="0,1,1,1"
             HorizontalScrollBarVisibility="Visible"
             ScrollViewer.HorizontalScrollBarVisibility="Visible"
@@ -217,14 +229,14 @@
         <DataGrid x:Name="SqlResults"
                   AutoGenerateColumns="True"
                   IsReadOnly="True"
-                  Background="{StaticResource Background}"
-                  Foreground="{StaticResource Foreground}"   
+                  Background="{DynamicResource Background}"
+                  Foreground="{DynamicResource Foreground}"   
                   ui:DataGridHelper.TextColumnFontSize="{StaticResource FontSizeDataGridCell}"
                   Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
                   Padding="0"
                   HeadersVisibility="All"
                   BorderThickness="1,0,1,1"
-                  BorderBrush="{StaticResource GridLines}"
+                  BorderBrush="{DynamicResource GridLines}"
                   Margin="0"
                   GridLinesVisibility="None"
                   HorizontalAlignment="Stretch"
@@ -235,13 +247,13 @@
             <DataGrid.CellStyle>
                 <Style TargetType="DataGridCell">
                     <Setter Property="BorderThickness" Value="0,0,1,1"></Setter>
-                    <Setter Property="BorderBrush" Value="{StaticResource GridLines}"></Setter>
-                    <Setter Property="Foreground" Value="{StaticResource Foreground}"></Setter>
+                    <Setter Property="BorderBrush" Value="{DynamicResource GridLines}"></Setter>
+                    <Setter Property="Foreground" Value="{DynamicResource Foreground}"></Setter>
                     <Setter Property="Background" Value="Transparent"></Setter>
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="{StaticResource SelectionBrush}"></Setter>
-                            <Setter Property="Foreground" Value="{StaticResource Foreground}"></Setter>
+                            <Setter Property="Background" Value="{DynamicResource SelectionBrush}"></Setter>
+                            <Setter Property="Foreground" Value="{DynamicResource Foreground}"></Setter>
                             <Setter Property="BorderThickness" Value="0,0,1,1" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="False">
@@ -253,12 +265,12 @@
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <Setter Property="BorderThickness" Value="0,0,1,1"></Setter>
-                    <Setter Property="BorderBrush" Value="{StaticResource GridLines}"></Setter>
-                    <Setter Property="Foreground" Value="{StaticResource Foreground}"></Setter>
+                    <Setter Property="BorderBrush" Value="{DynamicResource GridLines}"></Setter>
+                    <Setter Property="Foreground" Value="{DynamicResource Foreground}"></Setter>
                     <Setter Property="Background" Value="Transparent"></Setter>
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="{StaticResource SelectionBrush}"></Setter>
+                            <Setter Property="Background" Value="{DynamicResource SelectionBrush}"></Setter>
                             <Setter Property="BorderThickness" Value="0" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="False">
@@ -269,23 +281,23 @@
             </DataGrid.RowStyle>
             <DataGrid.Resources>
                 <Style BasedOn="{ui:StaticResource ResourceKey=DefaultDataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
-                    <Setter Property="Background" Value="{StaticResource ColumnHeaderBackground}" />
-                    <Setter Property="Foreground" Value="{StaticResource Foreground}" />
-                    <Setter Property="SeparatorBrush" Value="{StaticResource GridLines}" />
+                    <Setter Property="Background" Value="{DynamicResource ColumnHeaderBackground}" />
+                    <Setter Property="Foreground" Value="{DynamicResource Foreground}" />
+                    <Setter Property="SeparatorBrush" Value="{DynamicResource GridLines}" />
                     <Setter Property="SeparatorVisibility" Value="Visible"></Setter>
                 </Style>
                 <Style BasedOn="{ui:StaticResource ResourceKey=DefaultDataGridRowHeaderStyle}" TargetType="{x:Type DataGridRowHeader}">
-                    <Setter Property="Background" Value="{StaticResource ColumnHeaderBackground}" />
-                    <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+                    <Setter Property="Background" Value="{DynamicResource ColumnHeaderBackground}" />
+                    <Setter Property="Foreground" Value="{DynamicResource Foreground}" />
                     <Setter Property="BorderThickness" Value="0, 0, 0, 0"></Setter>
-                    <Setter Property="SeparatorBrush" Value="{StaticResource GridLines}" />
+                    <Setter Property="SeparatorBrush" Value="{DynamicResource GridLines}" />
                     <Setter Property="SeparatorVisibility" Value="Visible"></Setter>
                 </Style>
                 <Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type DataGrid}, ResourceId=DataGridSelectAllButtonStyle}" TargetType="{x:Type Button}">
-                    <Setter Property="Background" Value="{StaticResource ColumnHeaderBackground}" />
-                    <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+                    <Setter Property="Background" Value="{DynamicResource ColumnHeaderBackground}" />
+                    <Setter Property="Foreground" Value="{DynamicResource Foreground}" />
                     <Setter Property="BorderThickness" Value="0, 0, 1, 0" />
-                    <Setter Property="BorderBrush" Value="{StaticResource GridLinesBrush}" />
+                    <Setter Property="BorderBrush" Value="{DynamicResource GridLinesBrush}" />
                 </Style>
             </DataGrid.Resources>
         </DataGrid>

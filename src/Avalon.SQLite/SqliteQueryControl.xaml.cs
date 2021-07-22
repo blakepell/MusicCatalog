@@ -118,7 +118,7 @@ namespace Avalon.Sqlite
             InitializeComponent();
             this.DataContext = this;
 
-            var compact = new ResourceDictionary { Source = new Uri("/ModernWpf;component/DensityStyles/Compact.xaml", UriKind.Relative) };            
+            var compact = new ResourceDictionary { Source = new Uri("/ModernWpf;component/DensityStyles/Compact.xaml", UriKind.Relative) };
             SqlResults.Resources.MergedDictionaries.Add(compact);
             TreeViewSchema.Resources.MergedDictionaries.Add(compact);
             SqlCommandBar.Resources.MergedDictionaries.Add(compact);
@@ -133,17 +133,16 @@ namespace Avalon.Sqlite
 
         private void SetTheme()
         {
-            var theme = ThemeManager.GetActualTheme(this);
+            var theme = ThemeManager.Current.ActualApplicationTheme;
             var asm = Assembly.GetExecutingAssembly();
             string resourceName;
 
             switch (theme)
             {
-                case ElementTheme.Light:
-                case ElementTheme.Default:
+                case ApplicationTheme.Light:
                     resourceName = $"{asm.GetName().Name}.Assets.SqliteLight.xshd";
                     break;
-                case ElementTheme.Dark:
+                case ApplicationTheme.Dark:
                     resourceName = $"{asm.GetName().Name}.Assets.SqliteDark.xshd";
                     break;
                 default:
@@ -282,7 +281,7 @@ namespace Avalon.Sqlite
                             // query can bring back records with keys listed many times because of the join).
                             this.DataTable = new DataTable();
 
-                            using (var ds = new DataSet() {EnforceConstraints = false})
+                            using (var ds = new DataSet() { EnforceConstraints = false })
                             {
                                 ds.Tables.Add(this.DataTable);
                                 this.DataTable.BeginLoadData();
@@ -402,7 +401,7 @@ namespace Avalon.Sqlite
                     foreach (var item in Schema.Tables)
                     {
                         data.Add(new CompletionData(item.TableName));
-                    }                    
+                    }
 
                     // Add views
                     foreach (var view in Schema.Views)
