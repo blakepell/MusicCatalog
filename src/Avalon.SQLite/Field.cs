@@ -52,28 +52,40 @@ namespace Avalon.Sqlite
             set => Set(ref _type, value, nameof(Type));
         }
 
-        private int _notNull;
+        private bool _notNull;
 
         /// <summary>
         /// If the field is defined as not null.
         /// </summary>
         [Column("notnull")]
-        public int NotNull
+        public bool NotNull
         {
             get => _notNull;
             set => Set(ref _notNull, value, nameof(NotNull));
         }
 
-        private string _defaultValue;
+        private string _dfltValue;
 
         /// <summary>
         /// The default value of the field if one exists.
         /// </summary>
         [Column("dflt_value")]
-        public string DefaultValue
+        public string DfltValue
         {
-            get => _defaultValue;
-            set => Set(ref _defaultValue, value, nameof(DefaultValue));
+            get => _dfltValue;
+            set => Set(ref _dfltValue, value, nameof(this.DfltValue));
+        }
+
+        private bool _pk;
+
+        /// <summary>
+        /// If the field is a primary key.
+        /// </summary>
+        [Column("pk")]
+        public bool Pk
+        {
+            get => _pk;
+            set => Set(ref _pk, value, nameof(this.Pk));
         }
     }
 }

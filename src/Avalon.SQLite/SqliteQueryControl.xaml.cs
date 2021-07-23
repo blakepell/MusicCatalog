@@ -20,8 +20,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -68,7 +70,7 @@ namespace Avalon.Sqlite
         /// </summary>
         public bool RefreshSchemaAfterQuery
         {
-            get => (bool) GetValue(RefreshSchemaAfterQueryProperty);
+            get => (bool)GetValue(RefreshSchemaAfterQueryProperty);
             set => SetValue(RefreshSchemaAfterQueryProperty, value);
         }
 
@@ -102,22 +104,17 @@ namespace Avalon.Sqlite
             }
         }
 
-        /// <summary>
-        /// Internal variable for IsQueryExecuting
-        /// </summary>
-        private bool _isQueryExecuting;
+        public static readonly DependencyProperty IsQueryExecutingProperty = DependencyProperty.Register(
+            nameof(IsQueryExecuting), typeof(bool), typeof(SqliteQueryControl), new PropertyMetadata(false));
+
 
         /// <summary>
         /// Whether or not a query is currently executing.
         /// </summary>
         public bool IsQueryExecuting
         {
-            get => _isQueryExecuting;
-            set
-            {
-                _isQueryExecuting = value;
-                NotifyPropertyChanged();
-            }
+            get => (bool) GetValue(IsQueryExecutingProperty);
+            set => SetValue(IsQueryExecutingProperty, value);
         }
 
         /// <summary>
@@ -155,6 +152,10 @@ namespace Avalon.Sqlite
             SqlEditor.TextArea.TextEntered += SqlEditor_TextEntered;
         }
 
+        /// <summary>
+        /// Gets the current application theme and applies the dark or light colors to the syntax
+        /// highlighting in AvalonEdit.
+        /// </summary>
         private void SetTheme()
         {
             var theme = ThemeManager.Current.ActualApplicationTheme;
@@ -248,7 +249,7 @@ namespace Avalon.Sqlite
 
             try
             {
-                this.DataTable = await Task.Run(async () => await ExecuteQueryAsync(sql));
+                this.DataTable = await Task.Run(async () => await this.ExecuteDataTableAsync(sql));
                 this.SqlResults.ItemsSource = this.DataTable.DefaultView;
 
                 if (this.DataTable != null)
@@ -318,16 +319,71 @@ namespace Avalon.Sqlite
         }
 
         /// <summary>
+        /// Executes a query and displays it's results on the control.
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public async Task ExecuteQueryAsync(string sql)
+        {
+            // Close the auto complete window box if its open.
+            _completionWindow?.Close();
+
+            if (this.IsQueryExecuting)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(sql))
+            {
+                this.StatusText = "0 records returned.";
+                return;
+            }
+
+            this.IsQueryExecuting = true;
+            this.StatusText = "Status: Executing SQL";
+
+            // Get rid of anything in the current DataTable.
+            if (this.DataTable != null)
+            {
+                this.DataTable.Clear();
+                this.DataTable.Dispose();
+                SqlResults.ItemsSource = null;
+            }
+
+            try
+            {
+                this.DataTable = await Task.Run(async () => await this.ExecuteDataTableAsync(sql));
+                this.SqlResults.ItemsSource = this.DataTable.DefaultView;
+
+                if (this.DataTable != null)
+                {
+                    this.StatusText = $"{DataTable?.Rows.Count.ToString().FormatIfNumber()} {"record".IfCountPluralize(DataTable?.Rows.Count ?? 0, "records")} returned.";
+                }
+            }
+            catch (Exception ex)
+            {
+                this.StatusText = ex.Message;
+            }
+
+            if (this.RefreshSchemaAfterQuery)
+            {
+                await this.RefreshSchemaAsync();
+            }
+
+            this.IsQueryExecuting = false;
+        }
+
+        /// <summary>
         /// Executes SQL and returns a <see cref="DataTable"/>.
         /// </summary>
-        public async Task<DataTable> ExecuteQueryAsync(string sql)
+        public async Task<DataTable> ExecuteDataTableAsync(string sql)
         {
             var dt = new DataTable();
 
             await using (var conn = new SqliteConnection(this.ConnectionString))
             {
                 await conn.OpenAsync();
-
+                
                 await using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = sql;
@@ -466,7 +522,7 @@ namespace Avalon.Sqlite
                 {
                     foreach (var field in table.Fields)
                     {
-                        data.Add(new CompletionData(field.Name, $"Type: {field.Type}\r\nNot Null: {field.NotNull.ToString()}\r\nDefault Value: {field.DefaultValue}"));
+                        data.Add(new CompletionData(field.Name, $"Type: {field.Type}\r\nNot Null: {field.NotNull.ToString()}\r\nDefault Value: {field.DfltValue}"));
                     }
                 }
 
@@ -535,6 +591,196 @@ namespace Avalon.Sqlite
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private async void TreeViewMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var item = e.OriginalSource as MenuItem;
+            string cmd;
+            string tag;
+            int counter = 0;
+
+            if (item == null)
+            {
+                return;
+            }
+
+            StringBuilder sb;
+            Table table;
+            cmd = item.CommandParameter.ToString();
+            tag = item.Tag.ToString();
+
+            switch (cmd)
+            {
+                case "SelectAll":
+                    await this.ExecuteQueryAsync($"select * from {tag}");
+                    break;
+                case "Select1000":
+                    await this.ExecuteQueryAsync($"select * from {tag} limit 1000");
+                    break;
+                case "GenerateSelect":
+                    table = this.Schema.Tables.FirstOrDefault(x => x.TableName.Equals(tag, StringComparison.OrdinalIgnoreCase));
+
+                    if (table == null)
+                    {
+                        this.StatusText = $"Error: Table '{tag}' not found.";
+                        return;
+                    }
+
+                    sb = new StringBuilder();
+
+                    if (this.SqlEditor.Text.Length > 0)
+                    {
+                        sb.Append("\r\n\r\n");
+                    }
+
+                    sb.Append("SELECT ");
+
+                    foreach (var field in table.Fields)
+                    {
+                        counter++;
+
+                        if (counter > 1)
+                        {
+                            sb.AppendFormat("\r\n    , [{0}] -- {1}", field.Name, field.Type);
+                        }
+                        else
+                        {
+                            sb.AppendFormat("\r\n      [{0}] -- {1}", field.Name, field.Type);
+                        }
+
+                        if (field.Pk)
+                        {
+                            sb.Append(", PK");
+                        }
+                    }
+
+                    sb.TrimEnd(',');
+                    sb.AppendFormat("\r\nFROM [{0}];", table.Name);
+
+                    SqlEditor.AppendText(sb.ToString());
+
+                    break;
+                case "GenerateInsert":
+                    table = this.Schema.Tables.FirstOrDefault(x => x.TableName.Equals(tag, StringComparison.OrdinalIgnoreCase));
+
+                    if (table == null)
+                    {
+                        this.StatusText = $"Error: Table '{tag}' not found.";
+                        return;
+                    }
+
+                    sb = new StringBuilder();
+
+                    if (this.SqlEditor.Text.Length > 0)
+                    {
+                        sb.Append("\r\n\r\n");
+                    }
+                    
+                    sb.AppendFormat("INSERT INTO [{0}] (", table.Name);
+
+                    foreach (var field in table.Fields)
+                    {
+                        counter++;
+
+                        if (counter > 1)
+                        {
+                            sb.AppendFormat("\r\n    , [{0}]", field.Name);
+                        }
+                        else
+                        {
+                            sb.AppendFormat("\r\n      [{0}]", field.Name);
+                        }
+                    }
+
+                    counter = 0;
+                    sb.Append("\r\n) VALUES (");
+
+                    foreach (var field in table.Fields)
+                    {
+                        counter++;
+
+                        if (counter > 1)
+                        {
+                            sb.AppendFormat("\r\n    , @{0} -- {1}", field.Name, field.Type);
+                        }
+                        else
+                        {
+                            sb.AppendFormat("\r\n      @{0} -- {1}", field.Name, field.Type);
+                        }
+
+                        if (field.Pk)
+                        {
+                            sb.Append(", PK");
+                        }
+                    }
+
+                    sb.Append("\r\n);");
+
+                    SqlEditor.AppendText(sb.ToString());
+
+                    break;
+                case "GenerateUpdate":
+                    table = this.Schema.Tables.FirstOrDefault(x => x.TableName.Equals(tag, StringComparison.OrdinalIgnoreCase));
+
+                    if (table == null)
+                    {
+                        this.StatusText = $"Error: Table '{tag}' not found.";
+                        return;
+                    }
+
+                    sb = new StringBuilder();
+
+                    if (this.SqlEditor.Text.Length > 0)
+                    {
+                        sb.Append("\r\n\r\n");
+                    }
+
+                    sb.AppendLine("-- Note: Remember to put a WHERE statement on this if you need it.");
+                    sb.AppendFormat("UPDATE [{0}] SET ", table.Name);
+
+                    foreach (var field in table.Fields)
+                    {
+                        counter++;
+
+                        if (counter > 1)
+                        {
+                            sb.AppendFormat("\r\n     , [{0}] = @{0} -- {1}", field.Name, field.Type);
+                        }
+                        else
+                        {
+                            sb.AppendFormat("\r\n       [{0}] = @{0} -- {1}", field.Name, field.Type);
+                        }
+
+                        if (field.Pk)
+                        {
+                            sb.Append(", PK");
+                        }
+                    }
+
+                    sb.Append("\r\n;");
+
+                    SqlEditor.AppendText(sb.ToString());
+
+                    break;
+                case "CreateTable":
+                    table = this.Schema.Tables.FirstOrDefault(x => x.TableName.Equals(tag, StringComparison.OrdinalIgnoreCase));
+
+                    if (table == null)
+                    {
+                        this.StatusText = $"Error: Table '{tag}' not found.";
+                        return;
+                    }
+
+                    if (this.SqlEditor.Text.Length > 0)
+                    {
+                        this.SqlEditor.AppendText("\r\n\r\n");
+                    }
+
+                    this.SqlEditor.AppendText(table.Sql);
+
+                    break;
+            }
         }
     }
 }

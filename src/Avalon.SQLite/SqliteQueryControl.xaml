@@ -7,8 +7,10 @@
              xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
              xmlns:ui="http://schemas.modernwpf.com/2019"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:fluentWpf="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
              mc:Ignorable="d"
-             Loaded="QueryControl_Loaded" Unloaded="SqliteQueryControl_OnUnloaded"
+             Loaded="QueryControl_Loaded"
+             Unloaded="SqliteQueryControl_OnUnloaded"
              Name="QueryControl" Margin="10"
              Background="{DynamicResource Background}"
              BorderBrush="{DynamicResource GridLines}"
@@ -80,11 +82,14 @@
                     </ui:AppBarButton.Icon>
                 </ui:AppBarButton>
             </ui:CommandBar>
-            <TextBlock Text="{Binding StatusText}"
-                       HorizontalAlignment="Right" 
-                       Padding="0,10,10,0" 
-                       FontSize="14" 
-                       Foreground="{DynamicResource Foreground}"></TextBlock>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <ui:ProgressRing IsActive="{Binding IsQueryExecuting, Mode=OneWay}"></ui:ProgressRing>
+
+                <TextBlock Text="{Binding StatusText}"
+                           Padding="0,10,10,0" 
+                           FontSize="14"
+                           Foreground="{DynamicResource Foreground}"></TextBlock>
+            </StackPanel>
         </DockPanel>
 
         <TreeView x:Name="TreeViewSchema"
@@ -92,9 +97,48 @@
                   BorderBrush="{DynamicResource ResourceKey=GridLines}"
                   Background="{DynamicResource Background}"
                   Foreground="{DynamicResource Foreground}"
-                  Margin="0" Padding="0,0,0,0"
+                  Margin="0"
+                  Padding="0,0,0,0"
                   BorderThickness="1,1,1,1"
-                  Grid.Row="1" Grid.Column="0">
+                  Grid.Row="1" Grid.Column="0"  
+                  >
+            <TreeView.Resources>
+                <fluentWpf:AcrylicContextMenu x:Key="TableSchemaContextMenu"
+                                              FontSize="12"
+                                              fluentWpf:AcrylicWindow.TintColor="White"
+                                              fluentWpf:AcrylicWindow.NoiseOpacity="0.0"
+                                              fluentWpf:AcrylicWindow.TintOpacity="1.0">
+                    <MenuItem Header="Select Rows: All"
+                              CommandParameter="SelectAll"
+                              Click="TreeViewMenuItem_OnClick"
+                              Tag="{Binding Path=Name}" />
+                    <MenuItem Header="Select Rows: 1,000"
+                              Click="TreeViewMenuItem_OnClick" 
+                              CommandParameter="Select1000"
+                              Tag="{Binding Path=Name}" />
+                    <Separator />
+                    <MenuItem Header="Generate SQL" >
+                        <MenuItem Header="Select Statement" 
+                                  CommandParameter="GenerateSelect" 
+                                  Tag="{Binding Path=Name}"
+                                  Click="TreeViewMenuItem_OnClick" />
+                        <MenuItem Header="Insert Statement"
+                                  CommandParameter="GenerateInsert" 
+                                  Tag="{Binding Path=Name}"
+                                  Click="TreeViewMenuItem_OnClick" />
+                        <MenuItem Header="Update Statement"
+                                  CommandParameter="GenerateUpdate" 
+                                  Tag="{Binding Path=Name}"
+                                  Click="TreeViewMenuItem_OnClick" />
+                        <Separator />
+                        <MenuItem Header="Create Table"
+                                  CommandParameter="CreateTable" 
+                                  Tag="{Binding Path=Name}"
+                                  Click="TreeViewMenuItem_OnClick" />
+                    </MenuItem>
+                </fluentWpf:AcrylicContextMenu>
+            </TreeView.Resources>
+
             <TreeViewItem x:Name="TreeViewDatabaseName" IsExpanded="True">
                 <TreeViewItem.Header>
                     <StackPanel Orientation="Horizontal">
@@ -108,7 +152,9 @@
                                    VerticalAlignment="Center"></TextBlock>
                     </StackPanel>
                 </TreeViewItem.Header>
-                <TreeViewItem ItemsSource="{Binding Tables}" Margin="0,0,0,0">
+                <TreeViewItem ItemsSource="{Binding Tables}"
+                              Margin="0,0,0,0"
+                              >
                     <TreeViewItem.Header>
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconVaadinIcons Kind="Folder" 
@@ -123,7 +169,10 @@
                     </TreeViewItem.Header>
                     <TreeViewItem.ItemTemplate>
                         <DataTemplate>
-                            <TreeViewItem ItemsSource="{Binding Fields}" Margin="-30,0,0,0">
+                            <TreeViewItem ItemsSource="{Binding Fields}" 
+                                          Margin="-30,0,0,0"
+                                          Tag="Table"
+                                          TreeViewItem.ContextMenu="{StaticResource TableSchemaContextMenu}">
                                 <TreeViewItem.Header>
                                     <StackPanel Orientation="Horizontal">
                                         <iconPacks:PackIconVaadinIcons Kind="Table" 
