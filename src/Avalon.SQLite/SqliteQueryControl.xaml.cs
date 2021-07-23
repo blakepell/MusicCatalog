@@ -145,8 +145,6 @@ namespace Avalon.Sqlite
             SqlCommandBar.Resources.MergedDictionaries.Add(compact);
             DbExplorerCommandBar.Resources.MergedDictionaries.Add(compact);
 
-            this.SetTheme();
-
             // Intellisense
             SqlEditor.TextArea.TextEntering += SqlEditor_TextEntering;
             SqlEditor.TextArea.TextEntered += SqlEditor_TextEntered;
@@ -154,7 +152,8 @@ namespace Avalon.Sqlite
 
         /// <summary>
         /// Gets the current application theme and applies the dark or light colors to the syntax
-        /// highlighting in AvalonEdit.
+        /// highlighting in AvalonEdit.  This defaults to the current theme of the application which
+        /// will either be set by the application or it will be retrieved from the Windows default theme.
         /// </summary>
         private void SetTheme()
         {
@@ -183,6 +182,17 @@ namespace Avalon.Sqlite
                     SqlEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
                 }
             }
+        }
+
+        /// <summary>
+        /// Sets the theme to <see cref="ElementTheme.Light"/> or <see cref="ElementTheme.Dark"/> for this
+        /// control.
+        /// </summary>
+        /// <param name="theme"></param>
+        private void SetTheme(ApplicationTheme theme)
+        {
+            ThemeManager.SetRequestedTheme(this, ElementTheme.Dark);
+            this.SetTheme();
         }
 
         /// <summary>
