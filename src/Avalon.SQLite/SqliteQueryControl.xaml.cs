@@ -145,6 +145,8 @@ namespace Avalon.Sqlite
             SqlCommandBar.Resources.MergedDictionaries.Add(compact);
             DbExplorerCommandBar.Resources.MergedDictionaries.Add(compact);
 
+            this.SetTheme();
+
             // Intellisense
             SqlEditor.TextArea.TextEntering += SqlEditor_TextEntering;
             SqlEditor.TextArea.TextEntered += SqlEditor_TextEntered;
@@ -790,6 +792,24 @@ namespace Avalon.Sqlite
                     this.SqlEditor.AppendText(table.Sql);
 
                     break;
+                case "CreateView":
+                    var view = this.Schema.Views.FirstOrDefault(x => x.TableName.Equals(tag, StringComparison.OrdinalIgnoreCase));
+
+                    if (view == null)
+                    {
+                        this.StatusText = $"Error: Table '{tag}' not found.";
+                        return;
+                    }
+
+                    if (this.SqlEditor.Text.Length > 0)
+                    {
+                        this.SqlEditor.AppendText("\r\n\r\n");
+                    }
+
+                    this.SqlEditor.AppendText(view.Sql);
+
+                    break;
+
             }
         }
     }

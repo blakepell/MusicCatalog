@@ -143,6 +143,28 @@
                                   Click="TreeViewMenuItem_OnClick" />
                     </MenuItem>
                 </fluentWpf:AcrylicContextMenu>
+                <fluentWpf:AcrylicContextMenu x:Key="ViewSchemaContextMenu"
+                                              FontSize="12"
+                                              fluentWpf:AcrylicWindow.TintColor="White"
+                                              fluentWpf:AcrylicWindow.NoiseOpacity="0.0"
+                                              fluentWpf:AcrylicWindow.TintOpacity="1.0">
+                    <MenuItem Header="Select Rows: All"
+                              CommandParameter="SelectAll"
+                              Click="TreeViewMenuItem_OnClick"
+                              Tag="{Binding Path=Name}" />
+                    <MenuItem Header="Select Rows: 1,000"
+                              Click="TreeViewMenuItem_OnClick" 
+                              CommandParameter="Select1000"
+                              Tag="{Binding Path=Name}" />
+                    <Separator />
+                    <MenuItem Header="Generate SQL" >
+                        <MenuItem Header="Create View"
+                                  CommandParameter="CreateView" 
+                                  Tag="{Binding Path=Name}"
+                                  Click="TreeViewMenuItem_OnClick" />
+                    </MenuItem>
+                </fluentWpf:AcrylicContextMenu>
+
             </TreeView.Resources>
 
             <TreeViewItem x:Name="TreeViewDatabaseName" IsExpanded="True">
@@ -227,7 +249,10 @@
                     </TreeViewItem.Header>
                     <TreeViewItem.ItemTemplate>
                         <DataTemplate>
-                            <TreeViewItem ItemsSource="{Binding Fields}" Margin="-30,0,0,0">
+                            <TreeViewItem ItemsSource="{Binding Fields}" 
+                                          Margin="-30,0,0,0"
+                                          Tag="View"
+                                          TreeViewItem.ContextMenu="{StaticResource ViewSchemaContextMenu}">
                                 <TreeViewItem.Header>
                                     <StackPanel Orientation="Horizontal">
                                         <iconPacks:PackIconVaadinIcons Kind="Table" 
