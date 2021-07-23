@@ -70,8 +70,7 @@
                            Background="{DynamicResource Background}" 
                            Foreground="{DynamicResource Foreground}"
                            DefaultLabelPosition="Right" HorizontalAlignment="Left">
-                <ui:AppBarButton x:Name="ButtonExecuteSql" 
-                                 Background="{DynamicResource Background}" 
+                <ui:AppBarButton Background="{DynamicResource Background}" 
                                  Foreground="{DynamicResource Foreground}"
                                  Label="Execute Query [F5]" Click="ButtonExecuteSql_ClickAsync" 
                                  DataContext="{Binding ElementName=QueryControl}" 
@@ -81,7 +80,7 @@
                     </ui:AppBarButton.Icon>
                 </ui:AppBarButton>
             </ui:CommandBar>
-            <TextBlock x:Name="TextBlockStatus" 
+            <TextBlock Text="{Binding StatusText}"
                        HorizontalAlignment="Right" 
                        Padding="0,10,10,0" 
                        FontSize="14" 

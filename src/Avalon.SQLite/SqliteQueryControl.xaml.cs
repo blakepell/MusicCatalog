@@ -7,12 +7,14 @@
  * @license           : MIT
  */
 
+using Argus.Extensions;
 using Dapper;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Microsoft.Data.Sqlite;
+using ModernWpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -26,8 +28,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Xml;
-using Argus.Extensions;
-using ModernWpf;
 
 namespace Avalon.Sqlite
 {
@@ -36,6 +36,9 @@ namespace Avalon.Sqlite
     /// </summary>
     public partial class SqliteQueryControl
     {
+        public static readonly DependencyProperty SchemaProperty =
+            DependencyProperty.Register(nameof(Schema), typeof(Schema), typeof(SqliteQueryControl), new PropertyMetadata(new Schema()));
+
         /// <summary>
         /// The database schema current as of the last refresh.
         /// </summary>
@@ -45,8 +48,29 @@ namespace Avalon.Sqlite
             set => SetValue(SchemaProperty, value);
         }
 
-        public static readonly DependencyProperty SchemaProperty =
-            DependencyProperty.Register(nameof(Schema), typeof(Schema), typeof(SqliteQueryControl), new PropertyMetadata(new Schema()));
+        public static readonly DependencyProperty StatusTextProperty = DependencyProperty.Register(
+            nameof(StatusText), typeof(string), typeof(SqliteQueryControl), new PropertyMetadata("Status: Idle"));
+
+        /// <summary>
+        /// The status text on the upper right hand corner of the control.
+        /// </summary>
+        public string StatusText
+        {
+            get => (string)GetValue(StatusTextProperty);
+            set => SetValue(StatusTextProperty, value);
+        }
+
+        public static readonly DependencyProperty RefreshSchemaAfterQueryProperty = DependencyProperty.Register(
+            nameof(RefreshSchemaAfterQuery), typeof(bool), typeof(SqliteQueryControl), new PropertyMetadata(true));
+
+        /// <summary>
+        /// Whether the schema should refresh after each query batch is run.
+        /// </summary>
+        public bool RefreshSchemaAfterQuery
+        {
+            get => (bool) GetValue(RefreshSchemaAfterQueryProperty);
+            set => SetValue(RefreshSchemaAfterQueryProperty, value);
+        }
 
         private DataTable _dataTable;
 
@@ -194,7 +218,55 @@ namespace Avalon.Sqlite
         /// <param name="e"></param>
         private async void ButtonExecuteSql_ClickAsync(object sender, RoutedEventArgs e)
         {
-            await ExecuteQueryAsync();
+            // Close the auto complete window box if its open.
+            _completionWindow?.Close();
+
+            if (this.IsQueryExecuting)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(SqlEditor.Text))
+            {
+                this.StatusText = "0 records returned.";
+                return;
+            }
+
+            this.IsQueryExecuting = true;
+            this.StatusText = "Status: Executing SQL";
+
+            // Get rid of anything in the current DataTable.
+            if (this.DataTable != null)
+            {
+                this.DataTable.Clear();
+                this.DataTable.Dispose();
+                SqlResults.ItemsSource = null;
+            }
+
+            // Cross thread exception if we pass SqlText.Text into the Task, put it in string first.
+            string sql = this.SqlEditor.Text;
+
+            try
+            {
+                this.DataTable = await Task.Run(async () => await ExecuteQueryAsync(sql));
+                this.SqlResults.ItemsSource = this.DataTable.DefaultView;
+
+                if (this.DataTable != null)
+                {
+                    this.StatusText = $"{DataTable?.Rows.Count.ToString().FormatIfNumber()} {"record".IfCountPluralize(DataTable?.Rows.Count ?? 0, "records")} returned.";
+                }
+            }
+            catch (Exception ex)
+            {
+                this.StatusText = ex.Message;
+            }
+
+            if (this.RefreshSchemaAfterQuery)
+            {
+                await this.RefreshSchemaAsync();
+            }
+
+            this.IsQueryExecuting = false;
         }
 
         /// <summary>
@@ -213,12 +285,11 @@ namespace Avalon.Sqlite
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void QueryControl_KeyDownAsync(object sender, KeyEventArgs e)
+        private void QueryControl_KeyDownAsync(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.F5)
             {
-                // ExecuteQuery() will handle closing auto completion since it's called from multiple paths.
-                await ExecuteQueryAsync();
+                this.ButtonExecuteSql_ClickAsync(sender, e);
                 e.Handled = true;
             }
             else if (e.Key == Key.Escape)
@@ -247,76 +318,40 @@ namespace Avalon.Sqlite
         }
 
         /// <summary>
-        /// Executes the query that's currently in the SqlEditor.
+        /// Executes SQL and returns a <see cref="DataTable"/>.
         /// </summary>
-        public async Task ExecuteQueryAsync()
+        public async Task<DataTable> ExecuteQueryAsync(string sql)
         {
-            this.IsQueryExecuting = true;
+            var dt = new DataTable();
 
-            try
+            await using (var conn = new SqliteConnection(this.ConnectionString))
             {
-                // Close the auto complete window box if its open.
-                _completionWindow?.Close();
+                await conn.OpenAsync();
 
-                // Get rid of anything in the current DataTable.
-                if (this.DataTable != null)
+                await using (var cmd = conn.CreateCommand())
                 {
-                    this.DataTable.Clear();
-                    this.DataTable.Dispose();
-                    SqlResults.ItemsSource = null;
-                }
+                    cmd.CommandText = sql;
 
-                await using (var conn = new SqliteConnection(this.ConnectionString))
-                {
-                    await conn.OpenAsync();
-
-                    await using (var cmd = conn.CreateCommand())
+                    await using (var dr = await cmd.ExecuteReaderAsync())
                     {
-                        cmd.CommandText = SqlEditor.Text;
-
-                        await using (var dr = await cmd.ExecuteReaderAsync())
+                        // The DataSet is required to ignore constraints on the DataTable which is important
+                        // because queries don't always have the constraints of the source tables (e.g. an inner joined
+                        // query can bring back records with keys listed many times because of the join).
+                        using (var ds = new DataSet() { EnforceConstraints = false })
                         {
-                            // The DataSet is required to ignore constraints on the DataTable which is important
-                            // because queries don't always have the constraints of the source tables (e.g. an inner joined
-                            // query can bring back records with keys listed many times because of the join).
-                            this.DataTable = new DataTable();
-
-                            using (var ds = new DataSet() { EnforceConstraints = false })
-                            {
-                                ds.Tables.Add(this.DataTable);
-                                this.DataTable.BeginLoadData();
-                                this.DataTable.Load(dr);
-                                this.DataTable.EndLoadData();
-                                ds.Tables.Remove(this.DataTable);
-                            }
-
-                            SqlResults.ItemsSource = this.DataTable.DefaultView;
+                            ds.Tables.Add(dt);
+                            dt.BeginLoadData();
+                            dt.Load(dr);
+                            dt.EndLoadData();
+                            ds.Tables.Remove(dt);
                         }
                     }
-
-                    await conn.CloseAsync();
                 }
 
-                TextBlockStatus.Text = $"{DataTable?.Rows.Count.ToString().FormatIfNumber()} {"record".IfCountPluralize(DataTable?.Rows.Count ?? 0, "records")} returned.";
-
-                // Refresh the DB schema if we happen to see creates, drops or alters in the SQL.
-                string sql = SqlEditor.Text.ToLower();
-
-                if (sql.Contains("create")
-                    || sql.Contains("drop")
-                    || sql.Contains("alter"))
-                {
-                    await this.RefreshSchemaAsync();
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-                // TODO - Show this exception.
-                TextBlockStatus.Text = "0 records returned.";
+                await conn.CloseAsync();
             }
 
-            this.IsQueryExecuting = false;
+            return dt;
         }
 
         /// <summary>
@@ -384,7 +419,7 @@ namespace Avalon.Sqlite
 
         CompletionWindow _completionWindow;
 
-        void SqlEditor_TextEntered(object sender, TextCompositionEventArgs e)
+        private void SqlEditor_TextEntered(object sender, TextCompositionEventArgs e)
         {
             // Text was a space.. see if the previous word was a command that has sub commands.
             if (e.Text == " ")
@@ -452,7 +487,7 @@ namespace Avalon.Sqlite
 
             while (true)
             {
-                if (text == null && String.Compare(text, " ", StringComparison.Ordinal) > 0)
+                if (text == null && string.Compare(text, " ", StringComparison.Ordinal) > 0)
                 {
                     break;
                 }
@@ -480,7 +515,7 @@ namespace Avalon.Sqlite
             return wordBeforeDot;
         }
 
-        void SqlEditor_TextEntering(object sender, TextCompositionEventArgs e)
+        private void SqlEditor_TextEntering(object sender, TextCompositionEventArgs e)
         {
             if (e.Text.Length > 0 && _completionWindow != null)
             {
