@@ -27,11 +27,17 @@
                         <ResourceDictionary x:Key="Light">
                             <ResourceDictionary.MergedDictionaries>
                                 <ResourceDictionary Source="Resources/Light.xaml" />
+                                <!-- FluentWPF theme resources -->
+                                <ResourceDictionary Source="/FluentWPF;component/Styles/Colors.Light.xaml" />
+                                <ResourceDictionary Source="/FluentWPF;component/Styles/Brushes.xaml" />
                             </ResourceDictionary.MergedDictionaries>
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Dark">
                             <ResourceDictionary.MergedDictionaries>
                                 <ResourceDictionary Source="Resources/Dark.xaml" />
+                                <!-- FluentWPF theme resources -->
+                                <ResourceDictionary Source="/FluentWPF;component/Styles/Colors.Dark.xaml" />
+                                <ResourceDictionary Source="/FluentWPF;component/Styles/Brushes.xaml" />
                             </ResourceDictionary.MergedDictionaries>
                         </ResourceDictionary>
                     </ui:ThemeResources.ThemeDictionaries>
