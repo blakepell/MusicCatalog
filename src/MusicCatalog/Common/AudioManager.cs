@@ -118,7 +118,6 @@ namespace MusicCatalog.Common
 
             if (this.Mp3Reader != null)
             {
-                this.WaveOut.Stop();
                 await this.Mp3Reader.DisposeAsync();
             }
 
@@ -140,9 +139,12 @@ namespace MusicCatalog.Common
 
         private void WaveOut_PlaybackStopped(object sender, StoppedEventArgs e)
         {
-            this.WaveOut.Stop();
-            _playTimer?.Stop();
-            this.IsPlaying = false;
+            if (this.WaveOut.PlaybackState == PlaybackState.Stopped)
+            {
+                _playTimer?.Stop();
+                this.IsPlaying = false;
+            }
+
             this.PlaybackStopped?.Invoke(e);
         }
 
