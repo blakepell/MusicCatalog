@@ -15,6 +15,10 @@
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <TextBlock x:Name="TextResultsCount"
+                       FontSize="18"
+                       Foreground="#063455"
+                       Text="0"></TextBlock>
             <TextBlock FontSize="18"
                        Foreground="#063455"
                        Text="Results for '"></TextBlock>
