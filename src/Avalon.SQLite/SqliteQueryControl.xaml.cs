@@ -456,7 +456,8 @@ namespace Avalon.Sqlite
                     var parameters = new DynamicParameters(dictionary);
                     string tableName = await conn.QueryFirstAsync<string>("SELECT quote(@TableName)", parameters);
 
-                    var ieFields = await conn.QueryAsync<Field>("PRAGMA table_info(" + tableName + ");", parameters);
+                    SqlMapper.SetTypeMap(typeof(Field), new ColumnAttributeTypeMapper<Field>());
+                    var ieFields = await conn.QueryAsync<Field>($"PRAGMA table_info({tableName});", parameters);
                     table.Fields = new ObservableCollection<Field>(ieFields);
                 }
 
@@ -475,7 +476,8 @@ namespace Avalon.Sqlite
                     string viewName = await conn.QueryFirstAsync<string>("SELECT quote(@ViewName)", parameters);
 
                     // See comment above about escaping via the quote SQLite function.
-                    var ieFields = await conn.QueryAsync<Field>("PRAGMA table_info(" + viewName + ");", parameters);
+                    SqlMapper.SetTypeMap(typeof(Field), new ColumnAttributeTypeMapper<Field>());
+                    var ieFields = await conn.QueryAsync<Field>($"PRAGMA table_info({viewName});", parameters);
                     view.Fields = new ObservableCollection<Field>(ieFields);
                 }
 
@@ -534,7 +536,7 @@ namespace Avalon.Sqlite
                 {
                     foreach (var field in table.Fields)
                     {
-                        data.Add(new CompletionData(field.Name, $"Type: {field.Type}\r\nNot Null: {field.NotNull.ToString()}\r\nDefault Value: {field.DfltValue}"));
+                        data.Add(new CompletionData(field.Name, $"Type: {field.Type}\r\nNot Null: {field.NotNull.ToString()}\r\nDefault Value: {field.DefaultValue}"));
                     }
                 }
 
@@ -661,7 +663,7 @@ namespace Avalon.Sqlite
                             sb.AppendFormat("\r\n      [{0}] -- {1}", field.Name, field.Type);
                         }
 
-                        if (field.Pk)
+                        if (field.PrimaryKey)
                         {
                             sb.Append(", PK");
                         }
@@ -721,7 +723,7 @@ namespace Avalon.Sqlite
                             sb.AppendFormat("\r\n      @{0} -- {1}", field.Name, field.Type);
                         }
 
-                        if (field.Pk)
+                        if (field.PrimaryKey)
                         {
                             sb.Append(", PK");
                         }
@@ -764,7 +766,7 @@ namespace Avalon.Sqlite
                             sb.AppendFormat("\r\n       [{0}] = @{0} -- {1}", field.Name, field.Type);
                         }
 
-                        if (field.Pk)
+                        if (field.PrimaryKey)
                         {
                             sb.Append(", PK");
                         }
