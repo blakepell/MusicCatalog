@@ -10,7 +10,12 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using Dapper;
+using Dapper.Contrib.Extensions;
+using ICSharpCode.AvalonEdit.Document;
+using Microsoft.Data.Sqlite;
 using MusicCatalog.Common.Models;
 using TagLib;
 using File = TagLib.File;
@@ -19,6 +24,76 @@ namespace MusicCatalog.Common.Extensions
 {
     public static class TrackExtensions
     {
+        /// <summary>
+        /// Inserts a <see cref="Track"/> if it's a new object otherwise an existing
+        /// object will be updated.
+        /// </summary>
+        /// <param name="t"></param>
+        public static async Task Upsert(this Track t)
+        {
+            await using var conn = AppServices.GetService<SqliteConnection>();
+            await conn.OpenAsync();
+
+            if (t.Id <= 0)
+            {
+                await conn.InsertAsync(t);
+            }
+            else
+            {
+                await conn.UpdateAsync(t);
+            }
+
+            await conn.CloseAsync();
+        }
+
+        /// <summary>
+        /// Attempts to update the tags from the ID tags of the file or if those don't exist
+        /// from the filename.
+        /// </summary>
+        /// <param name="t"></param>
+        public static async Task UpdateTags(this Track t)
+        {
+            var tags = t.TagLib();
+
+            var id1 = tags.GetTag(TagTypes.Id3v1);
+            var id2 = tags.GetTag(TagTypes.Id3v2);
+
+            // ID1 => ID2 => From File
+            if (!string.IsNullOrWhiteSpace(id1?.Title))
+            {
+                t.TrackName = id1.Title;
+            }
+            else if (!string.IsNullOrWhiteSpace(id2?.Title))
+            {
+                t.TrackName = id2.Title;
+            }
+            else
+            {
+                t.TrackName = t.TrackNameFromFileName();
+            }
+
+            await using var conn = AppServices.GetService<SqliteConnection>();
+            await conn.OpenAsync();
+
+            t.TagsProcessed = true;
+
+            if (t.Id <= 0)
+            {
+                await conn.InsertAsync(t);
+            }
+            else
+            {
+                await conn.UpdateAsync(t);
+            }
+
+            await conn.CloseAsync();
+        }
+
+        /// <summary>
+        /// Acquires the TagLib record for the <see cref="Track"/>.
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public static File TagLib(this Track t)
         {
             return File.Create(t.FilePath);

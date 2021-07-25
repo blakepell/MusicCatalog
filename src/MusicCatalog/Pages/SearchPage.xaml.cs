@@ -46,6 +46,16 @@ namespace MusicCatalog.Pages
 
         public async Task ExecuteSearch()
         {
+            var tracks = await DbTasks.SearchTracks(this.SearchText);
+
+            foreach (var t in tracks)
+            {
+                if (!t.TagsProcessed)
+                {
+                    await t.UpdateTags();
+                }
+            }
+
             SearchResultsView.ItemsSource = await DbTasks.SearchTracks(this.SearchText);
             TextResultsCount.Text = $"{SearchResultsView.Items.Count.ToString()} ";
         }

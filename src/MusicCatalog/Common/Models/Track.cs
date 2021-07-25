@@ -54,43 +54,6 @@ namespace MusicCatalog.Common.Models
 
         public bool TagsProcessed { get; set; }
 
-        [JsonIgnore]
-        public string DisplayTrackName
-        {
-            get
-            {
-                if (!string.IsNullOrWhiteSpace(this.TrackName))
-                {
-                    return this.TrackName;
-                }
-
-                if (!string.IsNullOrWhiteSpace((Tags?.Tag?.Title)))
-                {
-                    return this.Tags?.Tag?.Title;
-                }
-
-                return this.FileName;
-            }
-        }
-
-        private TagLib.File _tags;
-
-        [Write(false)]
-        [JsonIgnore]
-        public TagLib.File Tags
-        {
-            get
-            {
-                if (_tags != null)
-                {
-                    return _tags;
-                }
-
-                _tags = TagLib.File.Create(FilePath);
-                return _tags;
-            }
-        }
-
         [Write(false)]
         [JsonIgnore]
         public BitmapImage AlbumArt
