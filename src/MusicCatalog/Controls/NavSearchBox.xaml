@@ -6,40 +6,20 @@
              xmlns:local="clr-namespace:MusicCatalog.Controls"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:fluentWpf="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+             xmlns:ui="http://schemas.modernwpf.com/2019"
              mc:Ignorable="d">
     <Border BorderThickness="5, 0, 0, 0">
-        <TextBox x:Name="SearchBox" x:FieldModifier="public"
-                 Margin="10,2,15,5" Padding="5" Text="" BorderThickness="1"
-                 fluentWpf:Extensions.PlaceholderText="Search" AcceptsReturn="false"
-                 Style="{StaticResource TextBoxRevealStyle}"
-                 GotFocus="SearchBox_OnGotFocus" LostFocus="SearchBox_OnLostFocus" PreviewKeyDown="SearchBox_OnPreviewKeyDown">
-        </TextBox>
-        <!--<TextBox x:Name="SearchBox" 
-                 Margin="10,2,15,5" Padding="5" Text="" BorderThickness="1"
-                 fluentWpf:Extensions.PlaceholderText="Search"
-                 GotFocus="SearchBox_OnGotFocus" LostFocus="SearchBox_OnLostFocus">
-            --><!--<TextBox.Style>
-                <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type TextBoxBase}">
-                                <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-                                    <ScrollViewer x:Name="PART_ContentHost" Focusable="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="TextBox.BorderBrush" TargetName="border" Value="Red"/>
-                                    </Trigger>
-                                    <Trigger Property="IsKeyboardFocused" Value="True">
-                                        <Setter Property="TextBox.BorderBrush" TargetName="border" Value="Orange"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </TextBox.Style>--><!--
-        </TextBox>-->        
+        <StackPanel Orientation="Horizontal">
+            <TextBox x:Name="SearchBox" x:FieldModifier="public"
+                     Margin="10,2,15,5" Padding="5" Text="" BorderThickness="1"
+                     fluentWpf:Extensions.PlaceholderText="Search" AcceptsReturn="false"
+                     Style="{StaticResource TextBoxRevealStyle}"
+                     Width="195"
+                     GotFocus="SearchBox_OnGotFocus" LostFocus="SearchBox_OnLostFocus" PreviewKeyDown="SearchBox_OnPreviewKeyDown">
+            </TextBox>
+            <!-- Ugly right?  TODO: Build this from a template and don't use negative margins -->
+            <ui:ProgressRing IsActive="{Binding ProgressRingIsActive}" Margin="-62,-2,0,0"></ui:ProgressRing>
+        </StackPanel>
         <Border.Style>
             <Style TargetType="{x:Type Border}">
                 <Setter Property="BorderBrush" Value="{Binding ActiveBrush}"/>

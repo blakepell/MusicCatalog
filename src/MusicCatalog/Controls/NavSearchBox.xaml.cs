@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace MusicCatalog.Controls
 {
@@ -67,6 +68,15 @@ namespace MusicCatalog.Controls
         {
             get => (bool) GetValue(ClearTextOnSearchProperty);
             set => SetValue(ClearTextOnSearchProperty, value);
+        }
+
+        public static readonly DependencyProperty ProgressRingIsActiveProperty = DependencyProperty.Register(
+            nameof(ProgressRingIsActive), typeof(bool), typeof(NavSearchBox), new PropertyMetadata(false));
+
+        public bool ProgressRingIsActive
+        {
+            get => (bool) GetValue(ProgressRingIsActiveProperty);
+            set => SetValue(ProgressRingIsActiveProperty, value);
         }
 
         public event EventHandler<string> Search;
