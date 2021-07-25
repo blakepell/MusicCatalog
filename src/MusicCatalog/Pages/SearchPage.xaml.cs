@@ -50,7 +50,7 @@ namespace MusicCatalog.Pages
 
             foreach (var t in tracks)
             {
-                if (!t.TagsProcessed)
+                if (!t.TagsProcessed || await t.IsTrackModified())
                 {
                     await t.UpdateTags();
                 }

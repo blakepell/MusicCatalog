@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using ABI.Windows.Networking.Connectivity;
 using Dapper;
 using Dapper.Contrib.Extensions;
 using ICSharpCode.AvalonEdit.Document;
@@ -77,6 +78,12 @@ namespace MusicCatalog.Common.Extensions
 
             t.TagsProcessed = true;
 
+            // Get some file system information.
+            var fi = new FileInfo(t.FilePath);
+            t.DateModified = fi.LastWriteTime;
+            t.FileSize = fi.Length;
+            t.DateLastIndexed = DateTime.Now;
+
             if (t.Id <= 0)
             {
                 await conn.InsertAsync(t);
@@ -87,6 +94,26 @@ namespace MusicCatalog.Common.Extensions
             }
 
             await conn.CloseAsync();
+        }
+
+        /// <summary>
+        /// If the <see cref="Track"/> has a modified date that is newer than the DateModified that is
+        /// stored in the database.
+        /// </summary>
+        /// <param name="t"></param>
+        public static async Task<bool> IsTrackModified(this Track t)
+        {
+            // Get the date modified from the actual file system.
+            var fi = new FileInfo(t.FilePath);
+
+            await using var conn = AppServices.GetService<SqliteConnection>();
+            await conn.OpenAsync();
+
+            var modifiedDate = await conn.QuerySingleOrDefaultAsync<DateTime>("SELECT DateModified FROM Track WHERE Id = @Id", new { t.Id });
+
+            await conn.CloseAsync();
+
+            return fi.LastWriteTime > modifiedDate;
         }
 
         /// <summary>
