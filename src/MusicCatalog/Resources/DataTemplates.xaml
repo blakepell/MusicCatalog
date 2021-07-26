@@ -77,6 +77,8 @@
             <Setter.Value>
                 <ContextMenu>
                     <MenuItem Header="Copy File Path" Command="{x:Static cmds:DataTemplateCommands.CopyFilePath}" CommandParameter="{Binding FilePath}"></MenuItem>
+                    <Separator />
+                    <MenuItem Header="Display ID Tag Info" Command="{x:Static cmds:DataTemplateCommands.DisplayIdTagInfo}" CommandParameter="{Binding FilePath}"></MenuItem>
                 </ContextMenu>
             </Setter.Value>
         </Setter>

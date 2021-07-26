@@ -7,6 +7,10 @@
  * @license           : MIT
  */
 
+using System;
+using System.Text;
+using System.Dynamic;
+using System.Linq;
 using ModernWpf.Controls;
 using MusicCatalog.Common;
 using MusicCatalog.Common.Models;
@@ -15,6 +19,10 @@ using MusicCatalog.Common.Extensions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Argus.Extensions;
+using MusicCatalog.ContentDialogs;
+using Newtonsoft.Json;
+using TagLib;
 
 namespace MusicCatalog.Pages
 {
@@ -33,6 +41,7 @@ namespace MusicCatalog.Pages
             InitializeComponent();
             this.DataContext = this;
             this.CommandBindings.Add(new CommandBinding(DataTemplateCommands.CopyFilePath, MenuItem_CopyFilePathClicked));
+            this.CommandBindings.Add(new CommandBinding(DataTemplateCommands.DisplayIdTagInfo, MenuItem_DisplayIdTagInfoClickedAsync));
         }
 
         private async void SearchResultsView_OnItemClick(object sender, ItemClickEventArgs e)
@@ -82,6 +91,50 @@ namespace MusicCatalog.Pages
             }
             catch
             {
+                // TODO: Log error
+            }
+        }
+
+        private async void MenuItem_DisplayIdTagInfoClickedAsync(object sender, ExecutedRoutedEventArgs args)
+        {
+            try
+            {
+                if (args?.Parameter != null)
+                {
+                    if (System.IO.File.Exists(args.Parameter.ToString()))
+                    {
+                        File tags = TagLib.File.Create(args.Parameter.ToString());
+                        
+                        //var id3v1 = tags.GetTag(TagTypes.Id3v1);
+                        //var id3v2 = tags.GetTag(TagTypes.Id3v2);
+
+                        var sb = new StringBuilder();
+
+                        sb.AppendLine("/* tag */");
+                        sb.AppendLine(JsonConvert.SerializeObject(tags.Tag, Formatting.Indented));
+
+                        sb.AppendLine("/* properties */");
+                        sb.AppendLine(JsonConvert.SerializeObject(tags.Properties, Formatting.Indented));
+
+                        //sb.AppendLine("/* Id3v1 */");
+                        //sb.AppendLine(JsonConvert.SerializeObject(id3v1, Formatting.Indented));
+
+                        //sb.AppendLine("\r\n/* Id3v2 */");
+                        //sb.AppendLine(JsonConvert.SerializeObject(id3v2, Formatting.Indented));
+
+                        var dialog = new StringDisplayDialog()
+                        {
+                            Title = "ID Tag Info",
+                            DisplayText = sb.ToString()
+                        };
+
+                        _ = await dialog.ShowAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                int x = 0;
                 // TODO: Log error
             }
         }

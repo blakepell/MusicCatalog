@@ -34,13 +34,17 @@ namespace MusicCatalog.Common
 
                     conveyor.UpdateInfoOverlay("Loading", "Deleting Index", true, true);
 
+                    // Save user provided data specific to a track.
+                    await conn.ExecuteAsync("DELETE FROM TrackUpdate");
+                    await conn.ExecuteAsync("INSERT INTO TrackUpdate(FilePath, DateLastPlayed, Favorite, PlayCount) SELECT FilePath, DateLastPlayed, Favorite, PlayCount FROM Track");
+
+                    // Clear the Track table and begin.
                     await conn.ExecuteAsync("DELETE FROM Track");
                     await conn.ExecuteAsync("VACUUM");
                     await conn.ExecuteAsync("BEGIN");
 
                     var extensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-                    {  ".mp3", ".wav" };
-
+                    {  ".mp3" };
 
                     foreach (var dir in settings.MusicDirectoryList)
                     {
@@ -88,6 +92,10 @@ namespace MusicCatalog.Common
                             _ = await conn.InsertAsync(tr);
                         }
                     }
+
+                    // Reload our user supplied data back into the Track table.
+                    conveyor.UpdateInfoOverlay("Loading", "Reloading Track Metadata", true, true);
+                    await conn.ExecuteAsync("UPDATE Track SET DateLastPlayed = t.DateLastPlayed, Favorite = t.Favorite, PlayCount = t.PlayCount FROM (SELECT FilePath, DateLastPlayed, Favorite, PlayCount FROM TrackUpdate) t WHERE Track.FilePath = t.FilePath");
 
                     conveyor.UpdateInfoOverlay("Loading", $"Commiting records to the database.", true, true);
                     await conn.ExecuteAsync("COMMIT");

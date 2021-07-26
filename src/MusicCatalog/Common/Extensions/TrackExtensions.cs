@@ -13,20 +13,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using ABI.Windows.Networking.Connectivity;
+using Argus.Extensions;
 using Dapper;
 using Dapper.Contrib.Extensions;
 using ICSharpCode.AvalonEdit.Document;
 using Microsoft.Data.Sqlite;
 using MusicCatalog.Common.Models;
 using TagLib;
+using TagLib.Matroska;
 using File = TagLib.File;
+using Track = MusicCatalog.Common.Models.Track;
 
 namespace MusicCatalog.Common.Extensions
 {
     public static class TrackExtensions
     {
         /// <summary>
-        /// Inserts a <see cref="Track"/> if it's a new object otherwise an existing
+        /// Inserts a <see cref="Models.Track"/> if it's a new object otherwise an existing
         /// object will be updated.
         /// </summary>
         /// <param name="t"></param>
@@ -56,21 +59,23 @@ namespace MusicCatalog.Common.Extensions
         {
             var tags = t.TagLib();
 
-            var id1 = tags.GetTag(TagTypes.Id3v1);
-            var id2 = tags.GetTag(TagTypes.Id3v2);
-
-            // ID1 => ID2 => From File
-            if (!string.IsNullOrWhiteSpace(id1?.Title))
+            // TrackName
+            if (!string.IsNullOrWhiteSpace(tags?.Tag.Title))
             {
-                t.TrackName = id1.Title;
-            }
-            else if (!string.IsNullOrWhiteSpace(id2?.Title))
-            {
-                t.TrackName = id2.Title;
+                t.TrackName = tags.Tag.Title;
             }
             else
             {
                 t.TrackName = t.TrackNameFromFileName();
+            }
+
+            if (tags != null)
+            {
+                t.Duration = tags.Properties.Duration.ToString();
+                t.AudioBitRate = tags.Properties.AudioBitrate;
+                t.AudioSampleRate = tags.Properties.AudioSampleRate;
+                t.BitsPerSample = tags.Properties.BitsPerSample;
+                t.AudioChannels = tags.Properties.AudioChannels;
             }
 
             await using var conn = AppServices.GetService<SqliteConnection>();
@@ -114,6 +119,29 @@ namespace MusicCatalog.Common.Extensions
             await conn.CloseAsync();
 
             return fi.LastWriteTime > modifiedDate;
+        }
+
+        /// <summary>
+        /// Gets an ArtistId from the database.  If the artist doesn't exist it is added.
+        /// </summary>
+        /// <param name="artistName"></param>
+        /// <returns></returns>
+        public static async Task<int> GetOrAddArtist(string artistName)
+        {
+            await using var conn = AppServices.GetService<SqliteConnection>();
+            await conn.OpenAsync();
+
+            int id = await conn.ExecuteScalarAsync<int>("SELECT Id FROM Artist WHERE Name=@artistName", new { artistName });
+
+            if (id == 0)
+            {
+                var artist = new Artist { Name = artistName };
+                id = await conn.InsertAsync(artist);
+            }
+
+            await conn.CloseAsync();
+
+            return id;
         }
 
         /// <summary>

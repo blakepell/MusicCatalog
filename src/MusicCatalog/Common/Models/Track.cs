@@ -44,6 +44,16 @@ namespace MusicCatalog.Common.Models
 
         public int PlayCount { get; set; }
 
+        public string Duration { get; set; }
+
+        public int AudioBitRate { get; set; }
+
+        public int AudioSampleRate { get; set; }
+
+        public int BitsPerSample { get; set; }
+
+        public int AudioChannels { get; set; }
+
         public DateTime DateCreated { get; set; }
 
         public DateTime DateModified { get; set; }

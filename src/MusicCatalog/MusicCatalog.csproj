@@ -49,10 +49,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="ContentDialogs\YesNoDialog - Copy.xaml.cs">
+      <DependentUpon>YesNoDialog.xaml.cs</DependentUpon>
+    </Compile>
     <Compile Update="Controls\NavButton - Copy.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>NavButton.xaml.cs</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="ContentDialogs\StringDisplayDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>

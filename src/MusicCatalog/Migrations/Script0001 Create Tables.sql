@@ -32,13 +32,29 @@ CREATE TABLE Track (
     MD5              TEXT,
     FileSize         INTEGER NOT NULL,
     TrackName        TEXT,
-    Favorite         INTEGER,
-    PlayCount        INTEGER,
+    Duration         TEXT,
+    AudioBitrate     INTEGER,
+    AudioSampleRate  INTEGER,
+    BitsPerSample    INTEGER,
+    AudioChannels    INTEGER,
+    TagsProcessed    INTEGER,
     DateCreated      TEXT    NOT NULL,
     DateModified     TEXT    NOT NULL,
     DateLastIndexed  TEXT    NOT NULL,
     DateLastPlayed   TEXT,
-    TagsProcessed    INTEGER
+    Favorite         INTEGER,
+    PlayCount        INTEGER
+);
+
+/*
+ * Used to hold data that should be repopulated into the Track table after a full
+ * index rebuild.  The Id will be different so we'll need to rely on the full path.
+ */
+CREATE TABLE TrackUpdate (
+    FilePath         TEXT,
+    DateLastPlayed   TEXT,
+    Favorite         INTEGER,
+    PlayCount        INTEGER
 );
 
 /*
