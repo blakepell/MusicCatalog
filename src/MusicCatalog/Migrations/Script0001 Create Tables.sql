@@ -31,7 +31,7 @@ CREATE TABLE Track (
     DirectoryPath    TEXT,
     MD5              TEXT,
     FileSize         INTEGER NOT NULL,
-    TrackName        TEXT,
+    Title            TEXT,
     Duration         TEXT,
     AudioBitrate     INTEGER,
     AudioSampleRate  INTEGER,

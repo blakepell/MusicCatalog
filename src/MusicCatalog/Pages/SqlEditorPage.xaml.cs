@@ -7,6 +7,7 @@
  * @license           : MIT
  */
 
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using MusicCatalog.Common;
@@ -26,7 +27,16 @@ namespace MusicCatalog.Pages
         private async void SqlEditorPage_OnLoaded(object sender, RoutedEventArgs e)
         {
             QueryControl.ConnectionString = _appSettings.DatabaseConnectionString;
-            await QueryControl.RefreshSchemaAsync();
+
+            try
+            {
+                await QueryControl.RefreshSchemaAsync();
+            }
+            catch (Exception ex)
+            {
+                // TODO: Log (remove this style message box also).
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

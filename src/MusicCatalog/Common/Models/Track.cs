@@ -38,7 +38,7 @@ namespace MusicCatalog.Common.Models
 
         public long FileSize { get; set; }
 
-        public string TrackName { get; set; }
+        public string Title { get; set; }
 
         public bool Favorite { get; set; }
 

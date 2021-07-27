@@ -59,14 +59,14 @@ namespace MusicCatalog.Common.Extensions
         {
             var tags = t.TagLib();
 
-            // TrackName
+            // Title
             if (!string.IsNullOrWhiteSpace(tags?.Tag.Title))
             {
-                t.TrackName = tags.Tag.Title;
+                t.Title = tags.Tag.Title;
             }
             else
             {
-                t.TrackName = t.TrackNameFromFileName();
+                t.Title = t.TrackNameFromFileName();
             }
 
             if (tags != null)

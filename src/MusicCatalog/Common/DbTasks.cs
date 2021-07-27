@@ -57,7 +57,7 @@ namespace MusicCatalog.Common
 
             await using var db = AppServices.GetService<SqliteConnection>();
             await db.OpenAsync();
-            return await db.QueryAsync<Track>($"SELECT * FROM Track WHERE FileName LIKE @searchTerm or TrackName Like @searchTerm ORDER BY FileName", new { searchTerm });
+            return await db.QueryAsync<Track>($"SELECT * FROM Track WHERE FileName LIKE @searchTerm or Title Like @searchTerm ORDER BY FileName", new { searchTerm });
         }
     }
 }
