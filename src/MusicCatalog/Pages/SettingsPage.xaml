@@ -29,8 +29,8 @@
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Vertical">
                             <ui:ProgressRing x:Name="ProgressRing"></ui:ProgressRing>
-
-                            <Button Width="150" Height="50" Content="Rebuild Catalog" Click="ButtonBase_OnClickAsync"></Button>
+                            <Button Width="150" Height="50" Content="Rebuild Catalog" Click="ButtonBase_OnClickAsync" Margin="0,0,0,10"></Button>
+                            <Button Width="150" Height="50" Content="Index Tags" Click="ButtonIndexTags_OnClickAsync" Margin="0,0,0,10"></Button>
                             <Button Width="150" Height="50" Content="Open Folder" Click="ButtonBase_OnClick"></Button>
                         </StackPanel>
                     </StackPanel>

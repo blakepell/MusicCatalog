@@ -15,6 +15,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using Dapper;
+using Microsoft.Data.Sqlite;
+using MusicCatalog.Common.Models;
 using TagLib;
 
 namespace MusicCatalog.Common
@@ -83,8 +86,6 @@ namespace MusicCatalog.Common
 
         public Mp3FileReader Mp3Reader { get; private set; }
 
-        public TagLib.File Tags { get; private set; }
-
         public Action<StoppedEventArgs> PlaybackStopped { get; set; }
 
         private DispatcherTimer _playTimer;
@@ -103,7 +104,7 @@ namespace MusicCatalog.Common
             _playTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
         }
 
-        public async Task Load(string fileName)
+        public async Task Load(string filePath)
         {
             if (this.WaveOut == null)
             {
@@ -121,20 +122,21 @@ namespace MusicCatalog.Common
                 await this.Mp3Reader.DisposeAsync();
             }
 
-            if (this.Tags != null)
+            TrackIndex tr;
+
+            using (var conn = AppServices.GetService<SqliteConnection>())
             {
-                this.Tags.Dispose();
+                tr = await conn.QueryFirstOrDefaultAsync<TrackIndex>("SELECT * FROM TrackIndex WHERE FilePath=@filePath", new {filePath});
             }
 
-            this.Tags = TagLib.File.Create(fileName);
-            this.Mp3Reader = new(fileName);
+            this.Mp3Reader = new(filePath);
             this.WaveOut.Init(this.Mp3Reader);
 
-            this.NowPlayingSongTitle = this.Tags.Tag.Title;
-            this.NowPlayingArtist = this.Tags.Tag.FirstAlbumArtist ?? this.Tags.Tag.FirstPerformer;
-            this.NowPlayingAlbum = this.Tags.Tag.Album;
+            this.NowPlayingSongTitle = tr?.Title ?? "Unknown Song";
+            this.NowPlayingArtist = tr?.ArtistName ?? "Unknown Artist";
+            this.NowPlayingAlbum = tr?.AlbumName ?? "Unknown Album";
 
-            _ = await DbTasks.UpdateLastPlayed(fileName);
+            _ = await DbTasks.UpdateLastPlayed(filePath);
         }
 
         private void WaveOut_PlaybackStopped(object sender, StoppedEventArgs e)
@@ -150,31 +152,31 @@ namespace MusicCatalog.Common
 
         public BitmapImage AlbumArtForCurrentTrack()
         {
-            if (this.Tags == null)
-            {
-                return App.DefaultAlbumArt;
-            }
+            //if (this.Tags == null)
+            //{
+            //    return App.DefaultAlbumArt;
+            //}
 
-            var cs = this.Tags.Tag.Pictures.FirstOrDefault();
+            //var cs = this.Tags.Tag.Pictures.FirstOrDefault();
 
 
-            if (cs == default(IPicture)
-                || cs.Type == PictureType.NotAPicture
-                || cs.Type == PictureType.Other)
-            {
-                return App.DefaultAlbumArt;
-            }
+            //if (cs == default(IPicture)
+            //    || cs.Type == PictureType.NotAPicture
+            //    || cs.Type == PictureType.Other)
+            //{
+            //    return App.DefaultAlbumArt;
+            //}
 
-            using (var stream = new MemoryStream(cs.Data.Data))
-            {
-                var bitmap = new BitmapImage();
-                bitmap.BeginInit();
-                bitmap.StreamSource = stream;
-                bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                bitmap.EndInit();
-                bitmap.Freeze();
-                return bitmap;
-            }
+            //using (var stream = new MemoryStream(cs.Data.Data))
+            //{
+            //    var bitmap = new BitmapImage();
+            //    bitmap.BeginInit();
+            //    bitmap.StreamSource = stream;
+            //    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            //    bitmap.EndInit();
+            //    bitmap.Freeze();
+            //    return bitmap;
+            //}
 
             return App.DefaultAlbumArt;
         }

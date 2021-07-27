@@ -39,6 +39,12 @@ namespace MusicCatalog.Pages
             await indexer.RebuildIndex();
         }
 
+        private async void ButtonIndexTags_OnClickAsync(object sender, RoutedEventArgs e)
+        {
+            var indexer = new FileIndexer();
+            await indexer.IndexTags();
+        }
+
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("explorer.exe", _appSettings.LocalAppData.AssemblyFolderPath);

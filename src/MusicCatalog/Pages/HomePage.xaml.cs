@@ -34,12 +34,12 @@ namespace MusicCatalog.Pages
         /// <param name="e"></param>
         private async void HomePage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            RecentPlaysView.ItemsSource = await DbTasks.RecentPlays(15);
+            RecentPlaysView.ItemsSource = await DbTasks.RecentPlays(10);
         }
 
         private async void RecentPlaysView_OnItemClick(object sender, ItemClickEventArgs e)
         {
-            if (e.ClickedItem is Track tr)
+            if (e.ClickedItem is TrackIndex tr)
             {
                 var conveyor = AppServices.CreateInstance<Conveyor>();
                 await conveyor.PlayTrack(tr.FilePath);

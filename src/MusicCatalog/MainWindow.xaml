@@ -14,7 +14,7 @@
                   fw:AcrylicWindow.FallbackColor="#66FFFFFF"
                   ui:ThemeManager.RequestedTheme="Light"
                   fw:ExtendViewIntoTitleBar="True"
-                  Title="Music Catalog" Height="720" Width="1024"
+                  Title="Music Catalog" Height="720" Width="1000"
                   Loaded="MainWindow_OnLoaded">
     <Window.Resources>
         <converters:BooleanToCollapsedConverter x:Key="BoolToCollapsedConverter"/>

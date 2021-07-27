@@ -13,6 +13,7 @@ using MusicCatalog.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Dapper.Contrib.Extensions;
 
 namespace MusicCatalog.Common
 {
@@ -21,32 +22,45 @@ namespace MusicCatalog.Common
         /// <summary>
         /// Updates the last played timestamp for a specified file.
         /// </summary>
-        /// <param name="fileName">The full path to the file that should be updated.</param>
-        public static async Task<int> UpdateLastPlayed(string fileName)
+        /// <param name="fullPath">The full path to the file that should be updated.</param>
+        public static async Task<int> UpdateLastPlayed(string fullPath)
         {
             await using var db = AppServices.GetService<SqliteConnection>();
             await db.OpenAsync();
-            await db.ExecuteAsync("UPDATE Track SET PlayCount = PlayCount + 1 WHERE FilePath = @fileName", new { DateLastPlayed = DateTime.Now, fileName });
-            return await db.ExecuteAsync("UPDATE Track SET DateLastPlayed = @DateLastPlayed WHERE FilePath = @fileName", new { DateLastPlayed = DateTime.Now, fileName });
+
+            var trackEx = await db.QuerySingleOrDefaultAsync<TrackEx>("SELECT * FROM TrackEx WHERE FilePath = @fullPath", new { fullPath });
+
+            if (trackEx == null)
+            {
+                trackEx = new TrackEx {FilePath = fullPath, DateLastPlayed = DateTime.Now, Favorite = false};
+                trackEx.PlayCount++;
+                return await db.InsertAsync(trackEx);
+            }
+
+            // TODO: Clean this up, inconsistent return
+            trackEx.PlayCount++;
+            trackEx.DateLastPlayed = DateTime.Now; 
+            bool result = await db.UpdateAsync(trackEx);
+            return result == true ? 1 : 0;
         }
 
         /// <summary>
         /// Returns the most recently played songs.
         /// </summary>
         /// <param name="count">The number of tracks to return.</param>
-        public static async Task<IEnumerable<Track>> RecentPlays(int count)
+        public static async Task<IEnumerable<TrackIndex>> RecentPlays(int count)
         {
             count = Math.Clamp(1, count, 100);
             await using var db = AppServices.GetService<SqliteConnection>();
             await db.OpenAsync();
-            return await db.QueryAsync<Track>($"SELECT * FROM Track Where PlayCount > 0 ORDER BY DateLastPlayed DESC LIMIT {count}");
+            return await db.QueryAsync<TrackIndex>($"SELECT * FROM TrackIndex Where PlayCount > 0 ORDER BY DateLastPlayed DESC LIMIT {count}");
         }
 
         /// <summary>
         /// Searches the tracks by keyword.
         /// </summary>
         /// <param name="searchTerm"></param>
-        public static async Task<IEnumerable<Track>> SearchTracks(string searchTerm)
+        public static async Task<IEnumerable<TrackIndex>> SearchTracks(string searchTerm)
         {
             searchTerm = searchTerm.Replace('*', '%');
 
@@ -57,7 +71,7 @@ namespace MusicCatalog.Common
 
             await using var db = AppServices.GetService<SqliteConnection>();
             await db.OpenAsync();
-            return await db.QueryAsync<Track>($"SELECT * FROM Track WHERE FileName LIKE @searchTerm or Title Like @searchTerm ORDER BY FileName", new { searchTerm });
+            return await db.QueryAsync<TrackIndex>($"SELECT * FROM TrackIndex WHERE FileName LIKE @searchTerm or Title Like @searchTerm ORDER BY FileName", new { searchTerm });
         }
     }
 }

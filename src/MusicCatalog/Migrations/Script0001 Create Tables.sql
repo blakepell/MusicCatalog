@@ -32,6 +32,8 @@ CREATE TABLE Track (
     MD5              TEXT,
     FileSize         INTEGER NOT NULL,
     Title            TEXT,
+    ArtistName       TEXT,
+    AlbumName        TEXT,
     Duration         TEXT,
     AudioBitrate     INTEGER,
     AudioSampleRate  INTEGER,
@@ -40,21 +42,19 @@ CREATE TABLE Track (
     TagsProcessed    INTEGER,
     DateCreated      TEXT    NOT NULL,
     DateModified     TEXT    NOT NULL,
-    DateLastIndexed  TEXT    NOT NULL,
-    DateLastPlayed   TEXT,
-    Favorite         INTEGER,
-    PlayCount        INTEGER
+    DateLastIndexed  TEXT    NOT NULL
 );
 
 /*
- * Used to hold data that should be repopulated into the Track table after a full
- * index rebuild.  The Id will be different so we'll need to rely on the full path.
+ * User provided track data that should be persisted between full index loads.  This data
+ * will have to be linked by file name since the Id of the main table can change (or it
+ * can be linked by ID if an update statement is run after a full rebuild to update the keys.
  */
-CREATE TABLE TrackUpdate (
-    FilePath         TEXT,
-    DateLastPlayed   TEXT,
+CREATE TABLE TrackEx (
+    FilePath         TEXT NOT NULL CONSTRAINT PK_TrackEx PRIMARY KEY,
     Favorite         INTEGER,
-    PlayCount        INTEGER
+    PlayCount        INTEGER,
+    DateLastPlayed   TEXT
 );
 
 /*

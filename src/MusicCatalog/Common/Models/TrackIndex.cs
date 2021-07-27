@@ -18,9 +18,8 @@ using TagLib;
 namespace MusicCatalog.Common.Models
 {
     [Table("Track")]
-    public class Track
+    public class TrackIndex
     {
-        [Key]
         public int Id { get; set; }
 
         public int ArtistId { get; set; }
@@ -63,6 +62,12 @@ namespace MusicCatalog.Common.Models
 
         public bool TagsProcessed { get; set; }
 
+        public bool Favorite { get; set; }
+
+        public int PlayCount { get; set; }
+
+        public DateTime DateLastPlayed { get; set; }
+
         [Write(false)]
         [JsonIgnore]
         public BitmapImage AlbumArt
@@ -78,7 +83,7 @@ namespace MusicCatalog.Common.Models
 
                 var cs = tags.Tag.Pictures.FirstOrDefault();
 
-                if (cs == default(IPicture) 
+                if (cs == default(IPicture)
                     || cs.Type == PictureType.NotAPicture
                     || cs.Type == PictureType.Other)
                 {

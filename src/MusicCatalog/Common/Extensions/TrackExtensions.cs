@@ -122,6 +122,26 @@ namespace MusicCatalog.Common.Extensions
         }
 
         /// <summary>
+        /// If the <see cref="Track"/> has a modified date that is newer than the DateModified that is
+        /// stored in the database.
+        /// </summary>
+        /// <param name="t"></param>
+        public static async Task<bool> IsTrackModified(this TrackIndex t)
+        {
+            // Get the date modified from the actual file system.
+            var fi = new FileInfo(t.FilePath);
+
+            await using var conn = AppServices.GetService<SqliteConnection>();
+            await conn.OpenAsync();
+
+            var modifiedDate = await conn.QuerySingleOrDefaultAsync<DateTime>("SELECT DateModified FROM Track WHERE Id = @Id", new { t.Id });
+
+            await conn.CloseAsync();
+
+            return fi.LastWriteTime > modifiedDate;
+        }
+
+        /// <summary>
         /// Gets an ArtistId from the database.  If the artist doesn't exist it is added.
         /// </summary>
         /// <param name="artistName"></param>
@@ -171,10 +191,42 @@ namespace MusicCatalog.Common.Extensions
         }
 
         /// <summary>
+        /// Attempts to infer the artist's name from the filename.
+        /// </summary>
+        /// <param name="t"></param>
+        public static string ArtistFromFileName(this TrackIndex t)
+        {
+            var parts = t.FileName.Split('-');
+
+            if (parts.Length > 1)
+            {
+                return parts[0].Replace(t.Extension, "").Trim();
+            }
+
+            return "Unknown Artist";
+        }
+
+        /// <summary>
         /// Attempts to infer the track title from the filename.
         /// </summary>
         /// <param name="t"></param>
         public static string TrackNameFromFileName(this Track t)
+        {
+            var parts = t.FileName.Split('-');
+
+            if (parts.Length > 1)
+            {
+                return parts[1].Replace(t.Extension, "").Trim();
+            }
+
+            return "Unknown Track";
+        }
+
+        /// <summary>
+        /// Attempts to infer the track title from the filename.
+        /// </summary>
+        /// <param name="t"></param>
+        public static string TrackNameFromFileName(this TrackIndex t)
         {
             var parts = t.FileName.Split('-');
 

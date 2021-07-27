@@ -3,11 +3,14 @@ using Dapper;
 using Dapper.Contrib.Extensions;
 using Microsoft.Data.Sqlite;
 using MusicCatalog.Common.Models;
+using MusicCatalog.Common.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using TagLib;
+using File = System.IO.File;
 
 namespace MusicCatalog.Common
 {
@@ -34,12 +37,9 @@ namespace MusicCatalog.Common
 
                     conveyor.UpdateInfoOverlay("Loading", "Deleting Index", true, true);
 
-                    // Save user provided data specific to a track.
-                    await conn.ExecuteAsync("DELETE FROM TrackUpdate");
-                    await conn.ExecuteAsync("INSERT INTO TrackUpdate(FilePath, DateLastPlayed, Favorite, PlayCount) SELECT FilePath, DateLastPlayed, Favorite, PlayCount FROM Track");
-
-                    // Clear the Track table and begin.
+                    // Clear the Track table, request its auto increment and start the transaction.
                     await conn.ExecuteAsync("DELETE FROM Track");
+                    await conn.ExecuteAsync("DELETE FROM sqlite_sequence WHERE name = 'Track'");
                     await conn.ExecuteAsync("VACUUM");
                     await conn.ExecuteAsync("BEGIN");
 
@@ -93,16 +93,82 @@ namespace MusicCatalog.Common
                         }
                     }
 
-                    // Reload our user supplied data back into the Track table.
-                    conveyor.UpdateInfoOverlay("Loading", "Reloading Track Metadata", true, true);
-                    await conn.ExecuteAsync("UPDATE Track SET DateLastPlayed = t.DateLastPlayed, Favorite = t.Favorite, PlayCount = t.PlayCount FROM (SELECT FilePath, DateLastPlayed, Favorite, PlayCount FROM TrackUpdate) t WHERE Track.FilePath = t.FilePath");
+                    conveyor.UpdateInfoOverlay("Loading", $"Commiting records to the database.", true, true);
+                    await conn.ExecuteAsync("COMMIT");
+
+                    conveyor.HideInfoOverlay();
+                }
+            });
+        }
+
+        /// <summary>
+        /// Attempts to index tags associated with the MP3.
+        /// </summary>
+        /// <returns></returns>
+        public async Task IndexTags()
+        {
+            await Task.Run(async () =>
+            {
+                var settings = AppServices.GetService<AppSettings>();
+                var conveyor = AppServices.CreateInstance<Conveyor>();
+                var extensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".mp3" };
+                int counter = 0;
+
+                using (var conn = AppServices.GetService<SqliteConnection>())
+                {
+                    await conn.OpenAsync();
+                    await conn.ExecuteAsync("BEGIN");
+
+                    conveyor.UpdateInfoOverlay("Loading", $"Getting Track List", true, true);
+                    var tracks = conn.Query<Track>("SELECT * FROM Track");
+
+                    foreach (var tr in tracks)
+                    {
+                        counter++;
+                        conveyor.UpdateInfoOverlay("Loading", $"{counter.ToString()}: {tr.FileName}", true, true);
+
+                        if (!File.Exists(tr.FilePath))
+                        {
+                            continue;
+                        }
+
+                        TagLib.File tags;
+
+                        try
+                        {
+                            tags = TagLib.File.Create(tr.FilePath);
+                        }
+                        catch
+                        {
+                            // Files with corrupt tags will likely still be playable but for our purposes here
+                            // we're going to eat the exception and continue.
+                            continue;
+                        }
+
+                        if (tags != null)
+                        {
+                            // Title
+                            tr.Title = !string.IsNullOrWhiteSpace(tags.Tag.Title) ? tags.Tag.Title : tr.TrackNameFromFileName();
+                            tr.ArtistName = !string.IsNullOrWhiteSpace(tags.Tag.JoinedAlbumArtists) ? tags.Tag.JoinedAlbumArtists: tr.ArtistFromFileName();
+                            tr.AlbumName = !string.IsNullOrWhiteSpace(tags.Tag.Album) ? tags.Tag.Album : string.Empty;
+                            tr.AudioBitRate = tags.Properties.AudioBitrate;
+                            tr.AudioSampleRate = tags.Properties.AudioSampleRate;
+                            tr.BitsPerSample = tags.Properties.BitsPerSample;
+                            tr.AudioChannels = tags.Properties.AudioChannels;
+                            tr.Duration = tags.Properties.Duration.ToString();
+                        }
+
+                        tr.TagsProcessed = true;
+                        tr.DateLastIndexed = DateTime.Now;
+                        
+                        _ = await conn.UpdateAsync(tr);
+                    }
 
                     conveyor.UpdateInfoOverlay("Loading", $"Commiting records to the database.", true, true);
                     await conn.ExecuteAsync("COMMIT");
 
                     conveyor.HideInfoOverlay();
                 }
-
             });
         }
 
@@ -114,7 +180,7 @@ namespace MusicCatalog.Common
                 {
                     await conn.OpenAsync();
 
-                    var results = conn.Query<string>("select FilePath from Track");
+                    var results = conn.Query<string>("SELECT FilePath FROM Track");
 
                     await conn.ExecuteAsync("BEGIN");
 
@@ -122,7 +188,7 @@ namespace MusicCatalog.Common
                     {
                         var fi = new FileInfo(filePath);
                         string md5 = fi.CreateMD5();
-                        await conn.ExecuteAsync("update Track set MD5 = @md5 where FilePath = @filePath", new {md5, filePath});
+                        await conn.ExecuteAsync("update Track set MD5 = @md5 where FilePath = @filePath", new { md5, filePath });
                     }
 
                     await conn.ExecuteAsync("COMMIT");
