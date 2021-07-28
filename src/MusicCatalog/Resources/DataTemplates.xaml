@@ -19,17 +19,21 @@
                         Source="{Binding AlbumArt, Mode=OneTime}">
                     </Image>
                 </fluentWpf:DropShadowPanel>
-                <controls:ScalingTextBlock Margin="15,10,0,0"
-                           FontSize="12" MaxFontSize="12" MinFontSize="9"
-                           FontWeight="SemiBold" TextTrimming="CharacterEllipsis"
-                           ToolTip="{Binding Title, Mode=OneTime}"
-                           Text="{Binding Title, Mode=OneTime}"></controls:ScalingTextBlock>
-                <controls:ScalingTextBlock Height="40"
-                           Margin="15,0,0,0"
-                           FontSize="12" MaxFontSize="12" MinFontSize="10" FontScaleIncrement="1.0"
-                           Foreground="Gray"
-                           Text="{Binding ArtistName, Mode=OneTime}" 
-                           TextTrimming="CharacterEllipsis"></controls:ScalingTextBlock>
+                <Border VerticalAlignment="Top" Margin="0,10,0,0">
+                    <controls:ScalingTextBlock Margin="15,0,0,0"
+                                               FontSize="12" MaxFontSize="12" MinFontSize="10"
+                                               FontWeight="SemiBold" TextTrimming="CharacterEllipsis"
+                                               ToolTip="{Binding Title, Mode=OneTime}"
+                                               Text="{Binding Title, Mode=OneTime}"></controls:ScalingTextBlock>
+                </Border>
+                <Border VerticalAlignment="Top">
+                    <controls:ScalingTextBlock Height="40"
+                                               Margin="15,0,0,0"
+                                               FontSize="12" MaxFontSize="12" MinFontSize="10" FontScaleIncrement="1.0"
+                                               Foreground="Gray"
+                                               Text="{Binding ArtistName, Mode=OneTime}" 
+                                               TextTrimming="CharacterEllipsis"></controls:ScalingTextBlock>
+                </Border>
             </ui:SimpleStackPanel>
         </UniformGrid>
     </DataTemplate>
