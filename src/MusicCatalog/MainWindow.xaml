@@ -75,12 +75,6 @@
                     </controls:NavButton.IconControl>
                 </controls:NavButton>
 
-                <controls:NavButton Text="Latest Songs">
-                    <controls:NavButton.IconControl>
-                        <iconPacks:PackIconVaadinIcons Kind="Music" Foreground="Black" />
-                    </controls:NavButton.IconControl>
-                </controls:NavButton>
-
                 <controls:NavButton Text="Playlists">
                     <controls:NavButton.IconControl>
                         <iconPacks:PackIconZondicons Kind="Playlist" Foreground="Black" />
