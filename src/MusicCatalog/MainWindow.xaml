@@ -5,16 +5,14 @@
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                   xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
                   xmlns:ui="http://schemas.modernwpf.com/2019"
-                  xmlns:local="clr-namespace:MusicCatalog"
                   xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                   xmlns:controls="clr-namespace:MusicCatalog.Controls"
-                  xmlns:pages="clr-namespace:MusicCatalog.Pages"
                   xmlns:converters="clr-namespace:MusicCatalog.Converters"
                   mc:Ignorable="d"
                   fw:AcrylicWindow.FallbackColor="#66FFFFFF"
                   ui:ThemeManager.RequestedTheme="Light"
                   fw:ExtendViewIntoTitleBar="True"
-                  Title="Music Catalog" Height="720" Width="1000"
+                  Title="Music Catalog" Height="780" Width="1200"
                   Loaded="MainWindow_OnLoaded">
     <Window.Resources>
         <converters:BooleanToCollapsedConverter x:Key="BoolToCollapsedConverter"/>
@@ -31,8 +29,7 @@
             <!-- Back Button and Window Title -->
             <StackPanel DockPanel.Dock="Top">
                 <StackPanel Orientation="Horizontal">
-                    <Button x:Name="ButtonPageBack"
-                            Width="46" Height="29"
+                    <Button Width="46" Height="29"
                             BorderThickness="0"
                             Background="Transparent"
                             WindowChrome.IsHitTestVisibleInChrome="True"
@@ -104,8 +101,7 @@
             <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <!-- Backwards -->
-                    <Button x:Name="ButtonBack"
-                            Style="{StaticResource ButtonRevealStyle}" 
+                    <Button Style="{StaticResource ButtonRevealStyle}" 
                             HorizontalContentAlignment="Center" 
                             Background="Transparent"
                             Click="ButtonBack_OnClick">
@@ -120,11 +116,10 @@
                     </Button>
 
                     <!-- Play -->
-                    <Button x:Name="ButtonPlay"
-                            Style="{StaticResource ButtonRevealStyle}" 
+                    <Button Style="{StaticResource ButtonRevealStyle}" 
                             HorizontalContentAlignment="Center" Background="Transparent"
                             Visibility="{Binding AudioManager.IsPlaying, Converter={StaticResource InvertingBoolToCollapsedConverter}}"
-                            Click="ButtonPlayAsync_OnClick">
+                            Click="ButtonPlay_OnClick">
                         <Button.Content>
                             <iconPacks:PackIconVaadinIcons Kind="Play" 
                                                            Margin="10"
@@ -136,8 +131,7 @@
                     </Button>
 
                     <!-- Pause -->
-                    <Button x:Name="ButtonPause"
-                            Style="{StaticResource ButtonRevealStyle}" 
+                    <Button Style="{StaticResource ButtonRevealStyle}" 
                             HorizontalContentAlignment="Center"
                             Background="Transparent"
                             Visibility="{Binding AudioManager.IsPlaying, Converter={StaticResource BoolToCollapsedConverter}}"
@@ -153,8 +147,7 @@
                     </Button>
 
                     <!-- Forward -->
-                    <Button x:Name="ButtonForward"
-                            Style="{StaticResource ButtonRevealStyle}"
+                    <Button Style="{StaticResource ButtonRevealStyle}"
                             HorizontalContentAlignment="Center" 
                             Background="Transparent"
                             Click="ButtonForward_OnClick">
@@ -207,7 +200,7 @@
                         </Image>
                     </fw:DropShadowPanel>
 
-                    <StackPanel x:Name="StackPanelNowPlaying" Orientation="Vertical" Margin="8,7,0,0">
+                    <StackPanel Orientation="Vertical" Margin="8,7,0,0">
                         <TextBlock Text="{Binding Path=AudioManager.NowPlayingSongTitle}" FontSize="16" FontWeight="SemiBold"></TextBlock>
                         <TextBlock Text="{Binding Path=AudioManager.NowPlayingArtist}" FontSize="14"></TextBlock>
                         <TextBlock Text="{Binding Path=AudioManager.NowPlayingAlbum}" FontSize="14"></TextBlock>

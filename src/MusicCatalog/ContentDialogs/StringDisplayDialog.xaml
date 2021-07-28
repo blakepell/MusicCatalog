@@ -7,7 +7,7 @@
     PrimaryButtonText="Close"
     SecondaryButtonText=""
     DefaultButton="Primary">
-    <TextBox x:Name="TextBoxStringDisplay" IsReadOnly="True" Text="{Binding DisplayText}" 
+    <TextBox IsReadOnly="True" Text="{Binding DisplayText}" 
              Width="450" FontFamily="Consolas"
              VerticalScrollBarVisibility="Visible" />
 </ui:ContentDialog>

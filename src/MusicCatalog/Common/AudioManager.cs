@@ -7,18 +7,15 @@
  * @license           : MIT
  */
 
+using Dapper;
+using Microsoft.Data.Sqlite;
+using MusicCatalog.Common.Models;
 using NAudio.Wave;
 using System;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using Dapper;
-using Microsoft.Data.Sqlite;
-using MusicCatalog.Common.Models;
-using TagLib;
 
 namespace MusicCatalog.Common
 {
@@ -93,7 +90,7 @@ namespace MusicCatalog.Common
         public AudioManager()
         {
             _playTimer = new();
-            _playTimer.Tick += new EventHandler(delegate (object? o, EventArgs args)
+            _playTimer.Tick += new EventHandler(delegate (object o, EventArgs args)
             {
                 if (this.Mp3Reader != null)
                 {

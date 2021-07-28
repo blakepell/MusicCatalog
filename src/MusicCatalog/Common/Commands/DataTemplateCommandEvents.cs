@@ -13,8 +13,8 @@ namespace MusicCatalog.Common.Commands
 {
     public static class DataTemplateCommands
     {
-        public static RoutedCommand CopyFilePath = new RoutedCommand("CopyFilePath", typeof(DataTemplateCommands));
+        public static RoutedCommand CopyFilePath = new("CopyFilePath", typeof(DataTemplateCommands));
 
-        public static RoutedCommand DisplayIdTagInfo = new RoutedCommand("DisplayIdTagInfo", typeof(DataTemplateCommands));
+        public static RoutedCommand DisplayIdTagInfo = new("DisplayIdTagInfo", typeof(DataTemplateCommands));
     }
 }

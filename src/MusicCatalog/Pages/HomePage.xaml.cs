@@ -7,13 +7,11 @@
  * @license           : MIT
  */
 
-using Dapper;
-using Microsoft.Data.Sqlite;
+using ModernWpf.Controls;
 using MusicCatalog.Common;
+using MusicCatalog.Common.Models;
 using System.Windows;
 using System.Windows.Controls;
-using ModernWpf.Controls;
-using MusicCatalog.Common.Models;
 using GridView = ModernWpf.Controls.GridView;
 
 namespace MusicCatalog.Pages
@@ -34,7 +32,7 @@ namespace MusicCatalog.Pages
         /// <param name="e"></param>
         private async void HomePage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            RecentPlaysView.ItemsSource = await DbTasks.RecentPlays(10);
+            RecentPlaysView.ItemsSource = await DbTasks.RecentPlays(15);
         }
 
         private async void RecentPlaysView_OnItemClick(object sender, ItemClickEventArgs e)

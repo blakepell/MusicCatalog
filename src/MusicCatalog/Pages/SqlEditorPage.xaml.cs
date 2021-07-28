@@ -7,10 +7,9 @@
  * @license           : MIT
  */
 
+using MusicCatalog.Common;
 using System;
 using System.Windows;
-using System.Windows.Controls;
-using MusicCatalog.Common;
 
 namespace MusicCatalog.Pages
 {

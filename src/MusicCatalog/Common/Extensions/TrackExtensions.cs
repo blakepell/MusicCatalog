@@ -7,20 +7,16 @@
  * @license           : MIT
  */
 
+using Dapper;
+using Dapper.Contrib.Extensions;
+using Microsoft.Data.Sqlite;
+using MusicCatalog.Common.Models;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using ABI.Windows.Networking.Connectivity;
-using Argus.Extensions;
-using Dapper;
-using Dapper.Contrib.Extensions;
-using ICSharpCode.AvalonEdit.Document;
-using Microsoft.Data.Sqlite;
-using MusicCatalog.Common.Models;
 using TagLib;
-using TagLib.Matroska;
 using File = TagLib.File;
 using Track = MusicCatalog.Common.Models.Track;
 

@@ -41,7 +41,7 @@ namespace MusicCatalog.Common
             trackEx.PlayCount++;
             trackEx.DateLastPlayed = DateTime.Now; 
             bool result = await db.UpdateAsync(trackEx);
-            return result == true ? 1 : 0;
+            return result ? 1 : 0;
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace MusicCatalog.Common
 
             await using var db = AppServices.GetService<SqliteConnection>();
             await db.OpenAsync();
-            return await db.QueryAsync<TrackIndex>($"SELECT * FROM TrackIndex WHERE FileName LIKE @searchTerm or Title Like @searchTerm ORDER BY FileName", new { searchTerm });
+            return await db.QueryAsync<TrackIndex>("SELECT * FROM TrackIndex WHERE FileName LIKE @searchTerm or Title Like @searchTerm ORDER BY FileName", new { searchTerm });
         }
     }
 }

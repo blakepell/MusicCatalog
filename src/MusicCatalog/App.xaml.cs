@@ -33,9 +33,9 @@ namespace MusicCatalog
             // Register our services with the dependency injection.
             AppServices.Init((sc) =>
             {
-                sc.AddSingleton<AppSettings>(appSettings);
-                sc.AddSingleton<MainWindow>(mainWindow);
-                sc.AddTransient<SqliteConnection>(s => new SqliteConnection(appSettings.DatabaseConnectionString));
+                sc.AddSingleton(appSettings);
+                sc.AddSingleton(mainWindow);
+                sc.AddTransient(s => new SqliteConnection(appSettings.DatabaseConnectionString));
             });
 
             // Since we're loading the main window manually we have to set it here.
@@ -48,7 +48,7 @@ namespace MusicCatalog
                 .LogToNowhere()
                 .Build();
 
-            var result = dbMigrations.PerformUpgrade();
+            _ = dbMigrations.PerformUpgrade();
 
             // Default settings if required.
             if (!appSettings.MusicDirectoryList.Any())

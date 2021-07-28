@@ -17,7 +17,7 @@ namespace MusicCatalog.Common
 {
     /// <summary>
     /// Searches the file system but also handles common exceptions that cause the .NET
-    /// provided enumerables to fail in cases such as accessing junctions, symbolic links, etc.
+    /// provided enumerable to fail in cases such as accessing junctions, symbolic links, etc.
     /// </summary>
     public class FileSystemEnumerable : IEnumerable<FileSystemInfo>
     {

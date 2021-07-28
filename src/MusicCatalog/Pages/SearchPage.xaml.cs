@@ -7,21 +7,18 @@
  * @license           : MIT
  */
 
-using System;
-using System.Text;
-using System.Dynamic;
-using System.Linq;
+using Argus.Extensions;
 using ModernWpf.Controls;
 using MusicCatalog.Common;
-using MusicCatalog.Common.Models;
 using MusicCatalog.Common.Commands;
-using MusicCatalog.Common.Extensions;
+using MusicCatalog.Common.Models;
+using MusicCatalog.ContentDialogs;
+using Newtonsoft.Json;
+using System;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Argus.Extensions;
-using MusicCatalog.ContentDialogs;
-using Newtonsoft.Json;
 using TagLib;
 
 namespace MusicCatalog.Pages
@@ -55,7 +52,6 @@ namespace MusicCatalog.Pages
 
         public async Task ExecuteSearch()
         {
-            var tracks = await DbTasks.SearchTracks(this.SearchText);
             SearchResultsView.ItemsSource = await DbTasks.SearchTracks(this.SearchText);
             TextResultsCount.Text = $"{SearchResultsView.Items.Count.ToString()} ";
         }
@@ -96,9 +92,6 @@ namespace MusicCatalog.Pages
                     {
                         File tags = TagLib.File.Create(args.Parameter.ToString());
                         
-                        //var id3v1 = tags.GetTag(TagTypes.Id3v1);
-                        //var id3v2 = tags.GetTag(TagTypes.Id3v2);
-
                         var sb = new StringBuilder();
 
                         sb.AppendLine("/* tag */");
@@ -106,12 +99,6 @@ namespace MusicCatalog.Pages
 
                         sb.AppendLine("/* properties */");
                         sb.AppendLine(JsonConvert.SerializeObject(tags.Properties, Formatting.Indented));
-
-                        //sb.AppendLine("/* Id3v1 */");
-                        //sb.AppendLine(JsonConvert.SerializeObject(id3v1, Formatting.Indented));
-
-                        //sb.AppendLine("\r\n/* Id3v2 */");
-                        //sb.AppendLine(JsonConvert.SerializeObject(id3v2, Formatting.Indented));
 
                         var dialog = new StringDisplayDialog()
                         {
@@ -125,8 +112,7 @@ namespace MusicCatalog.Pages
             }
             catch (Exception ex)
             {
-                int x = 0;
-                // TODO: Log error
+                MessageBox.Show(ex.Message);
             }
         }
 

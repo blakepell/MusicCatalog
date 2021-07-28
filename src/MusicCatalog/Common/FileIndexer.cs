@@ -2,14 +2,13 @@
 using Dapper;
 using Dapper.Contrib.Extensions;
 using Microsoft.Data.Sqlite;
-using MusicCatalog.Common.Models;
 using MusicCatalog.Common.Extensions;
+using MusicCatalog.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using TagLib;
 using File = System.IO.File;
 
 namespace MusicCatalog.Common
@@ -93,7 +92,7 @@ namespace MusicCatalog.Common
                         }
                     }
 
-                    conveyor.UpdateInfoOverlay("Loading", $"Commiting records to the database.", true, true);
+                    conveyor.UpdateInfoOverlay("Loading", "Commiting records to the database.", true, true);
                     await conn.ExecuteAsync("COMMIT");
 
                     conveyor.HideInfoOverlay();
@@ -119,7 +118,7 @@ namespace MusicCatalog.Common
                     await conn.OpenAsync();
                     await conn.ExecuteAsync("BEGIN");
 
-                    conveyor.UpdateInfoOverlay("Loading", $"Getting Track List", true, true);
+                    conveyor.UpdateInfoOverlay("Loading", "Getting Track List", true, true);
                     var tracks = conn.Query<Track>("SELECT * FROM Track");
 
                     foreach (var tr in tracks)
@@ -164,7 +163,7 @@ namespace MusicCatalog.Common
                         _ = await conn.UpdateAsync(tr);
                     }
 
-                    conveyor.UpdateInfoOverlay("Loading", $"Commiting records to the database.", true, true);
+                    conveyor.UpdateInfoOverlay("Loading", "Commiting records to the database.", true, true);
                     await conn.ExecuteAsync("COMMIT");
 
                     conveyor.HideInfoOverlay();

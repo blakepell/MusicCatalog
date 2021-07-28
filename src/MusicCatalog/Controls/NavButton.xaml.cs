@@ -104,6 +104,10 @@ namespace MusicCatalog.Controls
             set => SetValue(ClickBehaviorProperty, value);
         }
 
+        /// <summary>
+        /// Event handler for when the menu item is clicked.  The user supplied event will run
+        /// after the code for this
+        /// </summary>
         public event EventHandler Click;
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)

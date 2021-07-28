@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
-using MusicCatalog.Controls;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -48,7 +47,7 @@ namespace MusicCatalog
             }
         }
 
-        private async void ButtonPlayAsync_OnClick(object sender, RoutedEventArgs e)
+        private void ButtonPlay_OnClick(object sender, RoutedEventArgs e)
         {
             this.AudioManager.Play();
         }
@@ -102,7 +101,7 @@ namespace MusicCatalog
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void SearchBox_OnSearch(object? sender, string e)
+        private void SearchBox_OnSearch(object sender, string e)
         {
             // Navigate to the first page we're going to show the user.
             MainFrame.Navigate(typeof(SearchPage), e);

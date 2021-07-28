@@ -2,9 +2,11 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:fluentWpf="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
                     xmlns:cmds="clr-namespace:MusicCatalog.Common.Commands"
-                    xmlns:ui="http://schemas.modernwpf.com/2019">
+                    xmlns:ui="http://schemas.modernwpf.com/2019"
+                    xmlns:controls="clr-namespace:MusicCatalog.Controls"
+                    xmlns:local="clr-namespace:MusicCatalog.Common.Models">
     <!-- DataTemplate to show the XAML for the large track display -->
-    <DataTemplate x:Key="TrackTemplate">
+    <DataTemplate x:Key="TrackTemplate" DataType="{x:Type local:TrackIndex}">
         <UniformGrid Width="185" Height="200">
             <ui:SimpleStackPanel Orientation="Vertical" Cursor="Hand">
                 <fluentWpf:DropShadowPanel 
@@ -17,20 +19,22 @@
                         Source="{Binding AlbumArt, Mode=OneTime}">
                     </Image>
                 </fluentWpf:DropShadowPanel>
-                <TextBlock Margin="15,10,0,0"
-                           FontSize="12" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"
+                <controls:ScalingTextBlock Margin="15,10,0,0"
+                           FontSize="12" MaxFontSize="12" MinFontSize="9"
+                           FontWeight="SemiBold" TextTrimming="CharacterEllipsis"
                            ToolTip="{Binding Title, Mode=OneTime}"
-                           Text="{Binding Title, Mode=OneTime}"></TextBlock>
-                <TextBlock Grid.Row="1" Height="40"
+                           Text="{Binding Title, Mode=OneTime}"></controls:ScalingTextBlock>
+                <controls:ScalingTextBlock Height="40"
                            Margin="15,0,0,0"
-                           FontSize="12" Foreground="Gray"
+                           FontSize="12" MaxFontSize="12" MinFontSize="10" FontScaleIncrement="1.0"
+                           Foreground="Gray"
                            Text="{Binding ArtistName, Mode=OneTime}" 
-                           TextTrimming="CharacterEllipsis"></TextBlock>
+                           TextTrimming="CharacterEllipsis"></controls:ScalingTextBlock>
             </ui:SimpleStackPanel>
         </UniformGrid>
     </DataTemplate>
 
-    <DataTemplate x:Key="TrackGridTemplate">
+    <DataTemplate x:Key="TrackGridTemplate" DataType="{x:Type local:TrackIndex}">
         <ui:SimpleStackPanel Orientation="Horizontal" Cursor="Hand" Width="500">
             <Image
                     Margin="0,2,10,2"
@@ -38,7 +42,7 @@
                     ToolTip="{Binding Title, Mode=OneTime}"
                     Source="{Binding AlbumArt, Mode=OneTime}">
                 </Image>
-                <ui:SimpleStackPanel Orientation="Vertical" Grid.Column="1">
+                <ui:SimpleStackPanel Orientation="Vertical">
                     <TextBlock Margin="0,5,5,0"
                                FontSize="12" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"
                                ToolTip="{Binding Title, Mode=OneTime}"
