@@ -7,6 +7,7 @@
       Loaded="HomePage_OnLoaded"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
+      Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
       Title="Home">
     <Grid Margin="10,40,0,0">
         <Grid.RowDefinitions>
@@ -14,8 +15,8 @@
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <TextBlock Text="Recently Played Tracks" FontSize="18" Foreground="#063455"></TextBlock>
-            <TextBlock Text=" >" FontSize="18" Foreground="#063455"></TextBlock>
+            <TextBlock Text="Recently Played Tracks" FontSize="18" Foreground="{DynamicResource HeaderBrush}"></TextBlock>
+            <TextBlock Text=" >" FontSize="18" Foreground="{DynamicResource HeaderBrush}"></TextBlock>
         </StackPanel>
         <ui:GridView Grid.Row="1"
             x:Name="RecentPlaysView"

@@ -10,7 +10,7 @@
                   xmlns:converters="clr-namespace:MusicCatalog.Converters"
                   mc:Ignorable="d"
                   fw:AcrylicWindow.FallbackColor="#66FFFFFF"
-                  ui:ThemeManager.RequestedTheme="Light"
+                  ui:ThemeManager.IsThemeAware="True"
                   fw:ExtendViewIntoTitleBar="True"
                   Title="Music Catalog" Height="780" Width="1200"
                   Loaded="MainWindow_OnLoaded">
@@ -49,35 +49,35 @@
 
                 <!-- Search Box -->
                 <controls:NavSearchBox x:Name="SearchBox" Margin="0,5,0,0"
-                                       ActiveBrush="Transparent"
                                        Search="SearchBox_OnSearch">
                 </controls:NavSearchBox>
 
                 <!-- Nav Buttons Top -->
-                <controls:NavButton Text="Home" 
+                <controls:NavButton Text="Home"
+                                    Foreground="{DynamicResource SystemControlForegroundAltHighBrush}"
                                     AssociatedFrame="{Binding ElementName=MainFrame}"
                                     NavigationPageType="MusicCatalog.Pages.HomePage" IsActive="True"
                                     SkipNavigateIfAlreadyLoaded="True">
                     <controls:NavButton.IconControl>
-                        <iconPacks:PackIconVaadinIcons Kind="Home" Foreground="Black" />
+                        <iconPacks:PackIconVaadinIcons Kind="Home" />
                     </controls:NavButton.IconControl>
                 </controls:NavButton>
 
                 <controls:NavButton Text="Recent Songs">
                     <controls:NavButton.IconControl>
-                        <iconPacks:PackIconZondicons Kind="Time" Foreground="Black" />
+                        <iconPacks:PackIconZondicons Kind="Time" />
                     </controls:NavButton.IconControl>
                 </controls:NavButton>
 
                 <controls:NavButton Text="All Songs">
                     <controls:NavButton.IconControl>
-                        <iconPacks:PackIconVaadinIcons Kind="Music" Foreground="Black" />
+                        <iconPacks:PackIconVaadinIcons Kind="Music" />
                     </controls:NavButton.IconControl>
                 </controls:NavButton>
 
                 <controls:NavButton Text="Playlists">
                     <controls:NavButton.IconControl>
-                        <iconPacks:PackIconZondicons Kind="Playlist" Foreground="Black" />
+                        <iconPacks:PackIconZondicons Kind="Playlist" />
                     </controls:NavButton.IconControl>
                 </controls:NavButton>
 
@@ -86,7 +86,7 @@
                                     NavigationPageType="MusicCatalog.Pages.SqlEditorPage"
                                     SkipNavigateIfAlreadyLoaded="True">
                     <controls:NavButton.IconControl>
-                        <iconPacks:PackIconVaadinIcons Kind="Database" Foreground="Black" />
+                        <iconPacks:PackIconVaadinIcons Kind="Database" />
                     </controls:NavButton.IconControl>
                 </controls:NavButton>
             </StackPanel>
@@ -159,7 +159,7 @@
                                     NavigationPageType="MusicCatalog.Pages.SettingsPage"
                                     SkipNavigateIfAlreadyLoaded="True">
                     <controls:NavButton.IconControl>
-                        <iconPacks:PackIconVaadinIcons Kind="CogOutline" Margin="0" Foreground="Black" />
+                        <iconPacks:PackIconVaadinIcons Kind="CogOutline" Margin="0" />
                     </controls:NavButton.IconControl>
                 </controls:NavButton>
             </StackPanel>
@@ -179,7 +179,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Main Frame -->
-                <ui:Frame x:Name="MainFrame" Background="White"
+                <ui:Frame x:Name="MainFrame" Background="{DynamicResource BaseHigh}"
                               Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="2"
                               HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></ui:Frame>
 

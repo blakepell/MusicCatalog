@@ -14,7 +14,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using ModernWpf;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using MusicCatalog.Common.Wpf;
 
 namespace MusicCatalog.Pages
 {
@@ -92,6 +94,21 @@ namespace MusicCatalog.Pages
             {
                 _appSettings.MusicDirectoryList.Add( new IndexDirectory(fd.SelectedPath));
             }
+        }
+
+        private void ButtonToggleTheme_OnClick(object sender, RoutedEventArgs e)
+        {
+            DispatcherHelper.RunOnMainThread(() =>
+            {
+                if (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Dark)
+                {
+                    ThemeManager.Current.ApplicationTheme = ApplicationTheme.Light;
+                }
+                else
+                {
+                    ThemeManager.Current.ApplicationTheme = ApplicationTheme.Dark;
+                }
+            });
         }
     }
 }

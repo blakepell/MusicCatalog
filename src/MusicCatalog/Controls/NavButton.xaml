@@ -12,15 +12,15 @@
                 Click="ButtonBase_OnClick">
             <StackPanel Orientation="Horizontal">
                 <ContentPresenter Content="{Binding Path=IconControl}" Margin="0, 3, 0, 0"></ContentPresenter>
-                <TextBlock Text="{Binding Path=Text}" Margin="8,0,0,0" Foreground="Black"></TextBlock>
+                <TextBlock Text="{Binding Path=Text}" Margin="8,0,0,0"></TextBlock>
             </StackPanel>
         </Button>
         <Border.Style>
             <Style TargetType="{x:Type Border}">
-                <Setter Property="BorderBrush" Value="{Binding ActiveBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource ListAccentHigh}" />
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding IsActive}" Value="True">
-                        <Setter Property="BorderBrush" Value="{Binding ActiveBrush}"/>
+                        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlBackgroundAccentBrush}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding IsActive}" Value="False">
                         <Setter Property="BorderBrush" Value="{Binding InactiveBrush}"/>

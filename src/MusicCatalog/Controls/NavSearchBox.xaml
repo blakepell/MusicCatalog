@@ -20,10 +20,10 @@
         </StackPanel>
         <Border.Style>
             <Style TargetType="{x:Type Border}">
-                <Setter Property="BorderBrush" Value="{Binding ActiveBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource ListAccentHigh}"/>
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding SearchBoxIsFocused}" Value="True">
-                        <Setter Property="BorderBrush" Value="{Binding ActiveBrush}"/>
+                        <Setter Property="BorderBrush" Value="{DynamicResource ListAccentHigh}"/>
                     </DataTrigger>
                     <DataTrigger Binding="{Binding SearchBoxIsFocused}" Value="False">
                         <Setter Property="BorderBrush" Value="{Binding InactiveBrush}"/>

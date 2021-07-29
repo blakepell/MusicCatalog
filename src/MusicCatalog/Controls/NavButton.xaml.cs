@@ -32,15 +32,6 @@ namespace MusicCatalog.Controls
             set => SetValue(TextProperty, value);
         }
 
-        public static readonly DependencyProperty ActiveBrushProperty = DependencyProperty.Register(
-            nameof(ActiveBrush), typeof(Brush), typeof(NavButton), new PropertyMetadata(Brushes.DodgerBlue));
-
-        public Brush ActiveBrush
-        {
-            get => (Brush) GetValue(ActiveBrushProperty);
-            set => SetValue(ActiveBrushProperty, value);
-        }
-
         public static readonly DependencyProperty InactiveBrushProperty = DependencyProperty.Register(
             nameof(InactiveBrush), typeof(Brush), typeof(NavButton), new PropertyMetadata((SolidColorBrush)new BrushConverter().ConvertFrom("#66CCCCCC")));
 
