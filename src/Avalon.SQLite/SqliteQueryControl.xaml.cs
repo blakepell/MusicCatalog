@@ -193,7 +193,15 @@ namespace Avalon.Sqlite
         /// <param name="theme"></param>
         private void SetTheme(ApplicationTheme theme)
         {
-            ThemeManager.SetRequestedTheme(this, ElementTheme.Dark);
+            if (theme == ApplicationTheme.Dark)
+            {
+                ThemeManager.SetRequestedTheme(this, ElementTheme.Dark);
+            }
+            else
+            {
+                ThemeManager.SetRequestedTheme(this, ElementTheme.Light);
+            }
+
             this.SetTheme();
         }
 

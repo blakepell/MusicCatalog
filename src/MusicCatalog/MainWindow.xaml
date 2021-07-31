@@ -10,8 +10,8 @@
                   xmlns:converters="clr-namespace:MusicCatalog.Converters"
                   mc:Ignorable="d"
                   fw:AcrylicWindow.FallbackColor="#66FFFFFF"
-                  ui:ThemeManager.IsThemeAware="True"
                   fw:ExtendViewIntoTitleBar="True"
+                  BorderBrush="{DynamicResource WindowBorder}"
                   Title="Music Catalog" Height="780" Width="1200"
                   Loaded="MainWindow_OnLoaded">
     <Window.Resources>

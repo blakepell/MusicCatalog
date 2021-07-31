@@ -11,8 +11,8 @@
             <TextBox x:Name="SearchBox" x:FieldModifier="public"
                      Margin="10,2,15,5" Padding="5" Text="" BorderThickness="1"
                      fluentWpf:Extensions.PlaceholderText="Search" AcceptsReturn="false"
-                     Style="{StaticResource TextBoxRevealStyle}"
                      Width="195"
+                     Style="{StaticResource TextBoxRevealStyle}"
                      GotFocus="SearchBox_OnGotFocus" LostFocus="SearchBox_OnLostFocus" PreviewKeyDown="SearchBox_OnPreviewKeyDown">
             </TextBox>
             <!-- Ugly right?  TODO: Build this from a template and don't use negative margins -->

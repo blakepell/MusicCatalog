@@ -14,6 +14,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Media;
 using ModernWpf;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using MusicCatalog.Common.Wpf;
@@ -102,11 +103,11 @@ namespace MusicCatalog.Pages
             {
                 if (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Dark)
                 {
-                    ThemeManager.Current.ApplicationTheme = ApplicationTheme.Light;
+                    App.SetTheme(ApplicationTheme.Light, Colors.Green);
                 }
                 else
                 {
-                    ThemeManager.Current.ApplicationTheme = ApplicationTheme.Dark;
+                    App.SetTheme(ApplicationTheme.Dark, Colors.DarkGoldenrod);
                 }
             });
         }

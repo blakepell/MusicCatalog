@@ -17,7 +17,9 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ModernWpf;
 
 namespace MusicCatalog
 {
@@ -73,5 +75,48 @@ namespace MusicCatalog
             var settings = AppServices.GetService<AppSettings>();
             settings.Save();
         }
+
+        /// <summary>
+        /// Sets the applications current theme and accent color.
+        /// </summary>
+        /// <param name="theme"></param>
+        /// <param name="accentColor"></param>
+        public static void SetTheme(ApplicationTheme theme, Color accentColor)
+        {
+            var cpr = new ColorPaletteResources { Accent = accentColor };
+
+            Application.Current.Resources.BeginInit();
+
+            ThemeManager.Current.ApplicationTheme = theme;
+
+            // Wipe the slate clean
+            Application.Current.Resources.MergedDictionaries.Clear();
+
+            // Step through loading our resources in order.
+            Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/Resources/DataTemplates.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
+            Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/FluentWPF;component/Styles/Controls.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
+
+            if (theme == ApplicationTheme.Dark)
+            {
+                Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/ModernWpf;component/ThemeResources/Dark.xaml", UriKind.Relative)) as ResourceDictionary);
+                Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/FluentWPF;component/Styles/Colors.Dark.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
+                Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/Themes/Dark.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
+                Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/Avalon.Sqlite;component/Resources/Dark.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
+            }
+            else
+            {
+                Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/ModernWpf;component/ThemeResources/Light.xaml", UriKind.Relative)) as ResourceDictionary);
+                Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/FluentWPF;component/Styles/Colors.Light.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
+                Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/Themes/Light.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
+                Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/Avalon.Sqlite;component/Resources/Light.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
+            }
+
+            Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/FluentWPF;component/Styles/Brushes.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
+            Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/ModernWpf;component/ControlsResources.xaml", UriKind.Relative)) as ResourceDictionary);
+            Application.Current.Resources.MergedDictionaries.Add(cpr);
+
+            System.Windows.Application.Current.Resources.EndInit();
+        }
+
     }
 }
