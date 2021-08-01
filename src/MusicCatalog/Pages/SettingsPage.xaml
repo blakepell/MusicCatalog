@@ -7,6 +7,7 @@
       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       xmlns:models="clr-namespace:MusicCatalog.Common.Models"
       xmlns:theme="clr-namespace:MusicCatalog.Theme"
+      xmlns:controls="clr-namespace:MusicCatalog.Controls"
       mc:Ignorable="d"
       d:DesignHeight="450" d:DesignWidth="800" 
       Loaded="SettingsPage_OnLoaded"
@@ -51,6 +52,8 @@
                                 <theme:AppThemes />
                             </ui:RadioButtons.ItemsSource>
                         </ui:RadioButtons>
+
+                        <controls:AccentColorPicker x:Name="AccentColorPicker" />
                     </StackPanel>
                 </TabItem>
 
