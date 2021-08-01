@@ -15,11 +15,14 @@ using Newtonsoft.Json;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Windows.Media;
 
 namespace MusicCatalog
 {
     public class AppSettings : ConfigsTools, INotifyPropertyChanged
     {
+        public Color? AccentColor { get; set; }
+
         [JsonProperty("musicDirectoryList", Required = Required.Default)]
         public SpecialObservableCollection<IndexDirectory> MusicDirectoryList { get; set; } = new();
 

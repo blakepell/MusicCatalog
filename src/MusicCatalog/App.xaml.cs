@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MusicCatalog.Common;
 using MusicCatalog.Common.Models;
 using System;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -67,6 +68,17 @@ namespace MusicCatalog
 
             DefaultAlbumArt.Freeze();
 
+            // If there is no accent color, set it from the actual accent color that's used in
+            // the theme manager which -should- be from Windows.
+            if (appSettings.AccentColor == null)
+            {
+                appSettings.AccentColor = ThemeManager.Current.AccentColor ?? ThemeManager.Current.ActualAccentColor;
+            }
+            else
+            {
+                App.SetTheme(ApplicationTheme.Light, appSettings.AccentColor.GetValueOrDefault(Colors.DodgerBlue));
+            }
+
             mainWindow.Show();
         }
 
@@ -115,8 +127,10 @@ namespace MusicCatalog
             Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/ModernWpf;component/ControlsResources.xaml", UriKind.Relative)) as ResourceDictionary);
             Application.Current.Resources.MergedDictionaries.Add(cpr);
 
-            System.Windows.Application.Current.Resources.EndInit();
-        }
+            Application.Current.Resources.EndInit();
 
+            var settings = AppServices.GetService<AppSettings>();
+            settings.AccentColor = accentColor;
+        }
     }
 }
