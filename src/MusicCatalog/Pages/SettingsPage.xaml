@@ -43,10 +43,10 @@
 
                 <TabItem Header="Theme">
                     <StackPanel Orientation="Vertical">
-                        <!--SelectedItem="{Binding Source={x:Static theme:ThemeManagerProxy.Current}, Path=ApplicationTheme, Converter={StaticResource AppThemeConverter}}">-->
-
                         <ui:RadioButtons
+                            SelectedItem="{Binding Path=Theme, Converter={StaticResource AppThemeConverter}}"
                             Margin="0,10,0,0"
+                            SelectionChanged="RadioButtonsTheme_OnSelectionChanged"
                             Header="Theme Mode">
                             <ui:RadioButtons.ItemsSource>
                                 <theme:AppThemes />

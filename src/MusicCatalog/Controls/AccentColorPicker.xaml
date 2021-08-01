@@ -19,7 +19,9 @@
                 VerticalAlignment="Top"
                 SelectionMode="Single"
                 SelectedValuePath="Color"
+                SelectedValue="{Binding AccentColor}"
                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                SelectionChanged="ColorGridView_OnSelectionChanged"
                 ui:ThemeManager.HasThemeResources="True">
                 <ui:GridView.ItemsPanel>
                     <ItemsPanelTemplate>

@@ -24,6 +24,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using ModernWpf;
+using MusicCatalog.Common;
 
 namespace MusicCatalog.Theme
 {

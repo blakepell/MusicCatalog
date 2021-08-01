@@ -76,7 +76,7 @@ namespace MusicCatalog
             }
             else
             {
-                App.SetTheme(ApplicationTheme.Light, appSettings.AccentColor.GetValueOrDefault(Colors.DodgerBlue));
+                App.SetTheme(appSettings.Theme.GetValueOrDefault(ApplicationTheme.Light), appSettings.AccentColor.GetValueOrDefault(Colors.DodgerBlue));
             }
 
             mainWindow.Show();
@@ -93,7 +93,7 @@ namespace MusicCatalog
         /// </summary>
         /// <param name="theme"></param>
         /// <param name="accentColor"></param>
-        public static void SetTheme(ApplicationTheme theme, Color accentColor)
+        public static void SetTheme(ApplicationTheme theme, Color? accentColor)
         {
             var cpr = new ColorPaletteResources { Accent = accentColor };
 

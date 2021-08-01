@@ -16,12 +16,28 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
+using ModernWpf;
 
 namespace MusicCatalog
 {
     public class AppSettings : ConfigsTools, INotifyPropertyChanged
     {
-        public Color? AccentColor { get; set; }
+        private Color? _accentColor;
+        public Color? AccentColor
+        {
+            get => _accentColor;
+            set => this.Set(ref _accentColor, value);
+        }
+
+        private ApplicationTheme? _theme;
+        public ApplicationTheme? Theme
+        {
+            get => _theme;
+            set => this.Set(ref _theme, value);
+        }
+
+        [JsonIgnore] 
+        public Color? DefaultAccentColor { get;  } = Colors.DodgerBlue;
 
         [JsonProperty("musicDirectoryList", Required = Required.Default)]
         public SpecialObservableCollection<IndexDirectory> MusicDirectoryList { get; set; } = new();

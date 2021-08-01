@@ -12,12 +12,14 @@ using MusicCatalog.Common;
 using MusicCatalog.Common.Models;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using ModernWpf;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using MusicCatalog.Common.Wpf;
+using MusicCatalog.Theme;
 
 namespace MusicCatalog.Pages
 {
@@ -110,6 +112,22 @@ namespace MusicCatalog.Pages
                     App.SetTheme(ApplicationTheme.Dark, Colors.DarkGoldenrod);
                 }
             });
+        }
+
+        /// <summary>
+        /// Changes the theme between light, dark and the system vault.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RadioButtonsTheme_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count == 1)
+            {
+                if (e.AddedItems[0] is AppTheme item)
+                {
+                    App.SetTheme(item.Value ?? ApplicationTheme.Light, _appSettings.AccentColor);
+                }
+            }
         }
     }
 }
