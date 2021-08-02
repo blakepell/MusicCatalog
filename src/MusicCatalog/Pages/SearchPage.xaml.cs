@@ -52,8 +52,21 @@ namespace MusicCatalog.Pages
 
         public async Task ExecuteSearch()
         {
-            SearchResultsView.ItemsSource = await DbTasks.SearchTracks(this.SearchText);
-            TextResultsCount.Text = $"{SearchResultsView.Items.Count.ToString()} ";
+            SearchResultsView.BeginInit();
+
+            try
+            {
+                SearchResultsView.ItemsSource = await DbTasks.SearchTracks(this.SearchText);
+                TextResultsCount.Text = $"{SearchResultsView.Items.Count.ToString()} ";
+            }
+            catch
+            {
+                // TODO: Log
+            }
+            finally
+            {
+                SearchResultsView.EndInit();
+            }
         }
 
         public async Task ExecuteSearch(string searchTerm)

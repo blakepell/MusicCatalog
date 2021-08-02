@@ -7,6 +7,7 @@
  * @license           : MIT
  */
 
+using System;
 using ModernWpf.Controls;
 using MusicCatalog.Common;
 using MusicCatalog.Common.Models;
@@ -32,7 +33,20 @@ namespace MusicCatalog.Pages
         /// <param name="e"></param>
         private async void HomePage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            RecentPlaysView.ItemsSource = await DbTasks.RecentPlays(15);
+            RecentPlaysView.BeginInit();
+
+            try
+            {
+                RecentPlaysView.ItemsSource = await DbTasks.RecentPlays(15);
+            }
+            catch
+            {
+                // TODO: Error Logging
+            }
+            finally
+            {
+                RecentPlaysView.EndInit();
+            }
         }
 
         private async void RecentPlaysView_OnItemClick(object sender, ItemClickEventArgs e)
