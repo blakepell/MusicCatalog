@@ -41,9 +41,8 @@ namespace MusicCatalog.Converters
 
                 var cs = tags.Tag.Pictures.FirstOrDefault();
 
-                if (cs == default(IPicture)
-                    || cs.Type == PictureType.NotAPicture
-                    || cs.Type == PictureType.Other)
+                // jpeg for some reason comes back as PictureType.Other
+                if (cs == default(IPicture) || cs.Type == PictureType.NotAPicture)
                 {
                     return App.DefaultAlbumArt;
                 }
@@ -54,8 +53,8 @@ namespace MusicCatalog.Converters
                     {
                         var bitmap = new BitmapImage();
                         bitmap.BeginInit();
-                        //bitmap.DecodePixelHeight = 256;
-                        //bitmap.DecodePixelHeight = 256;
+                        bitmap.DecodePixelHeight = 256;
+                        bitmap.DecodePixelHeight = 256;
                         bitmap.StreamSource = stream;
                         bitmap.CacheOption = BitmapCacheOption.OnLoad;
                         bitmap.EndInit();
@@ -70,7 +69,7 @@ namespace MusicCatalog.Converters
             }
             else
             {
-                return null;
+                return App.DefaultAlbumArt;
             }
         }
 

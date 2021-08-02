@@ -8,6 +8,9 @@
                     xmlns:converters="clr-namespace:MusicCatalog.Converters">
     <!-- Track Template: Used on the Home Page to show the large track display -->
     <DataTemplate x:Key="TrackTemplate" DataType="{x:Type local:TrackIndex}">
+        <DataTemplate.Resources>
+            <converters:AlbumArtConverter x:Key="AlbumArtConverter" />
+        </DataTemplate.Resources>
         <UniformGrid Width="185" Height="200">
             <ui:SimpleStackPanel Orientation="Vertical" Cursor="Hand">
                 <fluentWpf:DropShadowPanel 
@@ -16,8 +19,10 @@
                     <Image
                         Margin="0,0,10,0"
                         Height="148" Width="148"
-                        ToolTip="{Binding Title, Mode=OneTime}"
-                        Source="{Binding AlbumArt, Mode=OneTime}">
+                        Source="{Binding Path=FilePath, 
+                        Converter={StaticResource AlbumArtConverter}, 
+                        IsAsync=true}"
+                        ToolTip="{Binding Title, Mode=OneTime}">
                     </Image>
                 </fluentWpf:DropShadowPanel>
                 <Border VerticalAlignment="Top" Margin="0,10,0,0">

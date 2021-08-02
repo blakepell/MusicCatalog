@@ -22,8 +22,9 @@
             x:Name="RecentPlaysView"
             Margin="0,10,0,0"
             ItemTemplate="{StaticResource TrackTemplate}"
+            ItemContainerStyle="{StaticResource TrackGridViewItemStyle}"
             IsItemClickEnabled="True"
-            SelectionMode="Single" ItemContainerStyle="{StaticResource TrackGridViewItemStyle}"
+            SelectionMode="Single"
             SelectionChanged="RecentPlaysView_OnSelectionChanged"
             ItemClick="RecentPlaysView_OnItemClick">
         </ui:GridView>
