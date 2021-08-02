@@ -67,6 +67,9 @@ namespace MusicCatalog
         [JsonIgnore]
         public LocalAppData LocalAppData { get; } = new();
 
+        [JsonIgnore]
+        public string CacheFolder => $"{Path.Combine(this.LocalAppData.AssemblyFolderPath, "Cache")}";
+
         /// <summary>
         /// Event that is fired when the property is changed via Set as part of INotifyPropertyChanged.
         /// </summary>

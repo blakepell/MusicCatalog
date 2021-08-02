@@ -15,6 +15,7 @@ using ModernWpf;
 using MusicCatalog.Common;
 using MusicCatalog.Common.Models;
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -30,6 +31,12 @@ namespace MusicCatalog
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
             var appSettings = ConfigsTools.GetConfigs<AppSettings>();
+
+            if (!Directory.Exists(appSettings.CacheFolder))
+            {
+                Directory.CreateDirectory(appSettings.CacheFolder);
+            }
+
             var mainWindow = new MainWindow();
 
             // Register our services with the dependency injection.
