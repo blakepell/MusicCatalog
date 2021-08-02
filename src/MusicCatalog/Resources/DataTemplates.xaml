@@ -4,7 +4,8 @@
                     xmlns:cmds="clr-namespace:MusicCatalog.Common.Commands"
                     xmlns:ui="http://schemas.modernwpf.com/2019"
                     xmlns:controls="clr-namespace:MusicCatalog.Controls"
-                    xmlns:local="clr-namespace:MusicCatalog.Common.Models">
+                    xmlns:local="clr-namespace:MusicCatalog.Common.Models"
+                    xmlns:converters="clr-namespace:MusicCatalog.Converters">
     <!-- Track Template: Used on the Home Page to show the large track display -->
     <DataTemplate x:Key="TrackTemplate" DataType="{x:Type local:TrackIndex}">
         <UniformGrid Width="185" Height="200">
@@ -41,12 +42,17 @@
 
     <!-- Track Template: Used on the Search Page -->
     <DataTemplate x:Key="TrackGridTemplate" DataType="{x:Type local:TrackIndex}">
+        <DataTemplate.Resources>
+            <converters:AlbumArtConverter x:Key="AlbumArtConverter" />
+        </DataTemplate.Resources>
         <ui:SimpleStackPanel Orientation="Horizontal" Cursor="Hand" Width="500">
             <Image
                 Margin="0,2,10,2"
                 Height="48" Width="48"
-                ToolTip="{Binding Title, Mode=OneTime}"
-                Source="{Binding AlbumArt, Mode=OneTime}">
+                Source="{Binding Path=FilePath, 
+                        Converter={StaticResource AlbumArtConverter}, 
+                        IsAsync=true}"
+                ToolTip="{Binding Title, Mode=OneTime}">
             </Image>
             <ui:SimpleStackPanel Orientation="Vertical">
                 <TextBlock Margin="0,5,5,0"

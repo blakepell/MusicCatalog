@@ -63,49 +63,5 @@ namespace MusicCatalog.Common.Models
 
         public bool TagsProcessed { get; set; }
 
-        [Write(false)]
-        [JsonIgnore]
-        public BitmapImage AlbumArt
-        {
-            get
-            {
-                var tags = TagLib.File.Create(FilePath);
-
-                if (tags.Tag == null)
-                {
-                    return App.DefaultAlbumArt;
-                }
-
-                var cs = tags.Tag.Pictures.FirstOrDefault();
-
-                if (cs == default(IPicture) 
-                    || cs.Type == PictureType.NotAPicture
-                    || cs.Type == PictureType.Other)
-                {
-                    return App.DefaultAlbumArt;
-                }
-
-                try
-                {
-                    using (var stream = new MemoryStream(cs.Data.Data))
-                    {
-                        var bitmap = new BitmapImage();
-                        bitmap.BeginInit();
-                        //bitmap.DecodePixelHeight = 256;
-                        //bitmap.DecodePixelHeight = 256;
-                        bitmap.StreamSource = stream;
-                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                        bitmap.EndInit();
-                        bitmap.Freeze();
-                        return bitmap;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                    throw;
-                }
-            }
-        }
     }
 }
