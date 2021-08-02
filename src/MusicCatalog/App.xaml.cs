@@ -11,16 +11,15 @@ using Configs;
 using DbUp;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
+using ModernWpf;
 using MusicCatalog.Common;
 using MusicCatalog.Common.Models;
 using System;
-using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using ModernWpf;
 
 namespace MusicCatalog
 {
@@ -125,6 +124,8 @@ namespace MusicCatalog
 
             Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/FluentWPF;component/Styles/Brushes.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
             Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/ModernWpf;component/ControlsResources.xaml", UriKind.Relative)) as ResourceDictionary);
+            Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/Resources/TextBox.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
+
             Application.Current.Resources.MergedDictionaries.Add(cpr);
 
             Application.Current.Resources.EndInit();
