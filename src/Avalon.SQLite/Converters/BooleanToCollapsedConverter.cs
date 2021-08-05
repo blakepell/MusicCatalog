@@ -14,6 +14,10 @@ using System.Windows.Data;
 
 namespace Avalon.Sqlite.Converters
 {
+    /// <summary>
+    /// Converts a bool to a Visibility.  True returns Visible and False return Collapsed.  This is the
+    /// opposite of <see cref="InvertingBooleanToCollapsedConverter"/>.
+    /// </summary>
     public class BooleanToCollapsedConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -25,10 +29,14 @@ namespace Avalon.Sqlite.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             Visibility vis = (Visibility)value;
-            return (vis == Visibility.Visible);
+            return vis == Visibility.Visible;
         }
     }
 
+    /// <summary>
+    /// Converts a bool to a Visibility.  True returns Collapsed and False returns Visible.  This is the
+    /// opposite of <see cref="BooleanToCollapsedConverter"/>.
+    /// </summary>
     public class InvertingBooleanToCollapsedConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -39,8 +47,13 @@ namespace Avalon.Sqlite.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value == null)
+            {
+                return Visibility.Visible;
+            }
+
             Visibility vis = (Visibility)value;
-            return (vis == Visibility.Collapsed);
+            return vis == Visibility.Collapsed;
         }
     }
 }
