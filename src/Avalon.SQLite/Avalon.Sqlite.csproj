@@ -16,13 +16,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\SqliteDark.xshd" />
-    <None Remove="Assets\SqliteLight.xshd" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Assets\SqliteLight.xshd" />
-    <EmbeddedResource Include="Assets\SqliteDark.xshd" />
+    <EmbeddedResource Include="Editor\SqliteLight.xshd" />
+    <EmbeddedResource Include="Editor\SqliteDark.xshd" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,10 +29,6 @@
     <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.7" />
     <PackageReference Include="ModernWpfUI" Version="0.9.4" />
     <PackageReference Include="MahApps.Metro.IconPacks.VaadinIcons" Version="4.8.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Themes\" />
   </ItemGroup>
 
 </Project>

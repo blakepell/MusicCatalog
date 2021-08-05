@@ -8,6 +8,8 @@
  */
 
 using Argus.Extensions;
+using Avalon.Sqlite.Common;
+using Avalon.Sqlite.Editor;
 using Dapper;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.CodeCompletion;
@@ -166,13 +168,13 @@ namespace Avalon.Sqlite
             switch (theme)
             {
                 case ApplicationTheme.Light:
-                    resourceName = $"{asm.GetName().Name}.Assets.SqliteLight.xshd";
+                    resourceName = $"{asm.GetName().Name}.Editor.SqliteLight.xshd";
                     break;
                 case ApplicationTheme.Dark:
-                    resourceName = $"{asm.GetName().Name}.Assets.SqliteDark.xshd";
+                    resourceName = $"{asm.GetName().Name}.Editor.SqliteDark.xshd";
                     break;
                 default:
-                    resourceName = $"{asm.GetName().Name}.Assets.SqliteLight.xshd";
+                    resourceName = $"{asm.GetName().Name}.Editor.SqliteLight.xshd";
                     break;
             }
 
