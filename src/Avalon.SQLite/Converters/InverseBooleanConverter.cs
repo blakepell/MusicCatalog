@@ -10,7 +10,7 @@
 using System;
 using System.Windows.Data;
 
-namespace Avalon.Sqlite
+namespace Avalon.Sqlite.Converters
 {
     [ValueConversion(typeof(bool), typeof(bool))]
     public class InverseBooleanConverter : IValueConverter
