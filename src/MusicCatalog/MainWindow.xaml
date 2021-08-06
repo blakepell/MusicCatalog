@@ -89,6 +89,16 @@
                         <iconPacks:PackIconVaadinIcons Kind="Database" />
                     </controls:NavButton.IconControl>
                 </controls:NavButton>
+
+                <controls:NavButton Text="SQL Editor (Test)"
+                                    AssociatedFrame="{Binding ElementName=MainFrame}"
+                                    NavigationPageType="MusicCatalog.Pages.SqlEditorPageTest"
+                                    SkipNavigateIfAlreadyLoaded="True">
+                    <controls:NavButton.IconControl>
+                        <iconPacks:PackIconVaadinIcons Kind="Database" />
+                    </controls:NavButton.IconControl>
+                </controls:NavButton>
+
             </StackPanel>
 
             <!-- Nav Buttons Bottom -->
