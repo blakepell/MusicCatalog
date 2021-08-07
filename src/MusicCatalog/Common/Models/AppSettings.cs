@@ -37,7 +37,7 @@ namespace MusicCatalog
         }
 
         [JsonIgnore] 
-        public Color? DefaultAccentColor { get;  } = Colors.DodgerBlue;
+        public Color? DefaultAccentColor { get; } = (Color)ColorConverter.ConvertFromString("#FF0063B1");
 
         [JsonProperty("musicDirectoryList", Required = Required.Default)]
         public SpecialObservableCollection<IndexDirectory> MusicDirectoryList { get; set; } = new();

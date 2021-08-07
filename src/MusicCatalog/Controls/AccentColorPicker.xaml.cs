@@ -30,6 +30,15 @@ namespace MusicCatalog.Controls
     /// </summary>
     public partial class AccentColorPicker
     {
+        public static readonly DependencyProperty SelectedAccentColorProperty = DependencyProperty.Register(
+            nameof(SelectedAccentColor), typeof(Color?), typeof(AccentColorPicker), new PropertyMetadata(Colors.DodgerBlue));
+
+        public Color? SelectedAccentColor
+        {
+            get => (Color?) GetValue(SelectedAccentColorProperty);
+            set => SetValue(SelectedAccentColorProperty, value);
+        }
+
         public AppSettings Settings { get; set; }
 
         public AccentColorPicker()
@@ -37,7 +46,15 @@ namespace MusicCatalog.Controls
             this.InitializeComponent();
             var settings = AppServices.GetService<AppSettings>();
             this.Settings = settings;
-            this.DataContext = this.Settings;
+            this.DataContext = this;
+        }
+
+        private void AccentColorPicker_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (this.Settings.AccentColor != null)
+            {
+                this.SelectedAccentColor = Color.FromArgb(this.Settings.AccentColor.Value.A, (byte)(this.Settings.AccentColor.Value.R), (byte)(this.Settings.AccentColor.Value.G), (byte)(this.Settings.AccentColor.Value.B));
+            }
         }
 
         /// <summary>
@@ -62,9 +79,10 @@ namespace MusicCatalog.Controls
         /// <param name="e"></param>
         private void ColorGridView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var settings = AppServices.GetService<AppSettings>();
-            App.SetTheme(settings.Theme.GetValueOrDefault(ApplicationTheme.Light), this.Settings.AccentColor);
+            this.Settings.AccentColor = this.SelectedAccentColor;
+            App.SetTheme(ApplicationTheme.Light, this.SelectedAccentColor);
         }
+
     }
 
     public class AccentColors : List<AccentColor>
@@ -123,7 +141,7 @@ namespace MusicCatalog.Controls
 
         private void Add(string color, string name)
         {
-            this.Add(new AccentColor((Color)ColorConverter.ConvertFromString(color), name));
+            this.Add(new AccentColor((Color)ColorConverter.ConvertFromString(color), name, color));
         }
     }
 
@@ -136,9 +154,19 @@ namespace MusicCatalog.Controls
             this.Brush = new SolidColorBrush(color);
         }
 
+        public AccentColor(Color color, string name, string hex)
+        {
+            this.Color = color;
+            this.Name = name;
+            this.Brush = new SolidColorBrush(color);
+            this.DisplayName = $"{name} {hex}";
+        }
+
         public Color Color { get; }
 
         public string Name { get; }
+
+        public string DisplayName { get; }
 
         public SolidColorBrush Brush { get; }
 

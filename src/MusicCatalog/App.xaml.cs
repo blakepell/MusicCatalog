@@ -132,6 +132,7 @@ namespace MusicCatalog
             Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/FluentWPF;component/Styles/Brushes.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
             Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/ModernWpf;component/ControlsResources.xaml", UriKind.Relative)) as ResourceDictionary);
             Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/Resources/TextBox.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
+            //Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/Avalon.Sqlite;component/Themes/Generic.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
 
             Application.Current.Resources.MergedDictionaries.Add(cpr);
 

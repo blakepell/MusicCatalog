@@ -6,12 +6,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:local="clr-namespace:MusicCatalog.Controls"
+    Loaded="AccentColorPicker_OnLoaded"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
 
     <GroupBox Header="Choose your accent color">
-        <!--SelectedValue="{Binding AccentColor, Source={x:Static local:ThemeManagerProxy.Current}}"-->
         <StackPanel>
             <ui:GridView
                 Padding="0"
@@ -19,7 +19,7 @@
                 VerticalAlignment="Top"
                 SelectionMode="Single"
                 SelectedValuePath="Color"
-                SelectedValue="{Binding AccentColor}"
+                SelectedValue="{Binding SelectedAccentColor, Mode=TwoWay}"
                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
                 SelectionChanged="ColorGridView_OnSelectionChanged"
                 ui:ThemeManager.HasThemeResources="True">
@@ -122,7 +122,7 @@
                             ToolTipService.InitialShowDelay="1000"
                             ToolTipService.BetweenShowDelay="500">
                             <Rectangle.ToolTip>
-                                <ToolTip Content="{Binding Name, Mode=OneTime}" />
+                                <ToolTip Content="{Binding DisplayName, Mode=OneTime}" />
                             </Rectangle.ToolTip>
                         </Rectangle>
                     </DataTemplate>
