@@ -56,17 +56,10 @@
       <SubType>Code</SubType>
       <DependentUpon>NavButton.xaml.cs</DependentUpon>
     </Compile>
-    <Compile Update="Pages\SqlEditorPageTest.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <Page Update="ContentDialogs\StringDisplayDialog.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Pages\SqlEditorPageTest.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
