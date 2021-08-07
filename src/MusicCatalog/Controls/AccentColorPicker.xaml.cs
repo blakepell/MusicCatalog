@@ -72,6 +72,8 @@ namespace MusicCatalog.Controls
             });
         }
 
+        private bool _colorGridViewInit = true;
+
         /// <summary>
         /// When the <see cref="AccentColor"/> has changed the app's theme will be updated.
         /// </summary>
@@ -79,10 +81,20 @@ namespace MusicCatalog.Controls
         /// <param name="e"></param>
         private void ColorGridView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.Settings.AccentColor = this.SelectedAccentColor;
-            App.SetTheme(ApplicationTheme.Light, this.SelectedAccentColor);
-        }
+            // Skip this the first time on the initial selection otherwise we'll get an
+            // a cannot animate on an immutable object exception.
+            if (_colorGridViewInit)
+            {
+                _colorGridViewInit = false;
+                return;
+            }
 
+            DispatcherHelper.RunOnMainThread(() =>
+            {
+                this.Settings.AccentColor = this.SelectedAccentColor;
+                App.SetTheme(ApplicationTheme.Light, this.SelectedAccentColor);
+            });
+        }
     }
 
     public class AccentColors : List<AccentColor>
