@@ -9,7 +9,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <!-- MusicCatalog Resources -->
                 <ResourceDictionary Source="Resources/DataTemplates.xaml" />
-                <ResourceDictionary Source="Resources/TextBox.xaml" />
 
                 <!-- FluentWPF Controls -->
                 <ResourceDictionary Source="/FluentWPF;component/Styles/Controls.xaml" />
@@ -48,6 +47,8 @@
                         </ResourceDictionary>
                     </ui:ThemeResources.ThemeDictionaries>
                 </ui:ThemeResources>
+
+                <ResourceDictionary Source="Resources/TextBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
