@@ -10,8 +10,6 @@
       Title="SQLite Query Editor"
       Loaded="SqlEditorPage_OnLoaded">
     <Grid Margin="0,30,0,0">
-        <sqlite:QueryControl x:Name="QueryControl" Margin="10"
-                             Background="{DynamicResource Background}"
-                             BorderBrush="{DynamicResource GridLines}"></sqlite:QueryControl>
+        <sqlite:QueryControl x:Name="QueryControl" Margin="10"></sqlite:QueryControl>
     </Grid>
 </Page>
