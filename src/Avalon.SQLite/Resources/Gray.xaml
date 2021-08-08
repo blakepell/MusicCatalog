@@ -2,12 +2,12 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=System.Runtime">
     <!-- ModernWpf Good -->
-    <SolidColorBrush x:Key="GridLinesBrush">#777471</SolidColorBrush>
+    <SolidColorBrush x:Key="GridLinesBrush">#AAAAAA</SolidColorBrush>
     <SolidColorBrush x:Key="DataGridCellBackgroundBrush">Transparent</SolidColorBrush>
 
     <!-- Local -->
-    <SolidColorBrush x:Key="GridLines">#777471</SolidColorBrush>
-    <SolidColorBrush x:Key="Background">Black</SolidColorBrush>
+    <SolidColorBrush x:Key="GridLines">#AAAAAA</SolidColorBrush>
+    <SolidColorBrush x:Key="Background">#1A1A1A</SolidColorBrush>
     <SolidColorBrush x:Key="Foreground">White</SolidColorBrush>
     <SolidColorBrush x:Key="ColumnHeaderBackground">#282828</SolidColorBrush>
     <SolidColorBrush x:Key="SelectionBrush">#4F81BD</SolidColorBrush>

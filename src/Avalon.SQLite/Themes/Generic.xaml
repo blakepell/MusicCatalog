@@ -1,12 +1,11 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:Avalon.Sqlite"
-    xmlns:ui="http://schemas.modernwpf.com/2019"
-    xmlns:converters="clr-namespace:Avalon.Sqlite.Converters"
-    xmlns:fluentWpf="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+    xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-    xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:local="clr-namespace:Avalon.Sqlite"
+    xmlns:converters="clr-namespace:Avalon.Sqlite.Converters">
 
     <ResourceDictionary.MergedDictionaries>
         <ui:XamlControlsResources />
@@ -15,17 +14,11 @@
                 <ResourceDictionary x:Key="Light">
                     <ResourceDictionary.MergedDictionaries>
                         <ResourceDictionary Source="/Avalon.Sqlite;component/Resources/Light.xaml" />
-                        <!-- FluentWPF theme resources -->
-                        <ResourceDictionary Source="/FluentWPF;component/Styles/Colors.Light.xaml" />
-                        <ResourceDictionary Source="/FluentWPF;component/Styles/Brushes.xaml" />
                     </ResourceDictionary.MergedDictionaries>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
                     <ResourceDictionary.MergedDictionaries>
                         <ResourceDictionary Source="/Avalon.Sqlite;component/Resources/Dark.xaml" />
-                        <!-- FluentWPF theme resources -->
-                        <ResourceDictionary Source="/FluentWPF;component/Styles/Colors.Dark.xaml" />
-                        <ResourceDictionary Source="/FluentWPF;component/Styles/Brushes.xaml" />
                     </ResourceDictionary.MergedDictionaries>
                 </ResourceDictionary>
             </ui:ThemeResources.ThemeDictionaries>

@@ -272,20 +272,6 @@ namespace Avalon.Sqlite
 
         }
 
-        //private void TreeViewSchemaOnContextMenuClosing(object sender, ContextMenuEventArgs e)
-        //{
-        //    if (_treeViewSchema.FindResource("TableSchemaContextMenu") is ContextMenu tablesContextMenu)
-        //    {
-        //        foreach (var obj in tablesContextMenu.Items)
-        //        {
-        //            if (obj is MenuItem menuItem)
-        //            {
-        //                menuItem.Click -= this.TreeViewMenuItem_ClickAsync;
-        //            }
-        //        }
-        //    }
-        //}
-
         /// <summary>
         /// OnLoaded Event: Used to set initial UI interactions like the setting the focus
         /// into the editor.
@@ -309,6 +295,30 @@ namespace Avalon.Sqlite
             {
                 this.DataTable.Clear();
                 this.DataTable.Dispose();
+            }
+
+            // TODO: Unwire the rest of the events.
+
+            if (_treeViewSchema.FindResource("TableSchemaContextMenu") is ContextMenu tablesContextMenu)
+            {
+                foreach (var obj in tablesContextMenu.Items)
+                {
+                    if (obj is MenuItem menuItem)
+                    {
+                        menuItem.Click -= this.TreeViewMenuItem_ClickAsync;
+                    }
+                }
+            }
+
+            if (_treeViewSchema.FindResource("ViewSchemaContextMenu") is ContextMenu viewsContextMenu)
+            {
+                foreach (var obj in viewsContextMenu.Items)
+                {
+                    if (obj is MenuItem menuItem)
+                    {
+                        menuItem.Click -= this.TreeViewMenuItem_ClickAsync;
+                    }
+                }
             }
         }
 
@@ -901,6 +911,18 @@ namespace Avalon.Sqlite
             }
             // Do not set e.Handled=true.
             // We still want to insert the character that was typed.
+        }
+
+
+        /// <summary>
+        /// Opens or creates a SQLite database as the requested path.  In order to create the
+        /// database the directory must already exist.
+        /// </summary>
+        /// <param name="filePath"></param>
+        public async Task OpenDb(string filePath)
+        {
+            this.ConnectionString = $"Data Source={filePath}";
+            await this.RefreshSchemaAsync();
         }
 
         /// <summary>
