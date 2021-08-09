@@ -990,6 +990,51 @@ namespace Avalon.Sqlite
             this.Schema = schema;
         }
 
+
+        /// <summary>
+        /// Expands the tables <see cref="TreeViewItem"/> node.
+        /// </summary>
+        public void ExpandTableNode()
+        {
+            if (this.Template.FindName("TablesNode", this) is TreeViewItem tablesNode)
+            {
+                tablesNode.IsExpanded = true;
+            }
+        }
+
+        /// <summary>
+        /// Collapses the tables <see cref="TreeViewItem"/> node.
+        /// </summary>
+        public void CollapseTableNode()
+        {
+            if (this.Template.FindName("TablesNode", this) is TreeViewItem tablesNode)
+            {
+                tablesNode.IsExpanded = false;
+            }
+        }
+
+        /// <summary>
+        /// Expands the views <see cref="TreeViewItem"/> node.
+        /// </summary>
+        public void ExpandViewsNode()
+        {
+            if (this.Template.FindName("ViewsNode", this) is TreeViewItem viewsNode)
+            {
+                viewsNode.IsExpanded = true;
+            }
+        }
+
+        /// <summary>
+        /// Collapses the views <see cref="TreeViewItem"/> node.
+        /// </summary>
+        public void CollapseViewsNode()
+        {
+            if (this.Template.FindName("ViewsNode", this) is TreeViewItem viewsNode)
+            {
+                viewsNode.IsExpanded = false;
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")

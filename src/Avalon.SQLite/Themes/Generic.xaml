@@ -142,9 +142,9 @@
                                                        VerticalAlignment="Center"></TextBlock>
                                         </StackPanel>
                                     </TreeViewItem.Header>
-                                    <TreeViewItem ItemsSource="{Binding Tables}"
-                                                  Margin="0,0,0,0"
-                                                  >
+                                    <TreeViewItem x:Name="TablesNode"
+                                                  ItemsSource="{Binding Tables}"
+                                                  Margin="0,0,0,0">
                                         <TreeViewItem.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <iconPacks:PackIconVaadinIcons Kind="Folder" 
@@ -211,7 +211,8 @@
                                             </DataTemplate>
                                         </TreeViewItem.ItemTemplate>
                                     </TreeViewItem>
-                                    <TreeViewItem ItemsSource="{Binding Views}">
+                                    <TreeViewItem x:Name="ViewsNode"
+                                                  ItemsSource="{Binding Views}">
                                         <TreeViewItem.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <iconPacks:PackIconVaadinIcons Kind="Folder" 

@@ -30,6 +30,8 @@ namespace MusicCatalog.Pages
             try
             {
                 await QueryControl.RefreshSchemaAsync();
+                QueryControl.ExpandTableNode();
+                QueryControl.ExpandViewsNode();
             }
             catch (Exception ex)
             {
