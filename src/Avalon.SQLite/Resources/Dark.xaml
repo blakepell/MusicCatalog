@@ -6,10 +6,9 @@
     <SolidColorBrush x:Key="DataGridCellBackgroundBrush">Transparent</SolidColorBrush>
 
     <!-- Local -->
-    <SolidColorBrush x:Key="GridLines">#777471</SolidColorBrush>
     <SolidColorBrush x:Key="Background">Black</SolidColorBrush>
     <SolidColorBrush x:Key="Foreground">White</SolidColorBrush>
-    <SolidColorBrush x:Key="ColumnHeaderBackground">#282828</SolidColorBrush>
+    <SolidColorBrush x:Key="ColumnHeaderBackground">#181818</SolidColorBrush>
     <SolidColorBrush x:Key="SelectionBrush">#4F81BD</SolidColorBrush>
     <SolidColorBrush x:Key="GenericIcon">#777471</SolidColorBrush>
     <SolidColorBrush x:Key="Folder">#f1d592</SolidColorBrush>

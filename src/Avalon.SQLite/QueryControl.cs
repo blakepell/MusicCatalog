@@ -36,6 +36,14 @@ using System.Xml;
 using ApplicationTheme = ModernWpf.ApplicationTheme;
 using ElementTheme = ModernWpf.ElementTheme;
 
+/*
+ * TODO: Selection brush to be the accent color
+ * TODO: ApplyTheme in this class for preset colors.
+ * TODO: Faster selection of all records
+ * TODO: Vacuum
+ * TODO: Export of data
+ */
+
 namespace Avalon.Sqlite
 {
     /// <summary>

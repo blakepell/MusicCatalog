@@ -1,12 +1,11 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=System.Runtime">
-    <!-- ModernWpf Good -->
+    <!-- ModernWpf Overrides -->
     <SolidColorBrush x:Key="GridLinesBrush">#E2E2E2</SolidColorBrush>
     <SolidColorBrush x:Key="DataGridCellBackgroundBrush">Transparent</SolidColorBrush>
 
     <!-- Local -->
-    <SolidColorBrush x:Key="GridLines">#E2E2E2</SolidColorBrush>
     <SolidColorBrush x:Key="Background">White</SolidColorBrush>
     <SolidColorBrush x:Key="Foreground">Black</SolidColorBrush>
     <SolidColorBrush x:Key="ColumnHeaderBackground">#F6F6F6</SolidColorBrush>
