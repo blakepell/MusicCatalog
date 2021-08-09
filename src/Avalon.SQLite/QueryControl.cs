@@ -432,56 +432,9 @@ namespace Avalon.Sqlite
         /// <param name="e"></param>
         private async void ButtonExecuteSql_ClickAsync(object sender, RoutedEventArgs e)
         {
-            // Close the auto complete window box if its open.
-            _completionWindow?.Close();
-
-            if (this.IsQueryExecuting)
-            {
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(_sqlEditor.Text))
-            {
-                this.StatusText = "0 records returned.";
-                return;
-            }
-
-            this.IsQueryExecuting = true;
-            this.StatusText = "Status: Executing SQL";
-
-            // Get rid of anything in the current DataTable.
-            if (this.DataTable != null)
-            {
-                this.DataTable.Clear();
-                this.DataTable.Dispose();
-                _sqlResults.ItemsSource = null;
-            }
-
             // Cross thread exception if we pass SqlText.Text into the Task, put it in string first.
             string sql = _sqlEditor.Text;
-
-            try
-            {
-                this.DataTable = await Task.Run(async () => await this.ExecuteDataTableAsync(sql));
-                _sqlResults.ItemsSource = this.DataTable.DefaultView;
-
-                if (this.DataTable != null)
-                {
-                    this.StatusText = $"{DataTable?.Rows.Count.ToString().FormatIfNumber()} {"record".IfCountPluralize(DataTable?.Rows.Count ?? 0, "records")} returned.";
-                }
-            }
-            catch (Exception ex)
-            {
-                this.StatusText = ex.Message;
-            }
-
-            if (this.RefreshSchemaAfterQuery)
-            {
-                await this.RefreshSchemaAsync();
-            }
-
-            this.IsQueryExecuting = false;
-
+            await ExecuteQueryAsync(sql);
         }
 
         /// <summary>
@@ -518,7 +471,10 @@ namespace Avalon.Sqlite
             try
             {
                 this.DataTable = await Task.Run(async () => await this.ExecuteDataTableAsync(sql));
+
+                _sqlResults.BeginInit();
                 _sqlResults.ItemsSource = this.DataTable.DefaultView;
+                _sqlResults.EndInit();
 
                 if (this.DataTable != null)
                 {
