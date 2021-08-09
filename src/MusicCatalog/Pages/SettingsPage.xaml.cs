@@ -7,6 +7,7 @@
  * @license           : MIT
  */
 
+using System;
 using Argus.Extensions;
 using MusicCatalog.Common;
 using MusicCatalog.Common.Models;
@@ -20,6 +21,7 @@ using ModernWpf;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using MusicCatalog.Common.Wpf;
 using MusicCatalog.Theme;
+using Application = System.Windows.Application;
 
 namespace MusicCatalog.Pages
 {
@@ -99,19 +101,37 @@ namespace MusicCatalog.Pages
             }
         }
 
+        private ResourceDictionary GetCurrentThemeDictionary()
+        {
+            // Determine the current theme by looking at the application resources and return the first dictionary having the resource key 'Brush_AppearanceService' defined.
+            return (from dict in Application.Current.Resources.MergedDictionaries
+                    where dict.Contains("Brush_AppearanceService")
+                    select dict).FirstOrDefault();
+        }
+
         private void ButtonToggleTheme_OnClick(object sender, RoutedEventArgs e)
         {
-            DispatcherHelper.RunOnMainThread(() =>
-            {
-                if (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Dark)
-                {
-                    App.SetTheme(ApplicationTheme.Light, Colors.Green);
-                }
-                else
-                {
-                    App.SetTheme(ApplicationTheme.Dark, Colors.DarkGoldenrod);
-                }
-            });
+            string themeName = "Dark";
+
+            ResourceDictionary currentThemeDict = this.GetCurrentThemeDictionary();
+
+            var newThemeDict = new ResourceDictionary { Source = new Uri($"/MusicCatalog;component/Themes/{themeName}.xaml", UriKind.RelativeOrAbsolute) };
+
+            // Prevent exceptions by adding the new dictionary before removing the old one
+            Application.Current.Resources.MergedDictionaries.Add(newThemeDict);
+            Application.Current.Resources.MergedDictionaries.Remove(currentThemeDict);
+
+            //DispatcherHelper.RunOnMainThread(() =>
+            //{
+            //    if (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Dark)
+            //    {
+            //        App.SetTheme(ApplicationTheme.Light, Colors.Green);
+            //    }
+            //    else
+            //    {
+            //        App.SetTheme(ApplicationTheme.Dark, Colors.DarkGoldenrod);
+            //    }
+            //});
         }
 
         /// <summary>
@@ -125,7 +145,17 @@ namespace MusicCatalog.Pages
             {
                 if (e.AddedItems[0] is AppTheme item)
                 {
-                    App.SetTheme(item.Value ?? ApplicationTheme.Light, _appSettings.AccentColor);
+                    if (item.Value != null)
+                    {
+                        if (item.Value == ApplicationTheme.Light)
+                        {
+                            App.ApplyTheme(true, _appSettings.AccentColor);
+                        }
+                        else
+                        {
+                            App.ApplyTheme(false, _appSettings.AccentColor);
+                        }
+                    }
                 }
             }
         }

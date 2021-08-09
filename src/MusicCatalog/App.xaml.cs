@@ -18,9 +18,11 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using MusicCatalog.Theme;
 
 namespace MusicCatalog
 {
@@ -82,7 +84,14 @@ namespace MusicCatalog
             }
             else
             {
-                App.SetTheme(appSettings.Theme.GetValueOrDefault(ApplicationTheme.Light), appSettings.AccentColor.GetValueOrDefault(Colors.DodgerBlue));
+                if (appSettings.Theme == ApplicationTheme.Light)
+                {
+                    ApplyTheme(true, appSettings.AccentColor);
+                }
+                else
+                {
+                    ApplyTheme(false, appSettings.AccentColor);
+                }
             }
 
             mainWindow.Show();
@@ -95,50 +104,63 @@ namespace MusicCatalog
         }
 
         /// <summary>
-        /// Sets the applications current theme and accent color.
+        /// Gets the current application theme resource instance.
         /// </summary>
-        /// <param name="theme"></param>
-        /// <param name="accentColor"></param>
-        public static void SetTheme(ApplicationTheme theme, Color? accentColor)
+        public static ResourceDictionary GetCurrentThemeDictionary()
         {
-            var cpr = new ColorPaletteResources { Accent = accentColor };
+            // Determine the current theme by looking at the application resources and return the first dictionary having the resource key 'Brush_AppearanceService' defined.
+            return (from dict in Application.Current.Resources.MergedDictionaries
+                    where dict.Contains("Brush_AppearanceService")
+                    select dict).FirstOrDefault();
+        }
 
-            Application.Current.Resources.BeginInit();
+        /// <summary>
+        /// Gets the current application color palette resource instance.
+        /// </summary>
+        /// <returns></returns>
+        public static ColorPaletteResourcesEx GetCurrentColorPalette()
+        {
+            // Determine the current color palette by looking at the application resources and return the first dictionary having the resource key 'Brush_AppearanceService' defined.
+            return (ColorPaletteResourcesEx)(from dict in Application.Current.Resources.MergedDictionaries
+                    where dict.Contains("ColorPalette_AppearanceService")
+                    select dict).FirstOrDefault();
+        }
 
-            ThemeManager.Current.ApplicationTheme = theme;
+        /// <summary>
+        /// Applies a new theme and accent color.
+        /// </summary>
+        /// <param name="useLightTheme"></param>
+        /// <param name="accentColor"></param>
+        public static void ApplyTheme(bool useLightTheme, Color? accentColor)
+        {
+            string themeName = "Dark";
 
-            // Wipe the slate clean
-            Application.Current.Resources.MergedDictionaries.Clear();
-
-            // Step through loading our resources in order.
-            Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/Resources/DataTemplates.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
-            Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/FluentWPF;component/Styles/Controls.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
-
-            if (theme == ApplicationTheme.Dark)
+            if (useLightTheme)
             {
-                Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/ModernWpf;component/ThemeResources/Dark.xaml", UriKind.Relative)) as ResourceDictionary);
-                Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/FluentWPF;component/Styles/Colors.Dark.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
-                Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/Themes/Dark.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
-                Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/Avalon.Sqlite;component/Resources/Dark.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
+                themeName = "Light";
             }
-            else
+
+            ResourceDictionary currentThemeDict = GetCurrentThemeDictionary();
+
+            var newThemeDict = new ResourceDictionary { Source = new Uri($"/MusicCatalog;component/Themes/{themeName}.xaml", UriKind.RelativeOrAbsolute) };
+
+            if (accentColor != null)
             {
-                Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/ModernWpf;component/ThemeResources/Light.xaml", UriKind.Relative)) as ResourceDictionary);
-                Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/FluentWPF;component/Styles/Colors.Light.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
-                Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/Themes/Light.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
-                Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/Avalon.Sqlite;component/Resources/Light.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
+                var currentCpr = GetCurrentColorPalette();
+
+                var cpr = new ColorPaletteResourcesEx { Accent = accentColor };
+                Application.Current.Resources.MergedDictionaries.Add(cpr);
+
+                if (currentCpr != null)
+                {
+                    Application.Current.Resources.MergedDictionaries.Remove(currentCpr);
+                }
+
             }
 
-            Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/FluentWPF;component/Styles/Brushes.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
-            Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/ModernWpf;component/ControlsResources.xaml", UriKind.Relative)) as ResourceDictionary);
-            Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(@"/Resources/TextBox.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary);
-
-            Application.Current.Resources.MergedDictionaries.Add(cpr);
-
-            Application.Current.Resources.EndInit();
-
-            var settings = AppServices.GetService<AppSettings>();
-            settings.AccentColor = accentColor;
+            // Prevent exceptions by adding the new dictionary before removing the old one
+            Application.Current.Resources.MergedDictionaries.Add(newThemeDict);
+            Application.Current.Resources.MergedDictionaries.Remove(currentThemeDict);
         }
     }
 }
