@@ -354,12 +354,9 @@
                                         <Setter Property="SeparatorBrush" Value="{DynamicResource GridLinesBrush}" />
                                         <Setter Property="SeparatorVisibility" Value="Visible"></Setter>
                                     </Style>
-                                    <Style TargetType="{x:Type Button}" x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}">
-                                        <Setter Property="Background" Value="{DynamicResource ColumnHeaderBackground}" />
-                                        <Setter Property="Foreground" Value="{DynamicResource Foreground}" />
-                                        <Setter Property="BorderBrush" Value="{DynamicResource GridLinesBrush}" />
-                                        <Setter Property="BorderThickness" Value="0,0,.9,0" />
-                                    </Style>
+                                    <!--<Style TargetType="{x:Type Polygon}">
+                                        <Setter Property="Fill" Value="Purple" />
+                                    </Style>-->
                                 </DataGrid.Resources>
                             </DataGrid>
                         </Grid>
