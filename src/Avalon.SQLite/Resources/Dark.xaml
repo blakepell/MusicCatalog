@@ -4,9 +4,10 @@
     <!-- Brush_AppearanceService is used by the AppearanceService to find this dictionary -->
     <SolidColorBrush x:Key="Brush_AppearanceService" Color="#FFFFFF"/>
 
-    <!-- ModernWpf Good -->
+    <!-- ModernWpf Overrides -->
     <SolidColorBrush x:Key="GridLinesBrush">#777471</SolidColorBrush>
     <SolidColorBrush x:Key="DataGridCellBackgroundBrush">Transparent</SolidColorBrush>
+    <SolidColorBrush x:Key="DataGridColumnHeaderBackgroundBrush">#181818</SolidColorBrush>
 
     <!-- Local -->
     <SolidColorBrush x:Key="Background">Black</SolidColorBrush>

@@ -7,6 +7,7 @@
     <!-- ModernWpf Overrides -->
     <SolidColorBrush x:Key="GridLinesBrush">#AAAAAA</SolidColorBrush>
     <SolidColorBrush x:Key="DataGridCellBackgroundBrush">Transparent</SolidColorBrush>
+    <SolidColorBrush x:Key="DataGridColumnHeaderBackgroundBrush">#282828</SolidColorBrush>
 
     <!-- Local -->
     <SolidColorBrush x:Key="Background">#1A1A1A</SolidColorBrush>

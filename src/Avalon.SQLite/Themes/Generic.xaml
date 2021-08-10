@@ -302,7 +302,7 @@
                                   GridLinesVisibility="None"
                                   HorizontalAlignment="Stretch"
                                   VerticalAlignment="Stretch"
-                                  SelectionMode="Extended"
+                                  SelectionMode="Single"
                                   SelectionUnit="CellOrRowHeader">
                                 <DataGrid.CellStyle>
                                     <Style TargetType="DataGridCell">
