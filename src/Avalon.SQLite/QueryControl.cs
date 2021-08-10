@@ -977,30 +977,58 @@ namespace Avalon.Sqlite
         /// Applies a new theme and accent color.
         /// </summary>
         /// <param name="theme"></param>
-        public void ApplyTheme(ControlTheme theme)
+        /// <param name="accentBrush"></param>
+        public void ApplyTheme(ControlTheme theme, SolidColorBrush accentBrush = null)
         {
             var asm = Assembly.GetExecutingAssembly();
             string resourceName = "";
+
+            // For the ColorPaletteResources, the TargetTheme MUST be set before the accent color
+            // is set, if that doesn't happen in that order the SystemAccentColor brushes won't be
+            // changed and then ya know, ugg.
+            var cpr = new ColorPaletteResources();
 
             switch (theme)
             {
                 case ControlTheme.Light:
                     resourceName = $"{asm.GetName().Name}.Editor.SqliteLight.xshd";
                     ThemeManager.SetRequestedTheme(this, ElementTheme.Light);
+                    cpr.TargetTheme = ApplicationTheme.Light;
                     break;
                 case ControlTheme.Dark:
                 case ControlTheme.Gray:
                     resourceName = $"{asm.GetName().Name}.Editor.SqliteDark.xshd";
                     ThemeManager.SetRequestedTheme(this, ElementTheme.Dark);
+                    cpr.TargetTheme = ApplicationTheme.Dark;
                     break;
             }
 
             ResourceDictionary currentThemeDict = GetCurrentThemeDictionary();
             var newThemeDict = new ResourceDictionary { Source = new Uri($"/Avalon.Sqlite;component/Resources/{theme.ToString()}.xaml", UriKind.RelativeOrAbsolute) };
 
+            // We'll either set the brush to the requested accent brush, we will default to the
+            // systems accent brush or if that's null we will fall back to whatever is in the theme file.
+            if (accentBrush != null)
+            {
+                newThemeDict["SelectionBrush"] = accentBrush;
+                cpr.Accent = accentBrush.Color;
+
+                newThemeDict.MergedDictionaries.Add(cpr);
+            }
+            else
+            {
+                if (Application.Current.Resources["SystemControlBackgroundAccentBrush"] is SolidColorBrush brush)
+                {
+                    newThemeDict["SelectionBrush"] = brush;
+                    cpr.Accent = brush.Color;
+
+                    newThemeDict.MergedDictionaries.Add(cpr);
+                }
+            }
+
             // Prevent exceptions by adding the new dictionary before removing the old one
-            Application.Current.Resources.MergedDictionaries.Add(newThemeDict);
-            Application.Current.Resources.MergedDictionaries.Remove(currentThemeDict);
+            this.Resources.MergedDictionaries.Add(newThemeDict);
+            this.Resources.MergedDictionaries.Remove(currentThemeDict);
 
             // Update the colors for the syntax editor.
             using (var s = asm.GetManifestResourceStream(resourceName))

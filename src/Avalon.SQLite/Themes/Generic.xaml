@@ -354,9 +354,6 @@
                                         <Setter Property="SeparatorBrush" Value="{DynamicResource GridLinesBrush}" />
                                         <Setter Property="SeparatorVisibility" Value="Visible"></Setter>
                                     </Style>
-                                    <!--<Style TargetType="{x:Type Polygon}">
-                                        <Setter Property="Fill" Value="Purple" />
-                                    </Style>-->
                                 </DataGrid.Resources>
                             </DataGrid>
                         </Grid>
