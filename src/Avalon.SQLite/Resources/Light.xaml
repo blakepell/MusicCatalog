@@ -15,6 +15,7 @@
     <SolidColorBrush x:Key="Foreground">Black</SolidColorBrush>
     <SolidColorBrush x:Key="ColumnHeaderBackground">#F6F6F6</SolidColorBrush>
     <SolidColorBrush x:Key="SelectionBrush">DodgerBlue</SolidColorBrush>
+    <SolidColorBrush x:Key="SelectionForegroundBrush">Black</SolidColorBrush>
     <SolidColorBrush x:Key="GenericIcon">#4C4A48</SolidColorBrush>
     <SolidColorBrush x:Key="Folder">#f1d592</SolidColorBrush>
     <system:Double x:Key="FontSizeRegular">12</system:Double>

@@ -15,6 +15,7 @@
     <SolidColorBrush x:Key="Foreground">White</SolidColorBrush>
     <SolidColorBrush x:Key="ColumnHeaderBackground">#181818</SolidColorBrush>
     <SolidColorBrush x:Key="SelectionBrush">#4F81BD</SolidColorBrush>
+    <SolidColorBrush x:Key="SelectionForegroundBrush">White</SolidColorBrush>
     <SolidColorBrush x:Key="GenericIcon">#777471</SolidColorBrush>
     <SolidColorBrush x:Key="Folder">#f1d592</SolidColorBrush>
     <system:Double x:Key="FontSizeRegular">12</system:Double>

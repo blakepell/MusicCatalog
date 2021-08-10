@@ -978,7 +978,8 @@ namespace Avalon.Sqlite
         /// </summary>
         /// <param name="theme"></param>
         /// <param name="accentBrush"></param>
-        public void ApplyTheme(ControlTheme theme, SolidColorBrush accentBrush = null)
+        /// <param name="accentForegroundBrush"></param>
+        public void ApplyTheme(ControlTheme theme, SolidColorBrush accentBrush = null, SolidColorBrush accentForegroundBrush = null)
         {
             var asm = Assembly.GetExecutingAssembly();
             string resourceName = "";
@@ -1024,6 +1025,11 @@ namespace Avalon.Sqlite
 
                     newThemeDict.MergedDictionaries.Add(cpr);
                 }
+            }
+
+            if (accentForegroundBrush != null)
+            {
+                newThemeDict["SelectionForegroundBrush"] = accentForegroundBrush;
             }
 
             // Prevent exceptions by adding the new dictionary before removing the old one

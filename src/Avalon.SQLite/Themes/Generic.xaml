@@ -314,7 +314,7 @@
                                         <Style.Triggers>
                                             <Trigger Property="IsSelected" Value="True">
                                                 <Setter Property="Background" Value="{DynamicResource SelectionBrush}"></Setter>
-                                                <Setter Property="Foreground" Value="{DynamicResource Foreground}"></Setter>
+                                                <Setter Property="Foreground" Value="{DynamicResource SelectionForegroundBrush}"></Setter>
                                                 <Setter Property="BorderThickness" Value="0,0,1,1" />
                                             </Trigger>
                                             <Trigger Property="IsSelected" Value="False">
