@@ -84,14 +84,7 @@ namespace MusicCatalog
             }
             else
             {
-                if (appSettings.Theme == ApplicationTheme.Light)
-                {
-                    ApplyTheme(true, appSettings.AccentColor);
-                }
-                else
-                {
-                    ApplyTheme(false, appSettings.AccentColor);
-                }
+                ApplyTheme(appSettings.Theme, appSettings.AccentColor);
             }
 
             mainWindow.Show();
@@ -128,13 +121,14 @@ namespace MusicCatalog
         /// <summary>
         /// Applies a new theme and accent color.
         /// </summary>
-        /// <param name="useLightTheme"></param>
+        /// <param name="theme"></param>
         /// <param name="accentColor"></param>
-        public static void ApplyTheme(bool useLightTheme, Color? accentColor)
+        public static void ApplyTheme(ApplicationTheme? theme, Color? accentColor)
         {
             string themeName = "Dark";
+            ThemeManager.Current.ApplicationTheme = theme;
 
-            if (useLightTheme)
+            if (theme == ApplicationTheme.Light)
             {
                 themeName = "Light";
             }

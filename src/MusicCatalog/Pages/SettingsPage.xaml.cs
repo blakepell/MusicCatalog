@@ -111,27 +111,17 @@ namespace MusicCatalog.Pages
 
         private void ButtonToggleTheme_OnClick(object sender, RoutedEventArgs e)
         {
-            string themeName = "Dark";
-
-            ResourceDictionary currentThemeDict = this.GetCurrentThemeDictionary();
-
-            var newThemeDict = new ResourceDictionary { Source = new Uri($"/MusicCatalog;component/Themes/{themeName}.xaml", UriKind.RelativeOrAbsolute) };
-
-            // Prevent exceptions by adding the new dictionary before removing the old one
-            Application.Current.Resources.MergedDictionaries.Add(newThemeDict);
-            Application.Current.Resources.MergedDictionaries.Remove(currentThemeDict);
-
-            //DispatcherHelper.RunOnMainThread(() =>
-            //{
-            //    if (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Dark)
-            //    {
-            //        App.SetTheme(ApplicationTheme.Light, Colors.Green);
-            //    }
-            //    else
-            //    {
-            //        App.SetTheme(ApplicationTheme.Dark, Colors.DarkGoldenrod);
-            //    }
-            //});
+            DispatcherHelper.RunOnMainThread(() =>
+            {
+                if (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Dark)
+                {
+                    App.ApplyTheme(ApplicationTheme.Light, Colors.Green);
+                }
+                else
+                {
+                    App.ApplyTheme(ApplicationTheme.Dark, Colors.DarkGoldenrod);
+                }
+            });
         }
 
         /// <summary>
@@ -147,14 +137,7 @@ namespace MusicCatalog.Pages
                 {
                     if (item.Value != null)
                     {
-                        if (item.Value == ApplicationTheme.Light)
-                        {
-                            App.ApplyTheme(true, _appSettings.AccentColor);
-                        }
-                        else
-                        {
-                            App.ApplyTheme(false, _appSettings.AccentColor);
-                        }
+                        App.ApplyTheme(item.Value, _appSettings.AccentColor);
                     }
                 }
             }

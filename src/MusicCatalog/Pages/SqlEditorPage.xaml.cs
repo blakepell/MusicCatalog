@@ -10,6 +10,7 @@
 using MusicCatalog.Common;
 using System;
 using System.Windows;
+using ModernWpf;
 
 namespace MusicCatalog.Pages
 {

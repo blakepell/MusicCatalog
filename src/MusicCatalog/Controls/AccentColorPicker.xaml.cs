@@ -67,15 +67,7 @@ namespace MusicCatalog.Controls
             DispatcherHelper.RunOnMainThread(() =>
             {
                 var settings = AppServices.GetService<AppSettings>();
-
-                if (settings.Theme == ApplicationTheme.Light)
-                {
-                    App.ApplyTheme(true, this.SelectedAccentColor);
-                }
-                else
-                {
-                    App.ApplyTheme(false, this.SelectedAccentColor);
-                }
+                App.ApplyTheme(settings.Theme, this.SelectedAccentColor);
             });
         }
 
@@ -99,15 +91,7 @@ namespace MusicCatalog.Controls
             DispatcherHelper.RunOnMainThread(() =>
             {
                 this.Settings.AccentColor = this.SelectedAccentColor;
-
-                if (this.Settings.Theme == ApplicationTheme.Light)
-                {
-                    App.ApplyTheme(true, this.SelectedAccentColor);
-                }
-                else
-                {
-                    App.ApplyTheme(false, this.SelectedAccentColor);
-                }
+                App.ApplyTheme(this.Settings.Theme, this.SelectedAccentColor);
             });
         }
     }

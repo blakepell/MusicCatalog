@@ -246,10 +246,6 @@ namespace Avalon.Sqlite
                 _dbExplorerCommandBar.Resources.MergedDictionaries.Add(compact);
             }
 
-            this.Loaded += OnLoaded;
-            this.Unloaded += OnUnloaded;
-            this.KeyDown += OnKeyDown;
-
             // Default theme will either be light or dark based on the ModernWpf setting
             // or the system setting (in that order).  The caller can call ApplyTheme to
             // access the additional themes supported (e.g. Visual Studio Gray).
@@ -264,6 +260,10 @@ namespace Avalon.Sqlite
                     this.ApplyTheme(ControlTheme.Dark);
                     break;
             }
+
+            this.Loaded += OnLoaded;
+            this.Unloaded += OnUnloaded;
+            this.KeyDown += OnKeyDown;
         }
 
         private void TreeViewSchemaOnContextMenuOpening(object sender, ContextMenuEventArgs e)
