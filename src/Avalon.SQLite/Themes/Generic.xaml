@@ -37,12 +37,14 @@
                                     Background="{DynamicResource Background}">
                                 <StackPanel Grid.Row="0" Grid.Column="0">
                                     <ui:CommandBar x:Name="DbExplorerCommandBar"
+                                                   Background="{DynamicResource Background}" 
+                                                   Foreground="{DynamicResource Foreground}"
                                                    DefaultLabelPosition="Right"
                                                    HorizontalAlignment="Left"
                                                    Margin="1">
                                         <ui:AppBarButton x:Name="ButtonRefreshSchema" 
                                                          Background="{DynamicResource Background}"
-                                                         Foreground="{DynamicResource Foreground}"
+                                                         Foreground="{DynamicResource Foreground}"                                                         
                                                          Label="Refresh Schema">
                                             <ui:AppBarButton.Icon>
                                                 <ui:SymbolIcon Symbol="Refresh" Foreground="CornflowerBlue" />
@@ -138,6 +140,7 @@
                                                        VerticalAlignment="Center" 
                                                        Foreground="{DynamicResource GenericIcon}" />
                                             <TextBlock Text="{Binding DatabaseName}"
+                                                       Foreground="{DynamicResource Foreground}"
                                                        FontSize="{DynamicResource FontSizeRegular}"
                                                        VerticalAlignment="Center"></TextBlock>
                                         </StackPanel>
@@ -152,7 +155,8 @@
                                                            Margin="0, 0, 5, 0" 
                                                            VerticalAlignment="Center"
                                                            Foreground="{DynamicResource Folder}"/>
-                                                <TextBlock Text="Tables" 
+                                                <TextBlock Text="Tables"
+                                                           Foreground="{DynamicResource Foreground}"
                                                            FontSize="{DynamicResource FontSizeRegular}"
                                                            VerticalAlignment="Center"></TextBlock>
                                             </StackPanel>

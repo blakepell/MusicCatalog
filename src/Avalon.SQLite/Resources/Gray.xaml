@@ -1,6 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=System.Runtime">
+    <!-- Brush_AppearanceService is used by the AppearanceService to find this dictionary -->
+    <SolidColorBrush x:Key="Brush_AppearanceService" Color="#FFFFFF"/>
+
     <!-- ModernWpf Overrides -->
     <SolidColorBrush x:Key="GridLinesBrush">#AAAAAA</SolidColorBrush>
     <SolidColorBrush x:Key="DataGridCellBackgroundBrush">Transparent</SolidColorBrush>

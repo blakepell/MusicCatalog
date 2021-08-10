@@ -117,7 +117,6 @@ namespace MusicCatalog
         /// <summary>
         /// Gets the current application color palette resource instance.
         /// </summary>
-        /// <returns></returns>
         public static ColorPaletteResourcesEx GetCurrentColorPalette()
         {
             // Determine the current color palette by looking at the application resources and return the first dictionary having the resource key 'Brush_AppearanceService' defined.

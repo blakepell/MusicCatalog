@@ -32,6 +32,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Xml;
 using ApplicationTheme = ModernWpf.ApplicationTheme;
 using ElementTheme = ModernWpf.ElementTheme;
@@ -249,7 +250,20 @@ namespace Avalon.Sqlite
             this.Unloaded += OnUnloaded;
             this.KeyDown += OnKeyDown;
 
-            this.SetTheme();
+            // Default theme will either be light or dark based on the ModernWpf setting
+            // or the system setting (in that order).  The caller can call ApplyTheme to
+            // access the additional themes supported (e.g. Visual Studio Gray).
+            var theme = ThemeManager.Current.ActualApplicationTheme;
+
+            switch (theme)
+            {
+                case ApplicationTheme.Light:
+                    this.ApplyTheme(ControlTheme.Light);
+                    break;
+                case ApplicationTheme.Dark:
+                    this.ApplyTheme(ControlTheme.Dark);
+                    break;
+            }
         }
 
         private void TreeViewSchemaOnContextMenuOpening(object sender, ContextMenuEventArgs e)
@@ -348,59 +362,6 @@ namespace Avalon.Sqlite
             {
                 _completionWindow?.Close();
             }
-        }
-
-        /// <summary>
-        /// Gets the current application theme and applies the dark or light colors to the syntax
-        /// highlighting in AvalonEdit.  This defaults to the current theme of the application which
-        /// will either be set by the application or it will be retrieved from the Windows default theme.
-        /// </summary>
-        private void SetTheme()
-        {
-            var theme = ThemeManager.Current.ActualApplicationTheme;
-            var asm = Assembly.GetExecutingAssembly();
-            string resourceName;
-
-            switch (theme)
-            {
-                case ApplicationTheme.Light:
-                    resourceName = $"{asm.GetName().Name}.Editor.SqliteLight.xshd";
-                    break;
-                case ApplicationTheme.Dark:
-                    resourceName = $"{asm.GetName().Name}.Editor.SqliteDark.xshd";
-                    break;
-                default:
-                    resourceName = $"{asm.GetName().Name}.Editor.SqliteLight.xshd";
-                    break;
-            }
-
-            using (var s = asm.GetManifestResourceStream(resourceName))
-            {
-                if (s != null)
-                {
-                    using var reader = new XmlTextReader(s);
-                    _sqlEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Sets the theme to <see cref="ModernWpf.ElementTheme.Light"/> or <see cref="ModernWpf.ElementTheme.Dark"/> for this
-        /// control.
-        /// </summary>
-        /// <param name="theme"></param>
-        private void SetTheme(ApplicationTheme theme)
-        {
-            if (theme == ApplicationTheme.Dark)
-            {
-                ThemeManager.SetRequestedTheme(this, ElementTheme.Dark);
-            }
-            else
-            {
-                ThemeManager.SetRequestedTheme(this, ElementTheme.Light);
-            }
-
-            this.SetTheme();
         }
 
         /// <summary>
@@ -996,6 +957,59 @@ namespace Avalon.Sqlite
             if (this.Template.FindName("ViewsNode", this) is TreeViewItem viewsNode)
             {
                 viewsNode.IsExpanded = false;
+            }
+        }
+
+        /// <summary>
+        /// Gets the current  theme resource instance.
+        /// </summary>
+        public  ResourceDictionary GetCurrentThemeDictionary()
+        {            
+            // Determine the current theme by looking at the resources and return 
+            // the first dictionary having the resource key 'Brush_AppearanceService'
+            // defined.
+            return (from dict in this.Resources.MergedDictionaries
+                    where dict.Contains("Brush_AppearanceService")
+                    select dict).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Applies a new theme and accent color.
+        /// </summary>
+        /// <param name="theme"></param>
+        public void ApplyTheme(ControlTheme theme)
+        {
+            var asm = Assembly.GetExecutingAssembly();
+            string resourceName = "";
+
+            switch (theme)
+            {
+                case ControlTheme.Light:
+                    resourceName = $"{asm.GetName().Name}.Editor.SqliteLight.xshd";
+                    ThemeManager.SetRequestedTheme(this, ElementTheme.Light);
+                    break;
+                case ControlTheme.Dark:
+                case ControlTheme.Gray:
+                    resourceName = $"{asm.GetName().Name}.Editor.SqliteDark.xshd";
+                    ThemeManager.SetRequestedTheme(this, ElementTheme.Dark);
+                    break;
+            }
+
+            ResourceDictionary currentThemeDict = GetCurrentThemeDictionary();
+            var newThemeDict = new ResourceDictionary { Source = new Uri($"/Avalon.Sqlite;component/Resources/{theme.ToString()}.xaml", UriKind.RelativeOrAbsolute) };
+
+            // Prevent exceptions by adding the new dictionary before removing the old one
+            Application.Current.Resources.MergedDictionaries.Add(newThemeDict);
+            Application.Current.Resources.MergedDictionaries.Remove(currentThemeDict);
+
+            // Update the colors for the syntax editor.
+            using (var s = asm.GetManifestResourceStream(resourceName))
+            {
+                if (s != null)
+                {
+                    using var reader = new XmlTextReader(s);
+                    _sqlEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+                }
             }
         }
 
