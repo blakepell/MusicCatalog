@@ -30,4 +30,8 @@
     <PackageReference Include="MahApps.Metro.IconPacks.VaadinIcons" Version="4.8.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Styles\" />
+  </ItemGroup>
+
 </Project>
