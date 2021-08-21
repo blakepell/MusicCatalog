@@ -19,7 +19,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:QueryControl}">
-                    <Border Background="Transparent"
+                    <Border Background="{DynamicResource Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="0,0,1,0">
                         <Grid Margin="0,5,0,0">
