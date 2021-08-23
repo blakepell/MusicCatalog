@@ -8,6 +8,14 @@
         Loaded="MainWindow_OnLoaded"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <sqlite:QueryControl x:Name="sqlite" Theme="Gray"></sqlite:QueryControl>
+        <sqlite:QueryControl x:Name="sqlite" Theme="Light">
+            <sqlite:QueryControl.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="/Avalon.Sqlite;component/Resources/Light.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+            </sqlite:QueryControl.Resources>
+        </sqlite:QueryControl>
     </Grid>
 </Window>
