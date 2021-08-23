@@ -45,7 +45,6 @@ using ElementTheme = ModernWpf.ElementTheme;
 
 namespace Avalon.Sqlite
 {
-
     /// <summary>
     /// SQLite Query Control.
     /// </summary>
