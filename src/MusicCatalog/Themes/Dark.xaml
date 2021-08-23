@@ -21,9 +21,6 @@
         <ResourceDictionary Source="/FluentWPF;component/Styles/Colors.Dark.xaml" />
         <ResourceDictionary Source="/FluentWPF;component/Styles/Brushes.xaml" />
 
-        <!-- Avalon.Sqlite -->
-        <ResourceDictionary Source="/Avalon.Sqlite;component/Resources/Dark.xaml" />
-
         <ResourceDictionary Source="/Resources/TextBox.xaml" />
     </ResourceDictionary.MergedDictionaries>
 

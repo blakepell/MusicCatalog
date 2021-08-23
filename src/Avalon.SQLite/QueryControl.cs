@@ -827,6 +827,7 @@ namespace Avalon.Sqlite
             {
                 await conn.OpenAsync();
 
+                schema.ConnectionString = conn.DataSource;
                 schema.DatabaseName = Argus.IO.FileSystemUtilities.ExtractFileName(conn.DataSource);
 
                 SqlMapper.SetTypeMap(typeof(Table), new ColumnAttributeTypeMapper<Table>());

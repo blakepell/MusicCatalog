@@ -10,9 +10,6 @@
 using MusicCatalog.Common;
 using System;
 using System.Windows;
-using System.Windows.Media;
-using Avalon.Sqlite.Common;
-using ModernWpf;
 
 namespace MusicCatalog.Pages
 {

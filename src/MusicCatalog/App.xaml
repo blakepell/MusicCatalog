@@ -27,8 +27,6 @@
                                 <ResourceDictionary Source="/FluentWPF;component/Styles/Brushes.xaml" />
                                 <!-- MusicCatalog resources -->
                                 <ResourceDictionary Source="Themes/Light.xaml"></ResourceDictionary>
-                                <!-- Avalon.Sqlite -->
-                                <ResourceDictionary Source="/Avalon.Sqlite;component/Resources/Light.xaml" />
                             </ResourceDictionary.MergedDictionaries>
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Dark" ui:ThemeDictionary.Key="Dark">
@@ -40,8 +38,6 @@
                                 <ResourceDictionary Source="/FluentWPF;component/Styles/Brushes.xaml" />
                                 <!-- MusicCatalog resources -->
                                 <ResourceDictionary Source="Themes/Dark.xaml"></ResourceDictionary>
-                                <!-- Avalon.Sqlite -->
-                                <ResourceDictionary Source="/Avalon.Sqlite;component/Resources/Dark.xaml" />
                             </ResourceDictionary.MergedDictionaries>
                             <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" Color="{StaticResource SystemBaseHighColor}" />
                         </ResourceDictionary>

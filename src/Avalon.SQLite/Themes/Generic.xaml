@@ -140,6 +140,7 @@
                                                        VerticalAlignment="Center" 
                                                        Foreground="{DynamicResource GenericIcon}" />
                                             <TextBlock Text="{Binding DatabaseName}"
+                                                       ToolTip="{Binding ConnectionString}"
                                                        Foreground="{DynamicResource Foreground}"
                                                        FontSize="{DynamicResource FontSizeRegular}"
                                                        VerticalAlignment="Center"></TextBlock>

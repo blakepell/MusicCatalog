@@ -10,6 +10,14 @@
       Title="SQLite Query Editor"
       Loaded="SqlEditorPage_OnLoaded">
     <Grid Margin="0,30,0,0">
-        <sqlite:QueryControl x:Name="QueryControl" Margin="10"></sqlite:QueryControl>
+        <sqlite:QueryControl x:Name="QueryControl" Theme="Light" Margin="10">
+            <sqlite:QueryControl.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="/Avalon.Sqlite;component/Themes/Light.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+            </sqlite:QueryControl.Resources>
+        </sqlite:QueryControl>
     </Grid>
 </Page>
