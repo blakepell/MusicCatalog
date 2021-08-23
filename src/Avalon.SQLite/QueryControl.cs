@@ -16,7 +16,6 @@ using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Microsoft.Data.Sqlite;
-using ModernWpf;
 using ModernWpf.Controls;
 using System;
 using System.Collections.Generic;
@@ -32,10 +31,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Xml;
-using ApplicationTheme = ModernWpf.ApplicationTheme;
-using ElementTheme = ModernWpf.ElementTheme;
 
 /*
  * TODO: Faster selection of all records
