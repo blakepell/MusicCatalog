@@ -126,6 +126,22 @@ namespace Avalon.Sqlite
             set => SetValue(IsQueryExecutingProperty, value);
         }
 
+        public static readonly DependencyProperty ThemeProperty = DependencyProperty.Register(
+            nameof(Theme), typeof(ControlTheme), typeof(QueryControl), new PropertyMetadata(ControlTheme.Light));
+
+        /// <summary>
+        /// The current theme of the control.
+        /// </summary>
+        public ControlTheme Theme
+        {
+            get => (ControlTheme) GetValue(ThemeProperty);
+            set
+            {
+                SetValue(ThemeProperty, value);
+                ApplyTheme(value);
+            }
+        }
+
         private DataTable _dataTable;
 
         /// <summary>
@@ -196,8 +212,6 @@ namespace Avalon.Sqlite
             this.ApplyTemplate();
             this.DataContext = this;
 
-            var compact = new ResourceDictionary { Source = new Uri("/ModernWpf;component/DensityStyles/Compact.xaml", UriKind.Relative) };
-
             if (this.Template.FindName("ButtonRefreshSchema", this) is AppBarButton btnRefresh)
             {
                 _buttonRefreshSchema = btnRefresh;
@@ -214,14 +228,12 @@ namespace Avalon.Sqlite
             {
                 _treeViewSchema = treeViewSchema;
                 _treeViewSchema.ContextMenuOpening += TreeViewSchemaOnContextMenuOpening;
-                _treeViewSchema.Resources.MergedDictionaries.Add(compact);
             }
 
             if (this.Template.FindName("SqlResults", this) is DataGrid sqlResults)
             {
                 _sqlResults = sqlResults;
                 _sqlResults.AutoGeneratingColumn += SqlResultsOnAutoGeneratingColumn;
-                _sqlResults.Resources.MergedDictionaries.Add(compact);
             }
 
             object o = this.Template.FindName("SqlEditor", this);
@@ -237,28 +249,11 @@ namespace Avalon.Sqlite
             if (this.Template.FindName("SqlCommandBar", this) is CommandBar sqlCommandBar)
             {
                 _sqlCommandBar = sqlCommandBar;
-                _sqlCommandBar.Resources.MergedDictionaries.Add(compact);
             }
 
             if (this.Template.FindName("DbExplorerCommandBar", this) is CommandBar dbExplorerCommandBar)
             {
                 _dbExplorerCommandBar = dbExplorerCommandBar;
-                _dbExplorerCommandBar.Resources.MergedDictionaries.Add(compact);
-            }
-
-            // Default theme will either be light or dark based on the ModernWpf setting
-            // or the system setting (in that order).  The caller can call ApplyTheme to
-            // access the additional themes supported (e.g. Visual Studio Gray).
-            var theme = ThemeManager.Current.ActualApplicationTheme;
-
-            switch (theme)
-            {
-                case ApplicationTheme.Light:
-                    this.ApplyTheme(ControlTheme.Light);
-                    break;
-                case ApplicationTheme.Dark:
-                    this.ApplyTheme(ControlTheme.Dark);
-                    break;
             }
 
             this.Loaded += OnLoaded;
@@ -302,6 +297,9 @@ namespace Avalon.Sqlite
         /// <param name="e"></param>
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
+            // Apply the AvalonEdit coloring now that the DP has been set.
+            this.ApplyTheme(this.Theme);
+
             _sqlEditor.Focus();
         }
 
@@ -961,80 +959,24 @@ namespace Avalon.Sqlite
         }
 
         /// <summary>
-        /// Gets the current  theme resource instance.
-        /// </summary>
-        public  ResourceDictionary GetCurrentThemeDictionary()
-        {            
-            // Determine the current theme by looking at the resources and return 
-            // the first dictionary having the resource key 'Brush_AppearanceService'
-            // defined.
-            return (from dict in this.Resources.MergedDictionaries
-                    where dict.Contains("Brush_AppearanceService")
-                    select dict).FirstOrDefault();
-        }
-
-        /// <summary>
         /// Applies a new theme and accent color.
         /// </summary>
         /// <param name="theme"></param>
-        /// <param name="accentBrush"></param>
-        /// <param name="accentForegroundBrush"></param>
-        public void ApplyTheme(ControlTheme theme, SolidColorBrush accentBrush = null, SolidColorBrush accentForegroundBrush = null)
+        public void ApplyTheme(ControlTheme theme)
         {
             var asm = Assembly.GetExecutingAssembly();
             string resourceName = "";
-
-            // For the ColorPaletteResources, the TargetTheme MUST be set before the accent color
-            // is set, if that doesn't happen in that order the SystemAccentColor brushes won't be
-            // changed and then ya know, ugg.
-            var cpr = new ColorPaletteResources();
 
             switch (theme)
             {
                 case ControlTheme.Light:
                     resourceName = $"{asm.GetName().Name}.Editor.SqliteLight.xshd";
-                    ThemeManager.SetRequestedTheme(this, ElementTheme.Light);
-                    cpr.TargetTheme = ApplicationTheme.Light;
                     break;
                 case ControlTheme.Dark:
                 case ControlTheme.Gray:
                     resourceName = $"{asm.GetName().Name}.Editor.SqliteDark.xshd";
-                    ThemeManager.SetRequestedTheme(this, ElementTheme.Dark);
-                    cpr.TargetTheme = ApplicationTheme.Dark;
                     break;
             }
-
-            ResourceDictionary currentThemeDict = GetCurrentThemeDictionary();
-            var newThemeDict = new ResourceDictionary { Source = new Uri($"/Avalon.Sqlite;component/Resources/{theme.ToString()}.xaml", UriKind.RelativeOrAbsolute) };
-
-            // We'll either set the brush to the requested accent brush, we will default to the
-            // systems accent brush or if that's null we will fall back to whatever is in the theme file.
-            if (accentBrush != null)
-            {
-                newThemeDict["SelectionBrush"] = accentBrush;
-                cpr.Accent = accentBrush.Color;
-
-                newThemeDict.MergedDictionaries.Add(cpr);
-            }
-            else
-            {
-                if (Application.Current.Resources["SystemControlBackgroundAccentBrush"] is SolidColorBrush brush)
-                {
-                    newThemeDict["SelectionBrush"] = brush;
-                    cpr.Accent = brush.Color;
-
-                    newThemeDict.MergedDictionaries.Add(cpr);
-                }
-            }
-
-            if (accentForegroundBrush != null)
-            {
-                newThemeDict["SelectionForegroundBrush"] = accentForegroundBrush;
-            }
-
-            // Prevent exceptions by adding the new dictionary before removing the old one
-            this.Resources.MergedDictionaries.Add(newThemeDict);
-            this.Resources.MergedDictionaries.Remove(currentThemeDict);
 
             // Update the colors for the syntax editor.
             using (var s = asm.GetManifestResourceStream(resourceName))

@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:Avalon.Sqlite.Editor"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+         <ResourceDictionary>
+             <ResourceDictionary.MergedDictionaries>
+                 <ResourceDictionary Source="/Avalon.Sqlite;component/Resources/Dark.xaml" />
+             </ResourceDictionary.MergedDictionaries>
+         </ResourceDictionary>
     </Application.Resources>
 </Application>

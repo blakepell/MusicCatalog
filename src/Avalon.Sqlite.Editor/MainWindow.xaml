@@ -8,6 +8,6 @@
         Loaded="MainWindow_OnLoaded"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <sqlite:QueryControl x:Name="sqlite"></sqlite:QueryControl>
+        <sqlite:QueryControl x:Name="sqlite" Theme="Gray"></sqlite:QueryControl>
     </Grid>
 </Window>
