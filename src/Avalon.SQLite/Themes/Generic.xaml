@@ -242,7 +242,7 @@
                                                                        Height="16" Width="16" 
                                                                        Margin="0, 0, 5, 0" 
                                                                        VerticalAlignment="Center"
-                                                                       Foreground="{DynamicResource GenericIcon}"/>
+                                                                       Foreground="{DynamicResource Foreground}"/>
                                                             <TextBlock Text="{Binding Name}" 
                                                                        Foreground="{DynamicResource Foreground}"
                                                                        VerticalAlignment="Center"
@@ -258,9 +258,22 @@
                                                                            VerticalAlignment="Center"
                                                                            Foreground="{DynamicResource GenericIcon}"/>
                                                                 <TextBlock Text="{Binding Name}" 
+                                                                           VerticalAlignment="Center"
+                                                                           Margin="0,0,5,0"
+                                                                           Foreground="{DynamicResource Foreground}"
+                                                                           FontSize="{DynamicResource FontSizeRegular}"></TextBlock>
+                                                                <TextBlock Text="("></TextBlock>
+                                                                <TextBlock Text="{Binding Type}" 
+                                                                           VerticalAlignment="Center"
+                                                                           Margin="0,0,0,0"
+                                                                           Foreground="{DynamicResource Foreground}"
+                                                                           FontSize="{DynamicResource FontSizeRegular}"></TextBlock>
+                                                                <TextBlock Text=")"></TextBlock>
+
+                                                                <!--<TextBlock Text="{Binding Name}" 
                                                                            Foreground="{DynamicResource Foreground}"
                                                                            FontSize="{DynamicResource FontSizeRegular}"
-                                                                           VerticalAlignment="Center" />
+                                                                           VerticalAlignment="Center" />-->
                                                             </StackPanel>
                                                         </DataTemplate>
                                                     </TreeViewItem.ItemTemplate>
